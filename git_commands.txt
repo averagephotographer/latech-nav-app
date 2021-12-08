@@ -1,0 +1,45 @@
+git clone
+    clone a repository
+
+git add
+    add a file to the current commit
+
+git commit -m "message"
+    make a local commit
+
+got push
+    push commit to github
+
+git pull
+    pull other commits from github
+
+git status
+    status of local machine
+
+git rm <filename>
+    remove a file from github
+
+git log
+    show commit history
+
+git branch
+    list of branches
+
+git checkout <branch>
+    "check out" a branch
+
+git switch <branch>
+    switch between branches 
+
+git merge
+    merge two branches together
+
+git push -d origin <branch name>
+    delete a branch from github
+
+git branch -d <branch name>
+    delete a branch on local machine
+
+git reset --hard <hex commit #>
+    *note: you only need teh first 5 or so digits
+    resets the repository to the specified commit 
