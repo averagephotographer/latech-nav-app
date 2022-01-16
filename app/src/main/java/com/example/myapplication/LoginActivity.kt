@@ -41,7 +41,7 @@ class LoginActivity : AppCompatActivity() {
 
             else{
                 startActivity(Intent(this, MapActivity::class.java))
-                Toast.makeText(applicationContext, "incorrect password", Toast.LENGTH_LONG).show()
+                // Toast.makeText(applicationContext, "incorrect password", Toast.LENGTH_LONG).show()
 
             }
         }
