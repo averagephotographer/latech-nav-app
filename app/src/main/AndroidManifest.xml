@@ -28,5 +28,7 @@
             android:name=".LoginActivity"
             android:exported="false" />
     </application>
+    // for getting permission to access the user's location
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
 
 </manifest>

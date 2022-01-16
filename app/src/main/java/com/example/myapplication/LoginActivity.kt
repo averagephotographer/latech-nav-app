@@ -1,5 +1,6 @@
 package com.example.myapplication
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
@@ -35,11 +36,13 @@ class LoginActivity : AppCompatActivity() {
         login.setOnClickListener{
 
             if(username.text.toString() == "Sadiat" && password.text.toString() == "Opeyemi"){
-                Toast.makeText(applicationContext, "you are logged in", Toast.LENGTH_LONG).show()
+                // Toast.makeText(applicationContext, "you are logged in", Toast.LENGTH_LONG).show()
             }
 
             else{
+                startActivity(Intent(this, MapActivity::class.java))
                 Toast.makeText(applicationContext, "incorrect password", Toast.LENGTH_LONG).show()
+
             }
         }
 
