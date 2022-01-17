@@ -16,7 +16,7 @@ class WelcomeActivity : AppCompatActivity() {
 
 
         continue_btn.setOnClickListener{
-            startActivity(Intent(this, SignOptionActivity::class.java))
+            startActivity(Intent(this, LocationActivity::class.java))
         }
     }
 }

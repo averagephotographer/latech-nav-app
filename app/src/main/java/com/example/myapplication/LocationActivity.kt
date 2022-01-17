@@ -11,6 +11,7 @@ import android.Manifest
 import android.content.Intent
 import android.location.Geocoder
 import android.widget.*
+import com.google.android.gms.maps.GoogleMap
 import kotlinx.android.synthetic.main.activity_location.*
 import kotlinx.android.synthetic.main.activity_register.*
 import java.util.*
@@ -30,26 +31,11 @@ class LocationActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_location)
 
-        // initialize fused location client
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
-
-        btSearchBar.isEnabled = false
-
-        if(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-            && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION), 111)
-
-        else
-            btSearchBar.isEnabled = true
-
+        btSearchBar.isEnabled = true
         searchBar()
 
         btSearchBar.setOnClickListener{
             getSearchedLocation()
-        }
-
-        btGetLocation.setOnClickListener{
-            getCurrentLocation()
         }
 
         btOpenMap.setOnClickListener{
@@ -62,81 +48,19 @@ class LocationActivity : AppCompatActivity() {
         // Get the array of classes
         val classes = resources.getStringArray(R.array.Classes)
         // Create adapter and add in AutoCompleteTextView
-        val adapter = ArrayAdapter(
-            this,
-            android.R.layout.simple_list_item_1, classes
-        )
+        val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, classes)
         autotextView.setAdapter(adapter)
     }
 
     private fun getSearchedLocation() {
-
-        if (ActivityCompat.checkSelfPermission(this,Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
-
-            // request permission
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), LOCATION_PERMISSION_REQ_CODE)
-
-            return
-        }
-
-
         var city = autoTextView.text.toString()
+        println(city)
         var gc = Geocoder(this, Locale.getDefault())
-        var addresses = gc.getFromLocationName(city, 0)
+        var addresses = gc.getFromLocationName(city, 1)
         var address = addresses.get(0)
 
         tvLatitude.text = "Latitude: ${address.latitude}"
         tvLongitude.text = "Longitude: ${address.longitude}"
-
-
-    }
-
-    private fun getCurrentLocation() {
-        // checking language permission
-        if (ActivityCompat.checkSelfPermission(this,Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
-
-            // request permission
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), LOCATION_PERMISSION_REQ_CODE)
-
-            return
-        }
-        fusedLocationProviderClient.lastLocation
-            .addOnSuccessListener { location ->
-                // getting the last known location or current location
-                // latitude = location.latitude
-                longitude = location.longitude
-                tvLatitude.text = "Latitude: ${location.latitude}"
-                tvLongitude.text = "Longitude: ${location.longitude}"
-                tvProvider.text = "Provider: ${location.provider}"
-
-                btOpenMap.visibility = View.VISIBLE
-            }
-            .addOnFailureListener {
-                Toast.makeText(this, "Failed on getting current location",
-                    Toast.LENGTH_SHORT).show()
-            }
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int, permissions: Array<out String>, grantResults: IntArray)
-    {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-
-        if(requestCode == 111 && grantResults[0]==PackageManager.PERMISSION_GRANTED){
-            btSearchBar.isEnabled = true
-        }
-
-        when (requestCode) {
-            LOCATION_PERMISSION_REQ_CODE -> {
-                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // permission granted
-                } else {
-                    // permission denied
-                    Toast.makeText(this, "You need to grant permission to access location",
-                        Toast.LENGTH_SHORT).show()
-                }
-            }
-        }
     }
 
     private fun openMap() {
