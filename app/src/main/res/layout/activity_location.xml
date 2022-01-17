@@ -10,6 +10,22 @@
         android:orientation="vertical"
         android:padding="30dp">
 
+        <AutoCompleteTextView
+            android:id="@+id/autoTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter a class..."
+            android:imeOptions="actionNext"
+            android:inputType="text" />
+
+        <Button
+            android:id="@+id/btSearchBar"
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:layout_marginBottom="10dp"
+            android:padding="10dp"
+            android:text="Search" />
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -4,4 +4,16 @@
     <string name="Sign_Up">Sign Up</string>
     <string name="Sign_in">Sign in</string>
     <string name="title_activity_maps">MapsActivity</string>
+
+    <string-array name="Classes">
+        <item>IESB101</item>
+        <item>IESB102</item>
+        <item>IESB103</item>
+        <item>IESB104</item>
+        <item>IESB105</item>
+        <item>IESB106</item>
+        <item>IESB107</item>
+        <item>IESB108</item>
+    </string-array>
+
 </resources>
