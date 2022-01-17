@@ -3,4 +3,5 @@
     <string name="Continue">Continue</string>
     <string name="Sign_Up">Sign Up</string>
     <string name="Sign_in">Sign in</string>
+    <string name="title_activity_maps">MapsActivity</string>
 </resources>

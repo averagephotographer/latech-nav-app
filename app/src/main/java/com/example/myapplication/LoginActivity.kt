@@ -40,7 +40,7 @@ class LoginActivity : AppCompatActivity() {
             }
 
             else{
-                startActivity(Intent(this, MapActivity::class.java))
+                startActivity(Intent(this, MapsActivity::class.java))
                 // Toast.makeText(applicationContext, "incorrect password", Toast.LENGTH_LONG).show()
 
             }

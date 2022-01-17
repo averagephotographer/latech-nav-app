@@ -10,12 +10,11 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import android.Manifest
 import android.content.Intent
-import android.net.Uri
-import kotlinx.android.synthetic.main.activity_map.*
+import kotlinx.android.synthetic.main.activity_location.*
 
 
 
-class MapActivity : AppCompatActivity() {
+class LocationActivity : AppCompatActivity() {
 
     private val LOCATION_PERMISSION_REQ_CODE = 1000
 
@@ -24,9 +23,10 @@ class MapActivity : AppCompatActivity() {
     private var latitude: Double = 0.0
     private var longitude: Double = 0.0
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_map)
+        setContentView(R.layout.activity_location)
 
         // initialize fused location client
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
@@ -40,7 +40,6 @@ class MapActivity : AppCompatActivity() {
         }
     }
 
-
     private fun getCurrentLocation() {
         // checking language permission
         if (ActivityCompat.checkSelfPermission(this,Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
@@ -50,7 +49,6 @@ class MapActivity : AppCompatActivity() {
 
             return
         }
-
         fusedLocationProviderClient.lastLocation
             .addOnSuccessListener { location ->
                 // getting the last known location or current location
@@ -86,9 +84,6 @@ class MapActivity : AppCompatActivity() {
     }
 
     private fun openMap() {
-        val uri = Uri.parse("geo:${latitude},${longitude}")
-        val mapIntent = Intent(Intent.ACTION_VIEW, uri)
-        mapIntent.setPackage("com.google.android.apps.maps")
-        startActivity(mapIntent)
+        startActivity(Intent(this, MapsActivity::class.java))
     }
 }
