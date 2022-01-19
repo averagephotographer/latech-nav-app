@@ -3,5 +3,8 @@
     <string name="Continue">Continue</string>
     <string name="Sign_Up">Sign Up</string>
     <string name="Sign_in">Sign in</string>
-    <string name="title_activity_maps">MapsActivity</string>
+    <string name="password_strength_weak" />
+    <string name="password_strength_medium" />
+    <string name="password_strength_strong" />
+    <string name="password_strength_very_strong" />
 </resources>
