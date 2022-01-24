@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.navapp">
 
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"
+    <uses-permission
+        android:name="android.permission.ACCESS_FINE_LOCATION"
         tools:ignore="CoarseFineLocation" />
 
     <application
@@ -14,9 +15,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.NavApp">
         <activity
+            android:name=".LoginActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SignOptionsActivity"
+            android:exported="false" />
+        <activity
             android:name=".MapsActivity"
-            android:exported="true">
-        </activity>
+            android:exported="false" />
         <activity
             android:name=".WelcomeActivity"
             android:exported="true">
