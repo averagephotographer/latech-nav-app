@@ -22,7 +22,7 @@ public class WelcomeActivity extends FragmentActivity {
         continue_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(view.getContext(), MapsActivity.class);
+                Intent intent = new Intent(view.getContext(), SignOptionsActivity.class);
                 view.getContext().startActivity(intent);
             }
         });
