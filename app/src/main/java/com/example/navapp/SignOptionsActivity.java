@@ -8,15 +8,25 @@ import android.view.View;
 import android.widget.Button;
 
 public class SignOptionsActivity extends AppCompatActivity {
-    private Button signin_btn;
+    private Button signIn_btn;
+    private Button signUp_btn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_options);
 
-        signin_btn = findViewById(R.id.sign_in);
-        signin_btn.setOnClickListener(new View.OnClickListener() {
+        signIn_btn = findViewById(R.id.sign_in);
+        signUp_btn = findViewById(R.id.sign_up);
+
+        signUp_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(SignOptionsActivity.this, RegisterActivity.class);
+                startActivity(intent);
+            }
+        });
+        signIn_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(SignOptionsActivity.this, LoginActivity.class);
