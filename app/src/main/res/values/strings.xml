@@ -8,6 +8,10 @@
     <string name="password_strength_medium" />
     <string name="password_strength_strong" />
     <string name="password_strength_very_strong" />
+    <string name="transparency">Transparency</string>
+    <string name="clickable">Clickable</string>
+    <string name="switch_image">Switch Image</string>
+
 
     <!-- Permissions -->
     <string name="permission_rationale_location">Access to the location service is required to demonstrate the \'my location\' feature, which shows your current location on the map.</string>

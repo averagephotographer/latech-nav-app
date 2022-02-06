@@ -104,7 +104,8 @@ public class MapsActivity extends AppCompatActivity
 
         @Override
         public void onMyLocationClick (@NonNull Location location){
-        Toast.makeText(this, "Current location:\n" + location, Toast.LENGTH_LONG).show();
+        // Toast.makeText(this, "Current location:\n" + location, Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "Current location:\n" + location.getLatitude() + " " + location.getLongitude(), Toast.LENGTH_LONG).show();
     }
 
         // [START maps_check_location_permission_result]
