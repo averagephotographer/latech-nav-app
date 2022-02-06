@@ -13,7 +13,10 @@
         <entry key="..\:/Users/jjung/Documents/GitHub/latech-nav-app/app/src/main/res/drawable/ic_baseline_settings_24.xml" value="0.290625" />
         <entry key="..\:/Users/jjung/Documents/GitHub/latech-nav-app/app/src/main/res/drawable/ic_baseline_vpn_key_24.xml" value="0.20555555555555555" />
         <entry key="..\:/Users/jjung/Documents/GitHub/latech-nav-app/app/src/main/res/drawable/ic_launcher_background.xml" value="0.20555555555555555" />
+        <entry key="..\:/Users/jjung/Documents/GitHub/latech-nav-app/app/src/main/res/layout/activity_about.xml" value="0.17753623188405798" />
+        <entry key="..\:/Users/jjung/Documents/GitHub/latech-nav-app/app/src/main/res/layout/activity_account.xml" value="0.17753623188405798" />
         <entry key="..\:/Users/jjung/Documents/GitHub/latech-nav-app/app/src/main/res/layout/activity_drawer_base.xml" value="0.264" />
+        <entry key="..\:/Users/jjung/Documents/GitHub/latech-nav-app/app/src/main/res/layout/activity_forum.xml" value="0.2513586956521739" />
         <entry key="..\:/Users/jjung/Documents/GitHub/latech-nav-app/app/src/main/res/layout/activity_login.xml" value="0.2536231884057971" />
         <entry key="..\:/Users/jjung/Documents/GitHub/latech-nav-app/app/src/main/res/layout/activity_main.xml" value="0.176" />
         <entry key="..\:/Users/jjung/Documents/GitHub/latech-nav-app/app/src/main/res/layout/activity_maps.xml" value="0.2536231884057971" />
@@ -30,7 +33,7 @@
         <entry key="..\:/Users/jjung/Documents/GitHub/latech-nav-app/app/src/main/res/layout/fragment_maps_fragment.xml" value="0.23731884057971014" />
         <entry key="..\:/Users/jjung/Documents/GitHub/latech-nav-app/app/src/main/res/layout/fragment_settings.xml" value="0.23731884057971014" />
         <entry key="..\:/Users/jjung/Documents/GitHub/latech-nav-app/app/src/main/res/layout/fragment_slideshow.xml" value="0.22735507246376813" />
-        <entry key="..\:/Users/jjung/Documents/GitHub/latech-nav-app/app/src/main/res/layout/main_drawer_header.xml" value="0.1" />
+        <entry key="..\:/Users/jjung/Documents/GitHub/latech-nav-app/app/src/main/res/layout/main_drawer_header.xml" value="0.2" />
         <entry key="..\:/Users/jjung/Documents/GitHub/latech-nav-app/app/src/main/res/layout/nav_header.xml" value="0.25769927536231885" />
         <entry key="..\:/Users/jjung/Documents/GitHub/latech-nav-app/app/src/main/res/layout/nav_header_main.xml" value="0.22735507246376813" />
         <entry key="..\:/Users/jjung/Documents/GitHub/latech-nav-app/app/src/main/res/layout/register_activity.xml" value="0.264" />

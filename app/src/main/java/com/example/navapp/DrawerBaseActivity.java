@@ -53,6 +53,11 @@ public class DrawerBaseActivity extends AppCompatActivity implements NavigationV
                 startActivity(new Intent(this, MapsActivity.class));
                 overridePendingTransition(0,0);
                 break;
+
+            case R.id.forum:
+                startActivity(new Intent(this, ForumActivity.class));
+                overridePendingTransition(0,0);
+                break;
         }
         return false;
     }

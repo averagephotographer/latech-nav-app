@@ -27,6 +27,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import android.widget.Toast;
@@ -64,10 +65,10 @@ public class MapsActivity extends DrawerBaseActivity
         ActivityMapsBinding activityMapBinding;
         @Override
         protected void onCreate (Bundle savedInstanceState){
-        super.onCreate(savedInstanceState);
-        activityMapBinding = ActivityMapsBinding.inflate(getLayoutInflater());
-        setContentView(activityMapBinding.getRoot());
-        allocateActivityTitle("Map");
+            super.onCreate(savedInstanceState);
+            activityMapBinding = ActivityMapsBinding.inflate(getLayoutInflater());
+            setContentView(activityMapBinding.getRoot());
+            allocateActivityTitle("Map");
 
         SupportMapFragment mapFragment =
                 (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);

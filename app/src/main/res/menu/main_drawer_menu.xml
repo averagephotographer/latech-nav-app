@@ -6,7 +6,7 @@
             android:title="Map"/>
         <item android:id="@+id/setting"
             android:icon="@drawable/ic_baseline_settings_24"
-            android:title="Setting"/>
+            android:title="Settings"/>
         <item android:id="@+id/forum"
             android:icon="@drawable/ic_baseline_forum_24"
             android:title="Forum"/>
