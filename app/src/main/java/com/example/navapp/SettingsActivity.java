@@ -10,16 +10,25 @@ import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 
+import com.example.navapp.databinding.ActivityDrawerBaseBinding;
+import com.example.navapp.databinding.ActivitySettingsBinding;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
 
-public class SettingsActivity extends AppCompatActivity {
+public class SettingsActivity extends DrawerBaseActivity {
+
+    ActivitySettingsBinding activitySettingsBinding;
+
     //Initialize variable
     SwitchMaterial switch_btn;
     ImageView about;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        activitySettingsBinding = ActivitySettingsBinding.inflate(getLayoutInflater());
+        setContentView(activitySettingsBinding.getRoot());
+
         //Check condition
         if(AppCompatDelegate.getDefaultNightMode()== AppCompatDelegate.MODE_NIGHT_YES){
             //When night mode is equal to yes
@@ -31,13 +40,7 @@ public class SettingsActivity extends AppCompatActivity {
             setTheme(R.style.ThemeNavApp_Light);
 
         }
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_settings);
 
-        // assign variables
-
-        Toolbar toolbar = findViewById(R.id.Toolbar);
-        setSupportActionBar(toolbar);
 
         about = findViewById(R.id.right_arrow2);
         switch_btn = findViewById(R.id.switch_mode);
