@@ -27,7 +27,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if(username.getText().toString().equals("Sadiat") && password.getText().toString().equals("oooo")){
-                    Intent intent = new Intent(LoginActivity.this, MapsActivity.class);
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     startActivity(intent);
                 }
                 else{

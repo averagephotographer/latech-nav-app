@@ -15,6 +15,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.NavApp">
         <activity
+            android:name=".DrawerBaseActivity"
+            android:exported="false" />
+        <activity
             android:name=".LoginActivity"
             android:exported="false" />
         <activity
@@ -22,6 +25,9 @@
             android:exported="false" />
         <activity
             android:name=".MapsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".MainActivity"
             android:exported="false" />
         <activity
             android:name=".RegisterActivity"

@@ -4,8 +4,6 @@
     <string name="Continue">Continue</string>
     <string name="Sign_Up">Sign Up</string>
     <string name="Sign_in">Sign in</string>
-    <string name="password_strength_weak" />
-    <string name="password_strength_medium" />
-    <string name="password_strength_strong" />
-    <string name="password_strength_very_strong" />
+    <string name="menu_drawer_open">Drawer Open</string>
+    <string name="menu_drawer_close">Drawer Close</string>
 </resources>
