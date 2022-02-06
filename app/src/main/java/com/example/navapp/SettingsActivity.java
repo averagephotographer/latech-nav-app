@@ -25,10 +25,6 @@ public class SettingsActivity extends DrawerBaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        activitySettingsBinding = ActivitySettingsBinding.inflate(getLayoutInflater());
-        setContentView(activitySettingsBinding.getRoot());
-
         //Check condition
         if(AppCompatDelegate.getDefaultNightMode()== AppCompatDelegate.MODE_NIGHT_YES){
             //When night mode is equal to yes
@@ -40,6 +36,11 @@ public class SettingsActivity extends DrawerBaseActivity {
             setTheme(R.style.ThemeNavApp_Light);
 
         }
+        super.onCreate(savedInstanceState);
+        activitySettingsBinding = ActivitySettingsBinding.inflate(getLayoutInflater());
+        setContentView(activitySettingsBinding.getRoot());
+        allocateActivityTitle("Settings");
+
 
 
         about = findViewById(R.id.right_arrow2);

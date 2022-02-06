@@ -28,6 +28,15 @@
             android:name=".MainActivity"
             android:exported="false" />
         <activity
+            android:name=".AboutActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SettingsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AccountActivity"
+            android:exported="false" />
+        <activity
             android:name=".RegisterActivity"
             android:exported="false" />
         <activity
@@ -39,16 +48,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".AboutActivity"
-            android:exported="false" />
-        <activity
-            android:name=".AccountActivity"
-            android:exported="false" />
-        <activity
-            android:name=".SettingsActivity"
-            android:label="Settings"
-            android:exported="false" />
         <activity
             android:name=".DrawerBaseActivity"
             android:exported="false" />
