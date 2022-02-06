@@ -4,6 +4,9 @@ package com.example.navapp;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.navapp.databinding.ActivityMapsBinding;
+import com.example.navapp.databinding.ActivitySettingsBinding;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -34,12 +37,13 @@ import android.widget.Toast;
  * Permission for {@link android.Manifest.permission#ACCESS_FINE_LOCATION} is requested at run
  * time. If the permission has not been granted, the Activity is finished with an error message.
  */
-public class MapsActivity extends AppCompatActivity
+public class MapsActivity extends DrawerBaseActivity
     implements
     OnMyLocationButtonClickListener,
     OnMyLocationClickListener,
     OnMapReadyCallback,
     ActivityCompat.OnRequestPermissionsResultCallback
+
 
     {
         /**
@@ -57,10 +61,13 @@ public class MapsActivity extends AppCompatActivity
 
         private GoogleMap map;
 
+        ActivityMapsBinding activityMapBinding;
         @Override
         protected void onCreate (Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_maps);
+        activityMapBinding = ActivityMapsBinding.inflate(getLayoutInflater());
+        setContentView(activityMapBinding.getRoot());
+        allocateActivityTitle("Map");
 
         SupportMapFragment mapFragment =
                 (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
