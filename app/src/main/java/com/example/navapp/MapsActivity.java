@@ -1,36 +1,52 @@
 package com.example.navapp;
 
 
+import static com.example.navapp.SettingsActivity.switch_btn;
+
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.SearchView;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.example.navapp.databinding.ActivityMapsBinding;
-import com.example.navapp.databinding.ActivitySettingsBinding;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
-
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMyLocationButtonClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMyLocationClickListener;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.android.gms.maps.model.MarkerOptions;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
-import android.location.Location;
-import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import android.widget.Toast;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * This demo shows how GMS Location can be used to check for changes to the users location.  The
@@ -62,6 +78,12 @@ public class MapsActivity extends DrawerBaseActivity
 
         private GoogleMap map;
 
+        SearchView searchView;
+        Button textView;
+        boolean [] selectedService;
+        ArrayList<Integer> servList = new ArrayList<>();
+        String[] servArray = {"Printing Station", "Restroom", "Food"};
+
         ActivityMapsBinding activityMapBinding;
         @Override
         protected void onCreate (Bundle savedInstanceState){
@@ -70,19 +92,207 @@ public class MapsActivity extends DrawerBaseActivity
             setContentView(activityMapBinding.getRoot());
             allocateActivityTitle("Map");
 
-        SupportMapFragment mapFragment =
-                (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
-    }
+            SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+            mapFragment.getMapAsync(this);
+
+            searchView = findViewById(R.id.sv_location);
+            textView = findViewById(R.id.textView);
+
+            selectedService = new boolean[servArray.length];
+
+            //Search bar
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String s) {
+                    String location = searchView.getQuery().toString();
+                    List<Address> addressList = null;
+                    if(location != null || !location.equals("")){
+                        Geocoder geocoder = new Geocoder(MapsActivity.this);
+                        try{
+                            addressList = geocoder.getFromLocationName(location,1);
+
+                        }catch (IOException e){
+                            e.printStackTrace();
+                        }
+                        Address address = addressList.get(0);
+                        LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
+                        map.addMarker(new MarkerOptions().position(latLng).title(location));
+                    }
+                    return false;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String s) {
+                    return false;
+                }
+            });
+
+            //Drop down box
+            textView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    // Initialize alert dialog
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this);
+
+                    // set title
+                    builder.setTitle("Services...");
+
+                    // set dialog non cancelable
+                    builder.setCancelable(false);
+
+                    builder.setMultiChoiceItems(servArray, selectedService, new DialogInterface.OnMultiChoiceClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i, boolean b) {
+                            // check condition
+                            if (b) {
+                                // when checkbox selected
+                                // Add position  in lang list
+                                servList.add(i);
+                                // Sort array list
+                                Collections.sort(servList);
+                            } else {
+                                // when checkbox unselected
+                                // Remove position from langList
+                                servList.remove(Integer.valueOf(i));
+                            }
+                        }
+                    });
+
+                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            for(int j = 0; j <servList.size(); j++){
+                                plotMarker(servArray[servList.get(j)]);
+                            }
+                        }
+                    });
+
+                    builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            // dismiss dialog
+                            dialogInterface.dismiss();
+                        }
+                    });
+                    builder.setNeutralButton("Clear All", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            // use for loop
+                            for (int j = 0; j < selectedService.length; j++) {
+                                // remove all selection
+                                selectedService[j] = false;
+                                // clear language list
+                                servList.clear();
+                                // clear text view value
+                                textView.setText("");
+                            }
+
+                            map.clear();
+                        }
+                    });
+                    // show dialog
+                    builder.show();
+                }
+            });
+        }
+
+        //PLaces markers for services
+        public void plotMarker (String service){
+            if(service == "Printing Station"){
+                LatLng tolliverPM = new LatLng(32.526528647649464, -92.64882063776503);
+                map.addMarker(new MarkerOptions().position(tolliverPM).title("Tolliver Printing Machine")
+                        .icon(BitmapFromVector(getApplicationContext(), R.drawable.printer)));
+
+                LatLng bogardPM = new LatLng(32.52640965519668,-92.64548752289164);
+                map.addMarker(new MarkerOptions().position(bogardPM).title("Bogard Printing Machine")
+                        .icon(BitmapFromVector(getApplicationContext(), R.drawable.printer)));
+
+                LatLng iesbPM = new LatLng(32.52611772172414,-92.64361384794148);
+                map.addMarker(new MarkerOptions().position(iesbPM).title("IESB Printing Machine")
+                        .icon(BitmapFromVector(getApplicationContext(), R.drawable.printer)));
+            }
+
+            if(service == "Restroom"){
+                LatLng tolliverRR1 = new LatLng(32.52607292949391,-92.64892240716625);
+                map.addMarker(new MarkerOptions().position(tolliverRR1).title("Tolliver Restroom #1")
+                        .icon(BitmapFromVector(getApplicationContext(), R.drawable.restroom)));
+
+                LatLng bogardRR = new LatLng(32.526440165950156,-92.64581763137875);
+                map.addMarker(new MarkerOptions().position(bogardRR).title("Bogard Restroom 1st Floor")
+                        .icon(BitmapFromVector(getApplicationContext(), R.drawable.restroom)));
+            }
+            if(service == "Food"){
+                LatLng cfa = new LatLng(32.52694408327142,-92.6485453583843);
+                map.addMarker(new MarkerOptions().position(cfa).title("Chick-fil-A")
+                        .icon(BitmapFromVector(getApplicationContext(), R.drawable.food)));
+
+                LatLng bbq = new LatLng(32.526628066890815,-92.64899657456743);
+                map.addMarker(new MarkerOptions().position(bbq).title("bbq")
+                        .icon(BitmapFromVector(getApplicationContext(), R.drawable.food)));
+
+                LatLng sushi = new LatLng(32.52650835160256,-92.64905509236604);
+                map.addMarker(new MarkerOptions().position(sushi).title("sushi")
+                        .icon(BitmapFromVector(getApplicationContext(), R.drawable.food)));
+
+                LatLng pod = new LatLng(32.52632037835968,-92.64912272221017);
+                map.addMarker(new MarkerOptions().position(pod).title("POD")
+                        .icon(BitmapFromVector(getApplicationContext(), R.drawable.food)));
+            }
+        }
 
         @Override
         public void onMapReady (GoogleMap googleMap){
-        map = googleMap;
-        map.setOnMyLocationButtonClickListener(this);
-        map.setOnMyLocationClickListener(this);
-        enableMyLocation();
+            map = googleMap;
+            map.setOnMyLocationButtonClickListener(this);
+            map.setOnMyLocationClickListener(this);
+            map.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(32.5264, -92.6457)));
+            map.moveCamera(CameraUpdateFactory.zoomTo(18));
+            enableMyLocation();
+            //Uses custom map
+
+            map.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.campus));
+            /*switch_btn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    //check condition
+                    if (isChecked){
+                        //when switch button is checked
+                        //Set night mode
+                        map.setMapStyle(MapStyleOptions.loadRawResourceStyle(MapsActivity.this, R.raw.campus));
+
+                    }else{
+                        //When switch button is unchecked
+                        //Set light mode
+                        map.setMapStyle(MapStyleOptions.loadRawResourceStyle(MapsActivity.this, R.raw.campus_night));
+
+                    }
+                }
+            });*/
     }
 
+        //Allows for other icons to be used as markers
+        private BitmapDescriptor BitmapFromVector(Context context, int vectorResId) {
+            // below line is use to generate a drawable.
+            Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorResId);
+
+            // below line is use to set bounds to our vector drawable.
+            vectorDrawable.setBounds(0, 0, vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight());
+
+            // below line is use to create a bitmap for our
+            // drawable which we have added.
+            Bitmap bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+
+            // below line is use to add bitmap in our canvas.
+            Canvas canvas = new Canvas(bitmap);
+
+            // below line is use to draw our
+            // vector drawable in canvas.
+            vectorDrawable.draw(canvas);
+
+            // after generating our bitmap we are returning our bitmap.
+            return BitmapDescriptorFactory.fromBitmap(bitmap);
+        }
         /**
          * Enables the My Location layer if the fine location permission has been granted.
          */
