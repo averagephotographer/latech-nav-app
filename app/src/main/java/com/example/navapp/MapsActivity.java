@@ -7,6 +7,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -61,7 +62,6 @@ public class MapsActivity extends DrawerBaseActivity
     OnMapReadyCallback,
     ActivityCompat.OnRequestPermissionsResultCallback
 
-
     {
         /**
          * Request code for location permission request.
@@ -99,6 +99,16 @@ public class MapsActivity extends DrawerBaseActivity
             textView = findViewById(R.id.textView);
 
             selectedService = new boolean[servArray.length];
+
+            Button oButton = findViewById(R.id.overlayButton);
+
+            oButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(view.getContext(), GroundOverlayActivity.class);
+                    view.getContext().startActivity(intent);
+                }
+            });
 
             //Search bar
             searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -246,7 +256,7 @@ public class MapsActivity extends DrawerBaseActivity
             map = googleMap;
             map.setOnMyLocationButtonClickListener(this);
             map.setOnMyLocationClickListener(this);
-            map.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(32.5264, -92.6457)));
+            map.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(32.52649980, -92.645448074)));
             map.moveCamera(CameraUpdateFactory.zoomTo(18));
             enableMyLocation();
             //Uses custom map

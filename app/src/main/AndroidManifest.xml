@@ -28,6 +28,9 @@
             android:name=".AboutActivity"
             android:exported="false" />
         <activity
+            android:name=".GroundOverlayActivity"
+            android:exported="false"/>
+        <activity
             android:name=".SettingsActivity"
             android:exported="false" />
         <activity
