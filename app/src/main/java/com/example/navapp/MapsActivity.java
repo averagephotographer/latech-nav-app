@@ -40,6 +40,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -259,6 +260,14 @@ public class MapsActivity extends DrawerBaseActivity
             map.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(32.52649980, -92.645448074)));
             map.moveCamera(CameraUpdateFactory.zoomTo(18));
             enableMyLocation();
+            // Create a LatLngBounds that includes the city of Adelaide in Australia.
+            LatLngBounds adelaideBounds = new LatLngBounds(
+                    new LatLng(32.52611447836993, -92.64626273239287), // SW bounds
+                    new LatLng(32.526948557853814, -92.64511421685144)  // NE bounds
+            );
+
+// Constrain the camera target to the Adelaide bounds.
+            map.setLatLngBoundsForCameraTarget(adelaideBounds);
             //Uses custom map
 
             map.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.campus));
