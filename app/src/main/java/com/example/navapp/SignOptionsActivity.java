@@ -1,11 +1,11 @@
 package com.example.navapp;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class SignOptionsActivity extends AppCompatActivity {
     private Button signIn_btn;

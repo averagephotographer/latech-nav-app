@@ -1,9 +1,9 @@
 package com.example.navapp;
 
+import android.os.Bundle;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
-
-import android.os.Bundle;
 
 public class AboutActivity extends AppCompatActivity {
 
