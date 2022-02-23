@@ -31,6 +31,7 @@ import com.google.android.gms.maps.GoogleMap.OnMyLocationButtonClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMyLocationClickListener;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
@@ -96,7 +97,47 @@ public class MapsActivity extends DrawerBaseActivity
 
             Button oButton = findViewById(R.id.overlayButton);
 
+            Button floor1 = findViewById(R.id.floor1);
+
+            Button floor2 = findViewById(R.id.floor2);
+
+            Button floor3 = findViewById(R.id.floor3);
+
+            Button floor4 = findViewById(R.id.floor4);
+
             oButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(view.getContext(), GroundOverlayActivity.class);
+                    view.getContext().startActivity(intent);
+                }
+            });
+
+            floor1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(view.getContext(), GroundOverlayActivity.class);
+                    view.getContext().startActivity(intent);
+                }
+            });
+
+            floor2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(view.getContext(), GroundOverlayActivity.class);
+                    view.getContext().startActivity(intent);
+                }
+            });
+
+            floor3.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(view.getContext(), GroundOverlayActivity.class);
+                    view.getContext().startActivity(intent);
+                }
+            });
+
+            floor4.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(view.getContext(), GroundOverlayActivity.class);
@@ -253,6 +294,8 @@ public class MapsActivity extends DrawerBaseActivity
             map.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(32.52649980, -92.645448074)));
             map.moveCamera(CameraUpdateFactory.zoomTo(18));
             enableMyLocation();
+            map.getUiSettings().setIndoorLevelPickerEnabled(false);
+            //map.getUiSettings().setAllGesturesEnabled(false);
             // Create a LatLngBounds that includes the city of Adelaide in Australia.
             LatLngBounds adelaideBounds = new LatLngBounds(
                     new LatLng(32.52611447836993, -92.64626273239287), // SW bounds
