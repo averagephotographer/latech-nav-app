@@ -17,7 +17,7 @@ public class SettingsActivity extends DrawerBaseActivity {
     ActivitySettingsBinding activitySettingsBinding;
 
     //Initialize variable
-    SwitchMaterial switch_btn;
+    public static SwitchMaterial switch_btn;
     ImageView about;
     SharedPref preference;
 
