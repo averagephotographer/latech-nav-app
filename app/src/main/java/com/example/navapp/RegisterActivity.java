@@ -84,7 +84,7 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher {
             strengthView.setText("Weak");
         }
     }
-    public boolean isValidPassword(final String password) {
+    public static boolean isValidPassword(final String password) {
         Pattern pattern;
         Matcher matcher;
         final String PASSWORD_PATTERN = "^(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$";
