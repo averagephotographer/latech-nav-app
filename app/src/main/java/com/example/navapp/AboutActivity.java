@@ -11,6 +11,7 @@ public class AboutActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         //Check condition
+        /*
         if(AppCompatDelegate.getDefaultNightMode()== AppCompatDelegate.MODE_NIGHT_YES){
             //When night mode is equal to yes
             //Set dark theme
@@ -21,8 +22,10 @@ public class AboutActivity extends AppCompatActivity {
             setTheme(R.style.ThemeNavApp_Light);
 
         }
+        */
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
     }
+
 
 }

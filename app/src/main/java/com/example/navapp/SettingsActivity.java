@@ -19,24 +19,30 @@ public class SettingsActivity extends DrawerBaseActivity {
     //Initialize variable
     public static SwitchMaterial switch_btn;
     ImageView about;
+    SharedPref preference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        preference = new SharedPref(this);
         //Check condition
-        if(AppCompatDelegate.getDefaultNightMode()== AppCompatDelegate.MODE_NIGHT_YES){
+        if(preference.loadNightModeState()){
             //When night mode is equal to yes
             //Set dark theme
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
             setTheme(R.style.Theme_NavApp_Night);
         }else{
             //When night mode is equal to no
             //set light theme
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
             setTheme(R.style.ThemeNavApp_Light);
 
         }
+
         super.onCreate(savedInstanceState);
         activitySettingsBinding = ActivitySettingsBinding.inflate(getLayoutInflater());
         setContentView(activitySettingsBinding.getRoot());
         allocateActivityTitle("Settings");
+
 
 
 
@@ -59,11 +65,13 @@ public class SettingsActivity extends DrawerBaseActivity {
                 if (isChecked){
                     //when switch button is checked
                     //Set night mode
+                    preference.setNightModeState(true);
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
 
                 }else{
                     //When switch button is unchecked
                     //Set light mode
+                    preference.setNightModeState(false);
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
                 }
             }
