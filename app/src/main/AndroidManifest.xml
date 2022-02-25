@@ -43,6 +43,9 @@
             android:name=".ForumActivity"
             android:exported="false" />
         <activity
+            android:name=".CreatePostActivity"
+            android:exported="false"/>
+        <activity
             android:name=".WelcomeActivity"
             android:exported="true">
             <intent-filter>
