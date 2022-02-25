@@ -1,5 +1,6 @@
 package com.example.navapp;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -10,15 +11,20 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.Statement;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import at.favre.lib.crypto.bcrypt.*;
 
 
 public class RegisterActivity extends AppCompatActivity implements TextWatcher {
     private TextView haveAccount_text;
-
+    public EditText password;
 
 
     @Override
@@ -34,7 +40,8 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher {
             }
         });
 
-        EditText password = (EditText)findViewById(R.id.inputPassword);
+
+        password= (EditText)findViewById(R.id.inputPassword);
         EditText cpassword = (EditText)findViewById(R.id.inputCPassword);
         Button loginNow = (Button) findViewById(R.id.buttonRegister);
         password.addTextChangedListener(this);
@@ -48,8 +55,12 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher {
                 } else if((password.getText().toString().equals(cpassword.getText().toString()))) {
                     Toast.makeText(RegisterActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
                 }
+                else {
+                    new Task().execute();
+                }
             }
         });
+
     }
 
     @Override
@@ -96,4 +107,24 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher {
     public void afterTextChanged(Editable s) {
 
     }
+
+    class Task extends AsyncTask<Void,Void,Void>{
+        @NonNull
+        @Override
+        protected Void doInBackground(Void... voids) {
+            try{
+                Class.forName("com.mysql.jdbc.Driver");
+                Connection con = DriverManager.getConnection("jdbc:mysql://192.168.86.65:3306/j", "andro", "andr0")
+                Statement s = con.createStatement();
+                string pw = password.getText();
+                Bcrypt
+                char[] hashword = BCrypt;
+                s.executeQuery("INSERT into user_profile Values()");
+            }
+            catch (Exception e)
+            {}
+            return null;
+        }
+    }
 }
+
