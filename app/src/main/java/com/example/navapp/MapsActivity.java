@@ -297,13 +297,13 @@ public class MapsActivity extends DrawerBaseActivity
             map.getUiSettings().setIndoorLevelPickerEnabled(false);
             //map.getUiSettings().setAllGesturesEnabled(false);
             // Create a LatLngBounds that includes the city of Adelaide in Australia.
-            LatLngBounds adelaideBounds = new LatLngBounds(
+            /*LatLngBounds adelaideBounds = new LatLngBounds(
                     new LatLng(32.52611447836993, -92.64626273239287), // SW bounds
                     new LatLng(32.526948557853814, -92.64511421685144)  // NE bounds
-            );
+            );*/
 
 // Constrain the camera target to the Adelaide bounds.
-            map.setLatLngBoundsForCameraTarget(adelaideBounds);
+            //map.setLatLngBoundsForCameraTarget(adelaideBounds);
             //Uses custom map
 
             map.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.campus));
