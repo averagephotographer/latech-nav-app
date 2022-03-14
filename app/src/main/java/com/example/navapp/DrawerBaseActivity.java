@@ -19,10 +19,25 @@ import com.google.android.material.navigation.NavigationView;
 public class DrawerBaseActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     DrawerLayout drawerLayout;
+    SharedPref preference;
 
 
     @Override
     public void setContentView(View view) {
+        preference = new SharedPref(this);
+        //Check condition
+        if(preference.loadNightModeState()){
+            //When night mode is equal to yes
+            //Set dark theme
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+            setTheme(R.style.Theme_NavApp_Night);
+        }else{
+            //When night mode is equal to no
+            //set light theme
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+            setTheme(R.style.ThemeNavApp_Light);
+
+        }
         drawerLayout = (DrawerLayout) getLayoutInflater().inflate(R.layout.activity_drawer_base, null);
         FrameLayout container = drawerLayout.findViewById(R.id.activityContainer);
         container.addView(view);

@@ -12,12 +12,24 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
 public class RegisterActivity extends AppCompatActivity implements TextWatcher {
     private TextView haveAccount_text;
+
+    public static final String DATABASE_NAME = "nav-app";
+    public static final String url = "jdbc:mysql://nav-app.czayyymumdfr.us-east-1.rds.amazonaws.com:3306/nav-app?user=admin&password=latechbulldog";
+    public static final String username = "admin", password="latechbulldog";
+
+    public static final String TABLE_NAME = "user_profile";
+
 
 
 
@@ -33,7 +45,8 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher {
             startActivity(intent);
             }
         });
-
+        EditText email = (EditText)findViewById(R.id.inputEmail);
+        EditText input_username = (EditText)findViewById(R.id.inputUsername);
         EditText password = (EditText)findViewById(R.id.inputPassword);
         EditText cpassword = (EditText)findViewById(R.id.inputCPassword);
         Button loginNow = (Button) findViewById(R.id.buttonRegister);
@@ -41,12 +54,16 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher {
         loginNow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                String email_str = email.getText().toString();
+                String username_str = input_username.getText().toString();
+                String password_str = password.getText().toString();
                 if(!isValidPassword(password.getText().toString())){
                     Toast.makeText(RegisterActivity.this,"Please input valid combination of password!",Toast.LENGTH_LONG).show();
                 } else if((!password.getText().toString().equals(cpassword.getText().toString()))){
                     Toast.makeText(RegisterActivity.this, "Confirm Password Not Matched", Toast.LENGTH_SHORT).show();
                 } else if((password.getText().toString().equals(cpassword.getText().toString()))) {
                     Toast.makeText(RegisterActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
+                    addTemp(username_str, password_str, email_str);
                 }
             }
         });
@@ -96,4 +113,24 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher {
     public void afterTextChanged(Editable s) {
 
     }
+
+
+    public static void addTemp(String Username, String hashpassword, String Emaillocalname) {
+        new Thread(() -> {
+
+            try {
+                Class.forName("com.mysql.jdbc.Driver");
+                Connection connection = DriverManager.getConnection(url, username, password);
+                Statement statement = connection.createStatement();
+
+                statement.execute("INSERT INTO " + TABLE_NAME + "(username, hashpassword, Emaillocalname) VALUES('" + Username + "', '" + hashpassword + "', '" + Emaillocalname + "')");
+
+                connection.close();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }).start();
+    }
 }
+
