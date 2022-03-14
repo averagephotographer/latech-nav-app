@@ -19,6 +19,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import at.favre.lib.crypto.bcrypt.*;
 
 
 public class RegisterActivity extends AppCompatActivity implements TextWatcher {
