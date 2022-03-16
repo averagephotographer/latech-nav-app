@@ -19,6 +19,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.xml.transform.Result;
+
 import at.favre.lib.crypto.bcrypt.*;
 
 
@@ -119,12 +122,24 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher {
     public static void addTemp(String Username, String hashpassword, String Emaillocalname) {
         new Thread(() -> {
 
+            char[] hashed = BCrypt.withDefaults().hashToChar(12,hashpassword.toCharArray());
+            String[] emailparts = Emaillocalname.split("@");
+            emailparts[1] = "@" + emailparts[1];
             try {
                 Class.forName("com.mysql.jdbc.Driver");
                 Connection connection = DriverManager.getConnection(url, username, password);
                 Statement statement = connection.createStatement();
+                ResultSet RS;
+                RS = statement.executeQuery("select domainid from domainlist where domainname ="+ emailparts[1] + ";");
+                if (RS.first() == false)
+                {
+                    statement.executeQuery("insert into domainlist (domainname) values ("+emailparts[1]+");");
+                    RS = statement.executeQuery("select domainid from domainlist where domainname ="+ emailparts[1] + ";");
+                }
+                String domid = RS.getString("DomainId");
 
-                statement.execute("INSERT INTO " + TABLE_NAME + "(username, hashpassword, Emaillocalname) VALUES('" + Username + "', '" + hashpassword + "', '" + Emaillocalname + "')");
+
+                statement.execute("INSERT INTO " + TABLE_NAME + "(username, hashpassword, domainid,Emaillocalname) VALUES('" + Username + "', '" + hashed + "', '"+ domid+ "', '"  + emailparts[0] + "')");
 
                 connection.close();
 
