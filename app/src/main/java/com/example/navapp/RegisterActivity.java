@@ -25,7 +25,7 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher {
     private TextView haveAccount_text;
 
     public static final String DATABASE_NAME = "nav-app";
-    public static final String url = "jdbc:mysql://nav-app.czayyymumdfr.us-east-1.rds.amazonaws.com:3306/nav-app?user=admin&password=latechbulldog";
+    public static final String url = "jdbc:mysql://nav-app.czayyymumdfr.us-east-1.rds.amazonaws.com:3306/nav-app";
     public static final String username = "admin", password="latechbulldog";
 
     public static final String TABLE_NAME = "user_profile";
@@ -61,7 +61,7 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher {
                     Toast.makeText(RegisterActivity.this,"Please input valid combination of password!",Toast.LENGTH_LONG).show();
                 } else if((!password.getText().toString().equals(cpassword.getText().toString()))){
                     Toast.makeText(RegisterActivity.this, "Confirm Password Not Matched", Toast.LENGTH_SHORT).show();
-                } else if((password.getText().toString().equals(cpassword.getText().toString()))) {
+                } else {
                     Toast.makeText(RegisterActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
                     addTemp(username_str, password_str, email_str);
                 }
@@ -103,7 +103,7 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher {
     public static boolean isValidPassword(final String password) {
         Pattern pattern;
         Matcher matcher;
-        final String PASSWORD_PATTERN = "^(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$";
+        final String PASSWORD_PATTERN = "^(?=.*[A-Z])(?=.*[!?@#$%^&*()+=,.])(?=\\S+$).{8,}$";
         pattern = Pattern.compile(PASSWORD_PATTERN);
         matcher = pattern.matcher(password);
         return matcher.matches();
