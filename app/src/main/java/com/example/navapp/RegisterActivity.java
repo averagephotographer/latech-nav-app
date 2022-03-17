@@ -57,12 +57,13 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher {
                 String email_str = email.getText().toString();
                 String username_str = input_username.getText().toString();
                 String password_str = password.getText().toString();
-                if(!isValidPassword(password.getText().toString())){
+
+                if(!isValidPassword(password_str)){
                     Toast.makeText(RegisterActivity.this,"Please input valid combination of password!",Toast.LENGTH_LONG).show();
-                } else if((!password.getText().toString().equals(cpassword.getText().toString()))){
+                } else if((!password_str.equals(cpassword.getText().toString()))){
                     Toast.makeText(RegisterActivity.this, "Confirm Password Not Matched", Toast.LENGTH_SHORT).show();
-                } else if((password.getText().toString().equals(cpassword.getText().toString()))) {
-                    Toast.makeText(RegisterActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
+                } else {
+                    //Toast.makeText(RegisterActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
                     addTemp(username_str, password_str, email_str);
                 }
             }
@@ -115,10 +116,17 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher {
     }
 
 
-    public static void addTemp(String Username, String hashpassword, String Emaillocalname) {
-        new Thread(() -> {
+    public void addTemp(String Username, String hashpassword, String Emaillocalname) {
+        Toast.makeText(RegisterActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
 
-            try {
+        /*
+        new Thread(() -> {
+            Toast.makeText(RegisterActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
+        */
+        try {
+
+               Toast.makeText(RegisterActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
+                /*
                 Class.forName("com.mysql.jdbc.Driver");
                 Connection connection = DriverManager.getConnection(url, username, password);
                 Statement statement = connection.createStatement();
@@ -126,11 +134,20 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher {
                 statement.execute("INSERT INTO " + TABLE_NAME + "(username, hashpassword, Emaillocalname) VALUES('" + Username + "', '" + hashpassword + "', '" + Emaillocalname + "')");
 
                 connection.close();
+                */
 
-            } catch (Exception e) {
+                Toast.makeText(RegisterActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
+
+            }
+        catch (Exception e) {
                 e.printStackTrace();
             }
-        }).start();
+
+        //}).start();
+
+
+
+
     }
 }
 
