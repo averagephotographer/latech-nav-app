@@ -65,7 +65,7 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher {
                     Toast.makeText(RegisterActivity.this,"Please input valid combination of password!",Toast.LENGTH_LONG).show();
                 } else if((!password.getText().toString().equals(cpassword.getText().toString()))){
                     Toast.makeText(RegisterActivity.this, "Confirm Password Not Matched", Toast.LENGTH_SHORT).show();
-                } else if((password.getText().toString().equals(cpassword.getText().toString()))) {
+                } else  {
                     Toast.makeText(RegisterActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
                     addTemp(username_str, password_str, email_str);
                 }
@@ -120,9 +120,9 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher {
 
 
     public static void addTemp(String Username, String hashpassword, String Emaillocalname) {
-        new Thread(() -> {
 
-            char[] hashed = BCrypt.withDefaults().hashToChar(12,hashpassword.toCharArray());
+
+            //char[] hashed = BCrypt.withDefaults().hashToChar(12,hashpassword.toCharArray());
             String[] emailparts = Emaillocalname.split("@");
             emailparts[1] = "@" + emailparts[1];
             try {
@@ -139,14 +139,14 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher {
                 String domid = RS.getString("DomainId");
 
 
-                statement.execute("INSERT INTO " + TABLE_NAME + "(username, hashpassword, domainid,Emaillocalname) VALUES('" + Username + "', '" + hashed + "', '"+ domid+ "', '"  + emailparts[0] + "')");
+                //statement.execute("INSERT INTO " + TABLE_NAME + "(username, hashpassword, domainid,Emaillocalname) VALUES('" + Username + "', '" + hashed + "', '"+ domid+ "', '"  + emailparts[0] + "')");
 
                 connection.close();
 
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }).start();
+
     }
 }
 
