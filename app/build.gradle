@@ -57,7 +57,7 @@ dependencies {
     androidTestImplementation 'junit:junit:4.12'
 
     implementation 'mysql:mysql-connector-java:5.1.49'
-
+    implementation 'com.estimote:indoorsdk:2.4.0'
 }
 
 configurations {
