@@ -17,6 +17,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -125,6 +126,8 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher {
             //char[] hashed = BCrypt.withDefaults().hashToChar(12,hashpassword.toCharArray());
             String[] emailparts = Emaillocalname.split("@");
             emailparts[1] = "@" + emailparts[1];
+            Random r = new Random();
+            int uid = r.nextInt(899999999)+100000000;
             try {
                 Class.forName("com.mysql.jdbc.Driver");
                 Connection connection = DriverManager.getConnection(url, username, password);
@@ -138,8 +141,7 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher {
                 }
                 String domid = RS.getString("DomainId");
 
-
-                //statement.execute("INSERT INTO " + TABLE_NAME + "(username, hashpassword, domainid,Emaillocalname) VALUES('" + Username + "', '" + hashed + "', '"+ domid+ "', '"  + emailparts[0] + "')");
+                //statement.execute("INSERT INTO " + TABLE_NAME + "(userid, username, hashpassword, domainid,Emaillocalname) VALUES('"+ uid +"', '" + Username + "', '" + hashed + "', '"+ domid+ "', '"  + emailparts[0] + "')");
 
                 connection.close();
 
