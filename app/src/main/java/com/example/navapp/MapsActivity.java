@@ -291,8 +291,8 @@ public class MapsActivity extends DrawerBaseActivity
             map = googleMap;
             map.setOnMyLocationButtonClickListener(this);
             map.setOnMyLocationClickListener(this);
-            map.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(32.52649980, -92.645448074)));
-            map.moveCamera(CameraUpdateFactory.zoomTo(18));
+            map.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(32.52565148675839, -92.64475211432803)));
+            map.moveCamera(CameraUpdateFactory.zoomTo(19));
             enableMyLocation();
             map.getUiSettings().setIndoorLevelPickerEnabled(false);
             //map.getUiSettings().setAllGesturesEnabled(false);

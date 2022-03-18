@@ -9,14 +9,6 @@
   },
   {
     "featureType": "administrative",
-    "stylers": [
-      {
-        "visibility": "off"
-      }
-    ]
-  },
-  {
-    "featureType": "administrative",
     "elementType": "geometry",
     "stylers": [
       {
@@ -41,23 +33,7 @@
     ]
   },
   {
-    "featureType": "landscape",
-    "stylers": [
-      {
-        "visibility": "off"
-      }
-    ]
-  },
-  {
     "featureType": "poi",
-    "stylers": [
-      {
-        "visibility": "off"
-      }
-    ]
-  },
-  {
-    "featureType": "road",
     "stylers": [
       {
         "visibility": "off"
