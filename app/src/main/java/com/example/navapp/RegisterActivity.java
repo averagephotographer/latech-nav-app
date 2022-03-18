@@ -23,7 +23,7 @@ import java.util.regex.Pattern;
 
 import javax.xml.transform.Result;
 
-import at.favre.lib.crypto.bcrypt.*;
+import org.mindrot.jbcrypt.*;
 
 
 public class RegisterActivity extends AppCompatActivity implements TextWatcher {
@@ -67,7 +67,6 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher {
                 } else if((!password.getText().toString().equals(cpassword.getText().toString()))){
                     Toast.makeText(RegisterActivity.this, "Confirm Password Not Matched", Toast.LENGTH_SHORT).show();
                 } else  {
-                    Toast.makeText(RegisterActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
                     addTemp(username_str, password_str, email_str);
                 }
             }
@@ -120,12 +119,14 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher {
     }
 
 
-    public static void addTemp(String Username, String hashpassword, String Emaillocalname) {
+    public void addTemp(String Username, String hashpassword, String Emaillocalname) {
 
 
-            //char[] hashed = BCrypt.withDefaults().hashToChar(12,hashpassword.toCharArray());
-            String[] emailparts = Emaillocalname.split("@");
-            emailparts[1] = "@" + emailparts[1];
+        String hashed = BCrypt.hashpw(hashpassword,BCrypt.gensalt(14));
+        Toast.makeText(RegisterActivity.this, hashed, Toast.LENGTH_SHORT).show();
+
+        String[] emailparts = Emaillocalname.split("@");
+        emailparts[1] = "@" + emailparts[1];
             Random r = new Random();
             int uid = r.nextInt(899999999)+100000000;
             try {
