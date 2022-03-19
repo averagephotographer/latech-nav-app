@@ -4,6 +4,7 @@ import android.nfc.Tag;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
@@ -16,8 +17,12 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.mysql.jdbc.Driver;
@@ -40,17 +45,11 @@ import javax.xml.transform.Result;
 
 public class RegisterActivity extends AppCompatActivity implements TextWatcher {
     private TextView haveAccount_text;
-
-    public static final String DATABASE_NAME = "nav-app";
-    public static final String url = "jdbc:mysql://nav-app.czayyymumdfr.us-east-1.rds.amazonaws.com:3306/nav app";
-    public static final String username = "admin", password="latechbulldog";
-
-    public static final String TABLE_NAME = "user_profile";
-
     FirebaseFirestore db;
-
-
-
+    FirebaseAuth fAuth;
+    ProgressBar progressBarInBackground;
+    String userID;
+    public static final String TAG = "TAG";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +57,10 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher {
         setContentView(R.layout.register_activity);
         db = FirebaseFirestore.getInstance();
         db.setLoggingEnabled(true);
+
+        fAuth = FirebaseAuth.getInstance();
+        progressBarInBackground = findViewById(R.id.progressBarLoading);
+
         haveAccount_text = (TextView) findViewById(R.id.haveAccount);
         haveAccount_text.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,33 +87,54 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher {
                 user.put("username", username_str);
                 user.put("email", email_str);
 
-                if(!isValidPassword(password_str)){
+                if(TextUtils.isEmpty(email_str)) {
+                    email.setError("Email is required!");
+                    return;
+                }
+
+                if(TextUtils.isEmpty(username_str)) {
+                    input_username.setError("Username is required!");
+                    return;
+                }
+
+                if(TextUtils.isEmpty(password_str)) {
+                    password.setError("Password is required!");
+                    return;
+                }
+
+                if(!isValidPassword(password_str)) {
                     Toast.makeText(RegisterActivity.this,"Please input valid combination of password!",Toast.LENGTH_LONG).show();
-                } else if((!password_str.equals(cpassword.getText().toString()))){
+                }
+
+                else if((!password_str.equals(cpassword.getText().toString()))){
                     Toast.makeText(RegisterActivity.this, "Confirm Password Not Matched", Toast.LENGTH_SHORT).show();
                 }
+
+                // register user into firebase
                 else  {
                     user.put("password", password_str);
-
-                    db.collection("user_profile")
-                            .add(user)
-                            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                                @Override
-                                public void onSuccess(DocumentReference documentReference) {
-                                    Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
-                                    startActivity(intent);
-
-                                }
-                            }).addOnFailureListener(new OnFailureListener() {
+                    progressBarInBackground.setVisibility(View.VISIBLE);
+                    fAuth.createUserWithEmailAndPassword(email_str, password_str).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(RegisterActivity.this, "Login failed", Toast.LENGTH_SHORT).show();
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if(task.isSuccessful()) {
+                                Toast.makeText(RegisterActivity.this, "User Created", Toast.LENGTH_SHORT).show();
+                                userID = fAuth.getCurrentUser().getUid();
+                                DocumentReference documentReference = db.collection("user_profile").document(userID);
+                                documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Log.d(TAG, "onSuccess: user profile is created for " + userID);
+                                    }
+                                });
+                                startActivity(new Intent(getApplicationContext(),LoginActivity.class));
+                            } else {
+                                Toast.makeText(RegisterActivity.this, "Error! " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                                progressBarInBackground.setVisibility(View.GONE);
+
+                            }
                         }
                     });
-
-
-                    //Toast.makeText(RegisterActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
-
                 }
             }
         });
@@ -160,42 +184,6 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher {
     public void afterTextChanged(Editable s) {
 
     }
-
-
-    /*
-    class Task extends AsyncTask<Void, Void, Void>{
-        String records = "";
-        String error = "";
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            try {
-                Class.forName("com.mysql.jdbc.Driver");
-                Connection connection = DriverManager.getConnection(url);
-                Statement statement = connection.createStatement();
-                ResultSet resultSet = statement.executeQuery("SELECT * FROM user_profile");
-                while (resultSet.next()) {
-                    records += resultSet.getString(1) + " " + resultSet.getString(2);
-
-                }
-            }
-            catch(Exception e){
-                error = e.toString();
-            }
-            return null;
-        }
-        @Override
-        protected void onPostExecute(Void aVoid){
-            Toast.makeText(RegisterActivity.this, records, Toast.LENGTH_SHORT).show();
-            if(error != "")
-                Toast.makeText(RegisterActivity.this, error, Toast.LENGTH_SHORT).show();
-            super.onPostExecute(aVoid);
-        }
-    }
-     */
-
-
-
 
 }
 
