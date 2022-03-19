@@ -63,17 +63,10 @@
         <entry key="..\:/Users/sadia/OneDrive/Documents/GitHub/latech-nav-app/app/src/main/res/layout/activity_sign_option.xml" value="0.17552083333333332" />
         <entry key="..\:/Users/sadia/OneDrive/Documents/GitHub/latech-nav-app/app/src/main/res/layout/activity_sign_options.xml" value="0.1796875" />
         <entry key="..\:/Users/sadia/OneDrive/Documents/GitHub/latech-nav-app/app/src/main/res/layout/activity_welcome.xml" value="0.17527173913043478" />
+        <entry key="..\:/Users/sadia/OneDrive/Documents/GitHub/nav app/app/src/main/res/layout/register_activity.xml" value="0.13802083333333334" />
         <entry key="app/src/main/res/drawable/printer.xml" value="0.15" />
-        <entry key="app/src/main/res/layout/activity_about.xml" value="0.3338541666666667" />
-        <entry key="app/src/main/res/layout/activity_account.xml" value="0.3338541666666667" />
-        <entry key="app/src/main/res/layout/activity_account_history.xml" value="0.29227401903455863" />
-        <entry key="app/src/main/res/layout/activity_create_post.xml" value="0.3338541666666667" />
-        <entry key="app/src/main/res/layout/activity_drawer_base.xml" value="0.3338541666666667" />
-        <entry key="app/src/main/res/layout/activity_login.xml" value="0.3338541666666667" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.16927083333333334" />
         <entry key="app/src/main/res/layout/activity_maps.xml" value="0.335" />
-        <entry key="app/src/main/res/layout/activity_settings.xml" value="0.3338541666666667" />
-        <entry key="app/src/main/res/layout/activity_sign_options.xml" value="0.25964914957682284" />
       </map>
     </option>
   </component>
