@@ -34,6 +34,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.GroundOverlayOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MapStyleOptions;
@@ -101,10 +102,6 @@ public class MapsActivity extends DrawerBaseActivity
 
             Button floor2 = findViewById(R.id.floor2);
 
-            Button floor3 = findViewById(R.id.floor3);
-
-            Button floor4 = findViewById(R.id.floor4);
-
             oButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -116,34 +113,26 @@ public class MapsActivity extends DrawerBaseActivity
             floor1.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(view.getContext(), GroundOverlayActivity.class);
-                    view.getContext().startActivity(intent);
+                    LatLng newarkLatLng = new LatLng(32.52559395625559, -92.64475918225845);
+
+                    GroundOverlayOptions newarkMap = new GroundOverlayOptions()
+                            .image(BitmapDescriptorFactory.fromResource(R.drawable.nethken))
+                            .position(newarkLatLng, 76f, 46f);
+
+                    map.addGroundOverlay(newarkMap);
+                    LatLng tolliverPM = new LatLng(32.525600627794965, -92.64475918225845);
+
+                    map.addMarker(new MarkerOptions().position(tolliverPM).title("classroom")
+                            .icon(BitmapFromVector(getApplicationContext(), R.drawable.classroom_dot)));
                 }
             });
 
             floor2.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(view.getContext(), GroundOverlayActivity.class);
-                    view.getContext().startActivity(intent);
                 }
             });
 
-            floor3.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(view.getContext(), GroundOverlayActivity.class);
-                    view.getContext().startActivity(intent);
-                }
-            });
-
-            floor4.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(view.getContext(), GroundOverlayActivity.class);
-                    view.getContext().startActivity(intent);
-                }
-            });
 
             //Search bar
             searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
