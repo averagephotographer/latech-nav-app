@@ -25,13 +25,13 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.mysql.jdbc.Driver;
+/*import com.mysql.jdbc.Driver;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.Statement;*/
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -39,7 +39,7 @@ import java.util.regex.Pattern;
 
 import javax.xml.transform.Result;
 
-//import org.mindrot.jbcrypt.*;
+import org.mindrot.jbcrypt.*;
 
 
 
@@ -112,7 +112,8 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher {
 
                 // register user into firebase
                 else  {
-                    user.put("password", password_str);
+                    String hashpwstring = BCrypt.hashpw(password_str,BCrypt.gensalt(18));
+                    user.put("password", hashpwstring);
                     progressBarInBackground.setVisibility(View.VISIBLE);
                     fAuth.createUserWithEmailAndPassword(email_str, password_str).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override

@@ -16,12 +16,17 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import org.mindrot.jbcrypt.BCrypt;
 
 public class LoginActivity extends AppCompatActivity {
     private EditText mEmail;
     private EditText mPassword;
     private Button mLogin;
     FirebaseAuth firebaseAuth;
+    FirebaseFirestore fStore;
+    String userid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +37,7 @@ public class LoginActivity extends AppCompatActivity {
         mPassword = findViewById(R.id.password);
         mLogin = findViewById(R.id.login_btn);
         firebaseAuth = FirebaseAuth.getInstance();
+        fStore = FirebaseFirestore.getInstance();
 
         mLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -48,8 +54,9 @@ public class LoginActivity extends AppCompatActivity {
                     mPassword.setError("Password is required!");
                     return;
                 }
-
-                firebaseAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                //String hashpw = BCrypt.hashpw(password,BCrypt.gensalt(18));
+               // System.out.println(hashpw);
+                firebaseAuth.signInWithEmailAndPassword(email,hashpw).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()) {
@@ -57,6 +64,7 @@ public class LoginActivity extends AppCompatActivity {
                             startActivity(new Intent(getApplicationContext(), MapsActivity.class));
                         } else {
                             Toast.makeText(LoginActivity.this, "Error! " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                            System.out.println(task.getException().getMessage());
                         }
                     }
                 });
