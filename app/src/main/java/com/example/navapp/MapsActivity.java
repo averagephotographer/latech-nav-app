@@ -78,7 +78,7 @@ public class MapsActivity extends DrawerBaseActivity
         Button textView;
         boolean [] selectedService;
         ArrayList<Integer> servList = new ArrayList<>();
-        String[] servArray = {"Printing Station", "Restroom", "Food"};
+        String[] servArray = {"Classrooms", "Professors", "Resources"};
 
         ActivityMapsBinding activityMapBinding;
         @Override
@@ -92,6 +92,7 @@ public class MapsActivity extends DrawerBaseActivity
             mapFragment.getMapAsync(this);
 
             searchView = findViewById(R.id.sv_location);
+            
             textView = findViewById(R.id.textView);
 
             selectedService = new boolean[servArray.length];
@@ -113,13 +114,13 @@ public class MapsActivity extends DrawerBaseActivity
             floor1.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    LatLng newarkLatLng = new LatLng(32.52559395625559, -92.64475918225845);
+                    LatLng nethken = new LatLng(32.52559395625559, -92.64475918225845);
 
-                    GroundOverlayOptions newarkMap = new GroundOverlayOptions()
+                    GroundOverlayOptions neth = new GroundOverlayOptions()
                             .image(BitmapDescriptorFactory.fromResource(R.drawable.nethken))
-                            .position(newarkLatLng, 76f, 46f);
+                            .position(nethken, 76f, 46f);
 
-                    map.addGroundOverlay(newarkMap);
+                    map.addGroundOverlay(neth);
                     LatLng tolliverPM = new LatLng(32.525600627794965, -92.64475918225845);
 
                     map.addMarker(new MarkerOptions().position(tolliverPM).title("classroom")
@@ -130,6 +131,7 @@ public class MapsActivity extends DrawerBaseActivity
             floor2.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    map.clear();
                 }
             });
 
@@ -233,86 +235,43 @@ public class MapsActivity extends DrawerBaseActivity
 
         //PLaces markers for services
         public void plotMarker (String service){
-            if(service == "Printing Station"){
-                LatLng tolliverPM = new LatLng(32.526528647649464, -92.64882063776503);
-                map.addMarker(new MarkerOptions().position(tolliverPM).title("Tolliver Printing Machine")
-                        .icon(BitmapFromVector(getApplicationContext(), R.drawable.printer)));
-
-                LatLng bogardPM = new LatLng(32.52640965519668,-92.64548752289164);
-                map.addMarker(new MarkerOptions().position(bogardPM).title("Bogard Printing Machine")
-                        .icon(BitmapFromVector(getApplicationContext(), R.drawable.printer)));
-
-                LatLng iesbPM = new LatLng(32.52611772172414,-92.64361384794148);
-                map.addMarker(new MarkerOptions().position(iesbPM).title("IESB Printing Machine")
-                        .icon(BitmapFromVector(getApplicationContext(), R.drawable.printer)));
+            if(service == "Classrooms"){
+                return;
             }
 
-            if(service == "Restroom"){
-                LatLng tolliverRR1 = new LatLng(32.52607292949391,-92.64892240716625);
-                map.addMarker(new MarkerOptions().position(tolliverRR1).title("Tolliver Restroom #1")
-                        .icon(BitmapFromVector(getApplicationContext(), R.drawable.restroom)));
-
-                LatLng bogardRR = new LatLng(32.526440165950156,-92.64581763137875);
-                map.addMarker(new MarkerOptions().position(bogardRR).title("Bogard Restroom 1st Floor")
-                        .icon(BitmapFromVector(getApplicationContext(), R.drawable.restroom)));
+            if(service == "Professors"){
+                return;
             }
-            if(service == "Food"){
-                LatLng cfa = new LatLng(32.52694408327142,-92.6485453583843);
-                map.addMarker(new MarkerOptions().position(cfa).title("Chick-fil-A")
-                        .icon(BitmapFromVector(getApplicationContext(), R.drawable.food)));
-
-                LatLng bbq = new LatLng(32.526628066890815,-92.64899657456743);
-                map.addMarker(new MarkerOptions().position(bbq).title("bbq")
-                        .icon(BitmapFromVector(getApplicationContext(), R.drawable.food)));
-
-                LatLng sushi = new LatLng(32.52650835160256,-92.64905509236604);
-                map.addMarker(new MarkerOptions().position(sushi).title("sushi")
-                        .icon(BitmapFromVector(getApplicationContext(), R.drawable.food)));
-
-                LatLng pod = new LatLng(32.52632037835968,-92.64912272221017);
-                map.addMarker(new MarkerOptions().position(pod).title("POD")
-                        .icon(BitmapFromVector(getApplicationContext(), R.drawable.food)));
+            if(service == "Resources"){
+                return;
             }
         }
 
         @Override
         public void onMapReady (GoogleMap googleMap){
             map = googleMap;
+
+            //Add nethken overlay
+            LatLng neth = new LatLng(32.52559395625559, -92.64475918225845);
+            GroundOverlayOptions nethken = new GroundOverlayOptions()
+                    .image(BitmapDescriptorFactory.fromResource(R.drawable.nethken))
+                    .position(neth, 76f, 46f);
+            map.addGroundOverlay(nethken);
+
             map.setOnMyLocationButtonClickListener(this);
             map.setOnMyLocationClickListener(this);
+
+            //zooms into nethken
             map.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(32.52565148675839, -92.64475211432803)));
             map.moveCamera(CameraUpdateFactory.zoomTo(19));
             enableMyLocation();
+
+            //removes bogard floor buttons
             map.getUiSettings().setIndoorLevelPickerEnabled(false);
-            //map.getUiSettings().setAllGesturesEnabled(false);
-            // Create a LatLngBounds that includes the city of Adelaide in Australia.
-            /*LatLngBounds adelaideBounds = new LatLngBounds(
-                    new LatLng(32.52611447836993, -92.64626273239287), // SW bounds
-                    new LatLng(32.526948557853814, -92.64511421685144)  // NE bounds
-            );*/
 
-// Constrain the camera target to the Adelaide bounds.
-            //map.setLatLngBoundsForCameraTarget(adelaideBounds);
-            //Uses custom map
-
+            //Set custom json map
             map.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.campus));
-            /*switch_btn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    //check condition
-                    if (isChecked){
-                        //when switch button is checked
-                        //Set night mode
-                        map.setMapStyle(MapStyleOptions.loadRawResourceStyle(MapsActivity.this, R.raw.campus));
 
-                    }else{
-                        //When switch button is unchecked
-                        //Set light mode
-                        map.setMapStyle(MapStyleOptions.loadRawResourceStyle(MapsActivity.this, R.raw.campus_night));
-
-                    }
-                }
-            });*/
     }
 
         //Allows for other icons to be used as markers
