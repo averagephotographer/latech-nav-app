@@ -51,6 +51,9 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher {
     String userID;
     public static final String TAG = "TAG";
 
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
