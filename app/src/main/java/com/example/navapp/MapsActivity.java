@@ -72,7 +72,7 @@ public class MapsActivity extends DrawerBaseActivity
          */
         private boolean permissionDenied = false;
 
-        private GoogleMap map;
+        private GoogleMap mMap;
 
         SearchView searchView;
         Button textView;
@@ -91,8 +91,8 @@ public class MapsActivity extends DrawerBaseActivity
             SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
             mapFragment.getMapAsync(this);
 
-            searchView = findViewById(R.id.sv_location);
-            
+            searchView = findViewById(R.id.idSearchView);
+
             textView = findViewById(R.id.textView);
 
             selectedService = new boolean[servArray.length];
@@ -120,10 +120,10 @@ public class MapsActivity extends DrawerBaseActivity
                             .image(BitmapDescriptorFactory.fromResource(R.drawable.nethken))
                             .position(nethken, 76f, 46f);
 
-                    map.addGroundOverlay(neth);
+                    mMap.addGroundOverlay(neth);
                     LatLng tolliverPM = new LatLng(32.525600627794965, -92.64475918225845);
 
-                    map.addMarker(new MarkerOptions().position(tolliverPM).title("classroom")
+                    mMap.addMarker(new MarkerOptions().position(tolliverPM).title("classroom")
                             .icon(BitmapFromVector(getApplicationContext(), R.drawable.classroom_dot)));
                 }
             });
@@ -131,7 +131,7 @@ public class MapsActivity extends DrawerBaseActivity
             floor2.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    map.clear();
+                    mMap.clear();
                 }
             });
 
@@ -152,7 +152,7 @@ public class MapsActivity extends DrawerBaseActivity
                         }
                         Address address = addressList.get(0);
                         LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
-                        map.addMarker(new MarkerOptions().position(latLng).title(location));
+                        mMap.addMarker(new MarkerOptions().position(latLng).title(location));
                     }
                     return false;
                 }
@@ -224,7 +224,7 @@ public class MapsActivity extends DrawerBaseActivity
                                 textView.setText("");
                             }
 
-                            map.clear();
+                            mMap.clear();
                         }
                     });
                     // show dialog
@@ -249,28 +249,28 @@ public class MapsActivity extends DrawerBaseActivity
 
         @Override
         public void onMapReady (GoogleMap googleMap){
-            map = googleMap;
+            mMap = googleMap;
 
             //Add nethken overlay
             LatLng neth = new LatLng(32.52559395625559, -92.64475918225845);
             GroundOverlayOptions nethken = new GroundOverlayOptions()
                     .image(BitmapDescriptorFactory.fromResource(R.drawable.nethken))
                     .position(neth, 76f, 46f);
-            map.addGroundOverlay(nethken);
+            mMap.addGroundOverlay(nethken);
 
-            map.setOnMyLocationButtonClickListener(this);
-            map.setOnMyLocationClickListener(this);
+            mMap.setOnMyLocationButtonClickListener(this);
+            mMap.setOnMyLocationClickListener(this);
 
             //zooms into nethken
-            map.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(32.52565148675839, -92.64475211432803)));
-            map.moveCamera(CameraUpdateFactory.zoomTo(19));
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(32.52565148675839, -92.64475211432803)));
+            mMap.moveCamera(CameraUpdateFactory.zoomTo(19));
             enableMyLocation();
 
             //removes bogard floor buttons
-            map.getUiSettings().setIndoorLevelPickerEnabled(false);
+            mMap.getUiSettings().setIndoorLevelPickerEnabled(false);
 
             //Set custom json map
-            map.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.campus));
+            mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.campus));
 
     }
 
@@ -304,8 +304,8 @@ public class MapsActivity extends DrawerBaseActivity
         // [START maps_check_location_permission]
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
-            if (map != null) {
-                map.setMyLocationEnabled(true);
+            if (mMap != null) {
+                mMap.setMyLocationEnabled(true);
             }
         } else {
             // Permission to access the location is missing. Show rationale and request permission
