@@ -115,7 +115,7 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher {
 
                 // register user into firebase
                 else  {
-                    String hashpwstring = BCrypt.hashpw(password_str,BCrypt.gensalt(18));
+                    String hashpwstring = BCrypt.hashpw(password_str,BCrypt.gensalt(13));
                     user.put("password", hashpwstring);
                     progressBarInBackground.setVisibility(View.VISIBLE);
                     fAuth.createUserWithEmailAndPassword(email_str, password_str).addOnCompleteListener(new OnCompleteListener<AuthResult>() {

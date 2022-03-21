@@ -66,6 +66,7 @@ public class LoginActivity extends AppCompatActivity {
                         DocumentSnapshot DS = task.getResult();
                         String checkpw;
                         checkpw = DS.get("password").toString();
+                        System.out.println(checkpw);
                         if (BCrypt.checkpw(passwordAAAA,checkpw)){
                             Toast.makeText(LoginActivity.this, "Logged In", Toast.LENGTH_SHORT).show();
                             startActivity(new Intent(getApplicationContext(), MapsActivity.class));
