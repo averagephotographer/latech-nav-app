@@ -113,7 +113,7 @@ public class MapsActivity extends DrawerBaseActivity
             SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
             mapFragment.getMapAsync(this);
 
-            textView = findViewById(R.id.textView);
+            Button filter = findViewById(R.id.filter);
 
             selectedService = new boolean[servArray.length];
 
@@ -178,7 +178,7 @@ public class MapsActivity extends DrawerBaseActivity
 
 
             //Drop down box
-            textView.setOnClickListener(new View.OnClickListener() {
+            filter.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
 
@@ -256,6 +256,7 @@ public class MapsActivity extends DrawerBaseActivity
             if(service == "Professors"){
                 return;
             }
+
             if(service == "Resources") {
 
             }
@@ -277,7 +278,7 @@ public class MapsActivity extends DrawerBaseActivity
 
             //zooms into nethken
             mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(32.52565148675839, -92.64475211432803)));
-            mMap.moveCamera(CameraUpdateFactory.zoomTo(19));
+            mMap.moveCamera(CameraUpdateFactory.zoomTo(20));
             enableMyLocation();
 
             //removes bogard floor buttons
