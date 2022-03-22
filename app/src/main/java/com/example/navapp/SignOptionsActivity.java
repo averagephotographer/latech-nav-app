@@ -1,6 +1,8 @@
 package com.example.navapp;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -10,6 +12,9 @@ import androidx.appcompat.app.AppCompatActivity;
 public class SignOptionsActivity extends AppCompatActivity {
     private Button signIn_btn;
     private Button signUp_btn;
+    SharedPreferences sharedPreferences;
+    public static final String Username = "username";
+    public static final String pass_wrd = "password";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,6 +23,13 @@ public class SignOptionsActivity extends AppCompatActivity {
 
         signIn_btn = findViewById(R.id.sign_in);
         signUp_btn = findViewById(R.id.sign_up);
+
+        sharedPreferences = getSharedPreferences("login", Context.MODE_PRIVATE);
+        if(sharedPreferences.contains(Username)){
+            Intent i = new Intent(SignOptionsActivity.this, MapsActivity.class);
+            startActivity(i);
+        }
+
 
         signUp_btn.setOnClickListener(new View.OnClickListener() {
             @Override
