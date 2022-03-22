@@ -3,8 +3,6 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.nfc.Tag;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
@@ -44,6 +42,7 @@ import com.google.firebase.storage.UploadTask;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 //import org.mindrot.jbcrypt.*;
+import org.mindrot.jbcrypt.BCrypt;
 
 
 
@@ -137,7 +136,8 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher {
 
                 // register user into firebase
                 else  {
-                    user.put("password", password_str);
+                    String hashpwstring = BCrypt.hashpw(password_str,BCrypt.gensalt(13));
+                    user.put("password", hashpwstring);
                     progressBarInBackground.setVisibility(View.VISIBLE);
                     fAuth.createUserWithEmailAndPassword(email_str, password_str).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
