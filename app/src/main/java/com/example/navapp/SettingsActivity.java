@@ -19,6 +19,7 @@ public class SettingsActivity extends DrawerBaseActivity {
     //Initialize variable
     SwitchMaterial switch_btn;
     ImageView about;
+    ImageView account;
     SharedPref preference;
 
     @Override
@@ -45,7 +46,7 @@ public class SettingsActivity extends DrawerBaseActivity {
 
 
 
-
+        account = findViewById(R.id.right_arrow1);
         about = findViewById(R.id.right_arrow2);
         switch_btn = findViewById(R.id.switch_mode);
 
@@ -55,6 +56,15 @@ public class SettingsActivity extends DrawerBaseActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(SettingsActivity.this, AboutActivity.class);
                 startActivity(intent);
+            }
+        });
+
+        account.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(SettingsActivity.this, AccountActivity.class);
+                startActivity(intent);
+
             }
         });
 
