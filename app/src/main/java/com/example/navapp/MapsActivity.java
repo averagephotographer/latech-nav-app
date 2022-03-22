@@ -15,6 +15,8 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.SearchView;
 import android.widget.Toast;
@@ -74,11 +76,31 @@ public class MapsActivity extends DrawerBaseActivity
 
         private GoogleMap mMap;
 
-        SearchView searchView;
         Button textView;
         boolean [] selectedService;
         ArrayList<Integer> servList = new ArrayList<>();
         String[] servArray = {"Classrooms", "Professors", "Resources"};
+        String[] countries={"India","Australia","West indies","indonesia","Indiana",
+                "South Africa","England","Bangladesh","Srilanka","singapore"};
+
+        String[][] prof1 = {{"Dr. Turner","","32.52578280595976","-92.64495279639961"},{"Dr. Choi","","",""},{"Dr. Prather","","",""},
+                {"Dr. O'Neal","","",""},{"Professor Lounge","","",""},{"Dr. Cox","","",""},{"Dr. Biggs","","",""},
+                {"Dr. Glisson","","",""},{"Dr. Bowman","","",""},{"Dr. Abdoulahi","","",""},
+                {"Dr. Gates","","",""}, {"Dr. Hyde","","",""}};
+
+        String[][] class1 = {{"","","",""},{"","","",""}};
+
+        String[][] re1 = {{"Admin Office" , "", "32.525778000264914","-92.64488641172647"}};/*,
+                {"Stairs -> Floor 2","","32.52578280595976","-92.64495279639961"}};,{"NETH103: Machinery I","","",""},{"NETH101: Data Mining Rese Lab","","",""},
+                {"NETH100: Power Systems Lab","","",""}, {"NETH102: Electrical Distribution","","",""},
+                {"NETH104: Machinery II","","",""}, {"NETH106: Instrument Room","","",""}, {"Elevator -> Floor 2","","",""},
+                {"NETH118: Storage","","",""},{"Mens Bathroom","","",""},
+                {"Janitor","","",""},{"Women Bathroom","","",""},{"Faculty Men","","",""},{"Conference Room","","",""},
+                {"Storage","","",""},{"The Grid","","",""}, {"Computer Lab I","","",""}, {"Computer Lab II","","",""},
+                {"Storage","","",""},{"Mens Bathroom","","",""}, {"Stairs -> Floor 2","","",""},
+                {"Artificial Intelligence","","",""},{"Stairs -> Floor 2","","",""},{"Optoelectronics Lab","","",""},
+                {"Student Organizations","","",""}, {"Stairs -> Floor 2","","",""}};*/
+
 
         ActivityMapsBinding activityMapBinding;
         @Override
@@ -91,8 +113,6 @@ public class MapsActivity extends DrawerBaseActivity
             SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
             mapFragment.getMapAsync(this);
 
-            searchView = findViewById(R.id.idSearchView);
-
             textView = findViewById(R.id.textView);
 
             selectedService = new boolean[servArray.length];
@@ -102,6 +122,11 @@ public class MapsActivity extends DrawerBaseActivity
             Button floor1 = findViewById(R.id.floor1);
 
             Button floor2 = findViewById(R.id.floor2);
+
+            ArrayAdapter<String> adapter=new ArrayAdapter<String>(this,android.R.layout.simple_dropdown_item_1line,countries);
+            AutoCompleteTextView textView=(AutoCompleteTextView)findViewById(R.id.txtcountries);
+            textView.setThreshold(3);
+            textView.setAdapter(adapter);
 
             oButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -114,10 +139,10 @@ public class MapsActivity extends DrawerBaseActivity
             floor1.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    LatLng nethken = new LatLng(32.52559395625559, -92.64475918225845);
+                    LatLng nethken = new LatLng(32.525641920516314, -92.64477126104399);
 
                     GroundOverlayOptions neth = new GroundOverlayOptions()
-                            .image(BitmapDescriptorFactory.fromResource(R.drawable.nethken))
+                            .image(BitmapDescriptorFactory.fromResource(R.drawable.nethken_floor1))
                             .position(nethken, 76f, 46f);
 
                     mMap.addGroundOverlay(neth);
@@ -131,37 +156,16 @@ public class MapsActivity extends DrawerBaseActivity
             floor2.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    mMap.clear();
-                }
-            });
-
-
-            //Search bar
-            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                @Override
-                public boolean onQueryTextSubmit(String s) {
-                    String location = searchView.getQuery().toString();
-                    List<Address> addressList = null;
-                    if(location != null || !location.equals("")){
-                        Geocoder geocoder = new Geocoder(MapsActivity.this);
-                        try{
-                            addressList = geocoder.getFromLocationName(location,1);
-
-                        }catch (IOException e){
-                            e.printStackTrace();
-                        }
-                        Address address = addressList.get(0);
-                        LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
-                        mMap.addMarker(new MarkerOptions().position(latLng).title(location));
+                    for (int i = 0; i < re1.length; i++) {
+                        double x = Double.parseDouble(re1[i][2]);
+                        double y = Double.parseDouble(re1[i][3]);
+                        LatLng resource = new LatLng(x, y);
+                        mMap.addMarker(new MarkerOptions().position(resource).title(re1[i][0])
+                                .icon(BitmapFromVector(getApplicationContext(), R.drawable.resource_dot)));
                     }
-                    return false;
-                }
-
-                @Override
-                public boolean onQueryTextChange(String s) {
-                    return false;
                 }
             });
+
 
             //Drop down box
             textView.setOnClickListener(new View.OnClickListener() {
@@ -242,8 +246,8 @@ public class MapsActivity extends DrawerBaseActivity
             if(service == "Professors"){
                 return;
             }
-            if(service == "Resources"){
-                return;
+            if(service == "Resources") {
+
             }
         }
 
@@ -272,7 +276,18 @@ public class MapsActivity extends DrawerBaseActivity
             //Set custom json map
             mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.campus));
 
+            googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener()
+            {
+                @Override
+                public void onMapClick(LatLng arg0)
+                {
+                    String cords = arg0.toString();
+                    android.util.Log.i("onMapClick", cords);
+                }
+            });
+
     }
+
 
         //Allows for other icons to be used as markers
         private BitmapDescriptor BitmapFromVector(Context context, int vectorResId) {
