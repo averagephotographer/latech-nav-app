@@ -65,14 +65,18 @@ public class LoginActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         DocumentSnapshot DS = task.getResult();
                         String checkpw;
-                        checkpw = DS.get("password").toString();
-                        System.out.println(checkpw);
-                        if (BCrypt.checkpw(passwordAAAA,checkpw)){
-                            Toast.makeText(LoginActivity.this, "Logged In", Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(getApplicationContext(), MapsActivity.class));
+                        if (DS.get("password") != null) {
+                            checkpw = DS.get("password").toString();
+                            System.out.println(checkpw);
+                            if (BCrypt.checkpw(passwordAAAA, checkpw)) {
+                                Toast.makeText(LoginActivity.this, "Logged In", Toast.LENGTH_SHORT).show();
+                                startActivity(new Intent(getApplicationContext(), MapsActivity.class));
+                            } else {
+                                Toast.makeText(LoginActivity.this, "Error! " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                            }
                         }
-                        else {
-                            Toast.makeText(LoginActivity.this, "Error! " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                        else{
+                            Toast.makeText(LoginActivity.this,"No account found!", Toast.LENGTH_LONG).show();
                         }
                     }
                 });
