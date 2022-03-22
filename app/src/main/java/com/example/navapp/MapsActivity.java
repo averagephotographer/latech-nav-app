@@ -139,6 +139,7 @@ public class MapsActivity extends DrawerBaseActivity
             floor1.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    mMap.clear();
                     LatLng nethken = new LatLng(32.525641920516314, -92.64477126104399);
 
                     GroundOverlayOptions neth = new GroundOverlayOptions()
@@ -156,13 +157,22 @@ public class MapsActivity extends DrawerBaseActivity
             floor2.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    for (int i = 0; i < re1.length; i++) {
+                    mMap.clear();
+                    LatLng nethken = new LatLng(32.525641920516314, -92.64477126104399);
+
+                    GroundOverlayOptions neth = new GroundOverlayOptions()
+                            .image(BitmapDescriptorFactory.fromResource(R.drawable.nethken_floor2))
+                            .position(nethken, 76f, 46f);
+
+                    mMap.addGroundOverlay(neth);
+
+                    /*for (int i = 0; i < re1.length; i++) {
                         double x = Double.parseDouble(re1[i][2]);
                         double y = Double.parseDouble(re1[i][3]);
                         LatLng resource = new LatLng(x, y);
                         mMap.addMarker(new MarkerOptions().position(resource).title(re1[i][0])
                                 .icon(BitmapFromVector(getApplicationContext(), R.drawable.resource_dot)));
-                    }
+                    }*/
                 }
             });
 
@@ -256,7 +266,7 @@ public class MapsActivity extends DrawerBaseActivity
             mMap = googleMap;
 
             //Add nethken overlay
-            LatLng neth = new LatLng(32.52559395625559, -92.64475918225845);
+            LatLng neth = new LatLng(32.525641920516314, -92.64477126104399);
             GroundOverlayOptions nethken = new GroundOverlayOptions()
                     .image(BitmapDescriptorFactory.fromResource(R.drawable.nethken))
                     .position(neth, 76f, 46f);
