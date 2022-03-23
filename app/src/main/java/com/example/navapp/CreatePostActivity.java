@@ -108,7 +108,7 @@ public class CreatePostActivity extends AppCompatActivity {
         public void onBackPressed() {
             new AlertDialog.Builder(this)
                     .setIcon(android.R.drawable.ic_dialog_alert)
-                    .setTitle("Closing Activity")
+                    .setTitle("Not Creating a Post?")
                     .setMessage("Are you sure you want to exit? Post will not be saved!")
                     .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                         @Override

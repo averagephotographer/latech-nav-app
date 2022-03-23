@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -31,6 +32,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText mUsername;
     private EditText mPassword;
     private Button mLogin;
+    TextView dontHaveAcc;
     FirebaseAuth firebaseAuth;
     FirebaseFirestore fStore;
     String userid;
@@ -54,6 +56,15 @@ public class LoginActivity extends AppCompatActivity {
             Intent i = new Intent(LoginActivity.this, MapsActivity.class);
             startActivity(i);
         }
+
+        dontHaveAcc = findViewById(R.id.dontHaveAcc);
+        dontHaveAcc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+                startActivity(intent);
+            }
+        });
 
         mLogin.setOnClickListener(new View.OnClickListener() {
             @Override

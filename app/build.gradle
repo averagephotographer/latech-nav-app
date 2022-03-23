@@ -53,6 +53,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-storage:20.0.1'
     implementation files('src\\main\\java\\com\\example\\navapp\\jBCrypt-0.4.jar')
     implementation files('src\\main\\java\\com\\example\\navapp\\jBCrypt-0.4.jar')
+    implementation 'androidx.compose.foundation:foundation-layout:1.0.5'
 
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.testng:testng:6.9.6'
