@@ -144,7 +144,7 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher {
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if(task.isSuccessful()) {
                                 Toast.makeText(RegisterActivity.this, "User Created", Toast.LENGTH_SHORT).show();
-                                userID = fAuth.getCurrentUser().getUid();
+                                //userID = fAuth.getCurrentUser().getUid();
                                 DocumentReference documentReference = db.collection("user_profile").document(username_str);
                                 documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override

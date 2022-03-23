@@ -90,6 +90,9 @@ public class LoginActivity extends AppCompatActivity {
                                 Toast.makeText(LoginActivity.this, "Error! " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
                             }
                         }
+                        else{
+                            Toast.makeText(LoginActivity.this,"No account found!", Toast.LENGTH_LONG).show();
+                        }
                     }
                 });
 
