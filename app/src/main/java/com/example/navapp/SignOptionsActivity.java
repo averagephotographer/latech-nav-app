@@ -23,7 +23,12 @@ public class SignOptionsActivity extends AppCompatActivity {
 
         signIn_btn = findViewById(R.id.sign_in);
         signUp_btn = findViewById(R.id.sign_up);
-        
+
+        sharedPreferences = getSharedPreferences("login", Context.MODE_PRIVATE);
+        if(sharedPreferences.contains(Username)){
+            Intent i = new Intent(SignOptionsActivity.this, MapsActivity.class);
+            startActivity(i);
+        }
 
 
         signUp_btn.setOnClickListener(new View.OnClickListener() {
