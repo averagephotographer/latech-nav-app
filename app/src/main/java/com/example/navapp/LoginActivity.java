@@ -83,7 +83,7 @@ public class LoginActivity extends AppCompatActivity {
                                 Toast.makeText(LoginActivity.this, "Logged In", Toast.LENGTH_SHORT).show();
                                 SharedPreferences.Editor editor = sharedPreferences.edit();
                                 editor.putString(Username, DS.get("username").toString());
-                                editor.putString(pass_wrd, DS.get("password").toString());
+                                //editor.putString(pass_wrd, DS.get("password").toString());
                                 editor.commit();
                                 startActivity(new Intent(getApplicationContext(), MapsActivity.class));
                             } else {
