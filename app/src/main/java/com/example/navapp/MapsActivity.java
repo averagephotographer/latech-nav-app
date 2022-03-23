@@ -6,6 +6,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -71,6 +72,9 @@ public class MapsActivity extends DrawerBaseActivity
          * @see #onRequestPermissionsResult(int, String[], int[])
          */
         private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
+        SharedPreferences sharedPreferences;
+        public static final String fileName = "login";
+        public static final String Username = "username";
 
         /**
          * Flag indicating whether a requested permission has been denied after returning in
@@ -131,6 +135,12 @@ public class MapsActivity extends DrawerBaseActivity
             super.onCreate(savedInstanceState);
             activityMapBinding = ActivityMapsBinding.inflate(getLayoutInflater());
             setContentView(activityMapBinding.getRoot());
+            sharedPreferences = getSharedPreferences(fileName, Context.MODE_PRIVATE);
+            if(!(sharedPreferences.contains(Username))){
+                Intent i = new Intent(MapsActivity.this, LoginActivity.class);
+                startActivity(i);
+
+            }
             allocateActivityTitle("Map");
 
             SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);

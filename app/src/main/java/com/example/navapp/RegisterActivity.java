@@ -1,8 +1,14 @@
 package com.example.navapp;
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -10,41 +16,85 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import com.canhub.cropper.CropImageView;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.xml.transform.Result;
+import com.canhub.cropper.CropImage;
+import com.google.firebase.storage.UploadTask;
+
+import de.hdodenhof.circleimageview.CircleImageView;
+//import org.mindrot.jbcrypt.*;
+import org.mindrot.jbcrypt.BCrypt;
+
 
 
 public class RegisterActivity extends AppCompatActivity implements TextWatcher {
     private TextView haveAccount_text;
-
-    public static final String DATABASE_NAME = "nav-app";
-    public static final String url = "jdbc:mysql://nav-app.czayyymumdfr.us-east-1.rds.amazonaws.com:3306/nav-app";
-    public static final String username = "admin", password="latechbulldog";
-
-    public static final String TABLE_NAME = "user_profile";
-
-
-
+    private FirebaseFirestore db;
+    private FirebaseAuth fAuth;
+    private ProgressBar progressBarInBackground;
+    private String userID;
+    private CircleImageView circleImageView;
+    private Uri mImageUri;
+    private boolean isPhotoSelected = false;
+    public static final String TAG = "TAG";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.register_activity);
-        haveAccount_text = (TextView) findViewById(R.id.haveAccount);
-        haveAccount_text.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
-            startActivity(intent);
+        db = FirebaseFirestore.getInstance();
+        db.setLoggingEnabled(true);
+
+        fAuth = FirebaseAuth.getInstance();
+        progressBarInBackground = findViewById(R.id.progressBarLoading);
+        circleImageView = findViewById(R.id.circleImageView);
+
+        circleImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    // checks to see if user gave permission to access storage in phone
+                    if (ContextCompat.checkSelfPermission(RegisterActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions(RegisterActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+                    } else {
+                        CropImage.activity()
+                                .setGuidelines(CropImageView.Guidelines.ON)
+                                .setAspectRatio(1, 1)
+                                .start(RegisterActivity.this);
+                    }
+                }
             }
         });
+
+
+        haveAccount_text = (TextView) findViewById(R.id.haveAccount);
+        haveAccount_text.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+                startActivity(intent);
+            }
+        });
+
         EditText email = (EditText)findViewById(R.id.inputEmail);
         EditText input_username = (EditText)findViewById(R.id.inputUsername);
         EditText password = (EditText)findViewById(R.id.inputPassword);
@@ -57,16 +107,80 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher {
                 String email_str = email.getText().toString();
                 String username_str = input_username.getText().toString();
                 String password_str = password.getText().toString();
-                if(!isValidPassword(password.getText().toString())){
+
+                Map<String,Object> user = new HashMap<>();
+                user.put("username", username_str);
+                user.put("email", email_str);
+                if(TextUtils.isEmpty(email_str)) {
+                    email.setError("Email is required!");
+                    return;
+                }
+
+                if(TextUtils.isEmpty(username_str)) {
+                    input_username.setError("Username is required!");
+                    return;
+                }
+
+                if(TextUtils.isEmpty(password_str)) {
+                    password.setError("Password is required!");
+                    return;
+                }
+
+                if(!isValidPassword(password_str)) {
                     Toast.makeText(RegisterActivity.this,"Please input valid combination of password!",Toast.LENGTH_LONG).show();
-                } else if((!password.getText().toString().equals(cpassword.getText().toString()))){
+                }
+
+                else if((!password_str.equals(cpassword.getText().toString()))){
                     Toast.makeText(RegisterActivity.this, "Confirm Password Not Matched", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(RegisterActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
-                    addTemp(username_str, password_str, email_str);
+                }
+
+                // register user into firebase
+                else  {
+                    String hashpwstring = BCrypt.hashpw(password_str,BCrypt.gensalt(13));
+                    user.put("password", hashpwstring);
+                    progressBarInBackground.setVisibility(View.VISIBLE);
+                    fAuth.createUserWithEmailAndPassword(email_str, password_str).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if(task.isSuccessful()) {
+                                Toast.makeText(RegisterActivity.this, "User Created", Toast.LENGTH_SHORT).show();
+                                //userID = fAuth.getCurrentUser().getUid();
+                                DocumentReference documentReference = db.collection("user_profile").document(username_str);
+                                documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Log.d(TAG, "onSuccess: user profile is created for " + userID);
+                                    }
+                                });
+                                startActivity(new Intent(getApplicationContext(),LoginActivity.class));
+                            } else {
+                                Toast.makeText(RegisterActivity.this, "Error! " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                                progressBarInBackground.setVisibility(View.GONE);
+
+                            }
+                        }
+                    });
                 }
             }
         });
+    }
+    
+    // not functionable atm, trying to figure out whats wrong
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if (resultCode == RESULT_OK) {
+                //mImageUri = result.getUri();
+                circleImageView.setImageURI(mImageUri);
+
+                isPhotoSelected = true;
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Toast.makeText(this, "Action canceled", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     @Override
@@ -103,7 +217,7 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher {
     public static boolean isValidPassword(final String password) {
         Pattern pattern;
         Matcher matcher;
-        final String PASSWORD_PATTERN = "^(?=.*[A-Z])(?=.*[!?@#$%^&*()+=,.])(?=\\S+$).{8,}$";
+        final String PASSWORD_PATTERN = "^(?=.*[A-Z])(?=.*[!?@#$%^&*()+=,.<>_/`~-])(?=\\S+$).{8,20}$";
         pattern = Pattern.compile(PASSWORD_PATTERN);
         matcher = pattern.matcher(password);
         return matcher.matches();
@@ -114,23 +228,7 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher {
 
     }
 
-
-    public static void addTemp(String Username, String hashpassword, String Emaillocalname) {
-        new Thread(() -> {
-
-            try {
-                Class.forName("com.mysql.jdbc.Driver");
-                Connection connection = DriverManager.getConnection(url, username, password);
-                Statement statement = connection.createStatement();
-
-                statement.execute("INSERT INTO " + TABLE_NAME + "(username, hashpassword, Emaillocalname) VALUES('" + Username + "', '" + hashpassword + "', '" + Emaillocalname + "')");
-
-                connection.close();
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }).start();
-    }
 }
+
+
 
