@@ -7,6 +7,7 @@
     <ImageView
         android:layout_width="100dp"
         android:layout_height="100dp"
+        android:background="@drawable/cherry"
         android:id="@+id/image"/>
 
     <LinearLayout
