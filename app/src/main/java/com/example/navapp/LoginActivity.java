@@ -1,6 +1,8 @@
 package com.example.navapp;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -32,6 +34,9 @@ public class LoginActivity extends AppCompatActivity {
     FirebaseAuth firebaseAuth;
     FirebaseFirestore fStore;
     String userid;
+    SharedPreferences sharedPreferences;
+    public static final String Username = "username";
+    public static final String pass_wrd = "password";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +48,13 @@ public class LoginActivity extends AppCompatActivity {
         mLogin = findViewById(R.id.login_btn);
         firebaseAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
+        sharedPreferences = getSharedPreferences("login", Context.MODE_PRIVATE);
+
+        if(sharedPreferences.contains(Username)){
+            Intent i = new Intent(LoginActivity.this, MapsActivity.class);
+            startActivity(i);
+        }
+
         mLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -51,7 +63,7 @@ public class LoginActivity extends AppCompatActivity {
                 String passwordAAAA = mPassword.getText().toString();
 
                 if (TextUtils.isEmpty(username)) {
-                    mUsername.setError("Email is required!");
+                    mUsername.setError("Username is required!");
                     return;
                 }
                 if (TextUtils.isEmpty(passwordAAAA)) {
@@ -65,11 +77,14 @@ public class LoginActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         DocumentSnapshot DS = task.getResult();
                         String checkpw;
-                        if (DS.get("password") != null) {
+                        if (DS.exists()) {
                             checkpw = DS.get("password").toString();
-                            System.out.println(checkpw);
                             if (BCrypt.checkpw(passwordAAAA, checkpw)) {
                                 Toast.makeText(LoginActivity.this, "Logged In", Toast.LENGTH_SHORT).show();
+                                SharedPreferences.Editor editor = sharedPreferences.edit();
+                                editor.putString(Username, DS.get("username").toString());
+                                editor.putString(pass_wrd, DS.get("password").toString());
+                                editor.commit();
                                 startActivity(new Intent(getApplicationContext(), MapsActivity.class));
                             } else {
                                 Toast.makeText(LoginActivity.this, "Error! " + task.getException().getMessage(), Toast.LENGTH_LONG).show();

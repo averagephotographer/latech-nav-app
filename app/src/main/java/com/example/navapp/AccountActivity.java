@@ -1,6 +1,8 @@
 package com.example.navapp;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TextView;
@@ -21,7 +23,11 @@ public class AccountActivity extends AppCompatActivity {
     Button log_out;
     FirebaseAuth fAuth;
     FirebaseFirestore fStore;
-    String userID;
+    //String userID;
+    SharedPreferences sharedPreferences;
+    public static final String Username = "username";
+    public static final String pass_wrd = "password";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,9 +40,11 @@ public class AccountActivity extends AppCompatActivity {
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
 
-        userID = fAuth.getCurrentUser().getUid();
+        //userID = fAuth.getCurrentUser().getUid();
+        sharedPreferences = getApplicationContext().getSharedPreferences("login", Context.MODE_PRIVATE);
+        String name = sharedPreferences.getString("username", "");
 
-        DocumentReference documentReference = fStore.collection("user_profile").document(userID);
+        DocumentReference documentReference = fStore.collection("user_profile").document(name);
         documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException error) {
