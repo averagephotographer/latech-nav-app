@@ -3,8 +3,10 @@ package com.example.navapp;
 import static com.example.navapp.RegisterActivity.TAG;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -47,6 +49,7 @@ public class CreatePostActivity extends AppCompatActivity {
     EditText user_input;
     EditText write_title;
     ImageView postImage;
+    SharedPreferences sharedPreferences;
     StorageReference storageReference;
     FirebaseFirestore firestore;
     FirebaseAuth firebaseAuth;
@@ -64,7 +67,6 @@ public class CreatePostActivity extends AppCompatActivity {
         postImage = findViewById(R.id.postImage);
         firestore = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
-        currentUserID = firebaseAuth.getCurrentUser().getUid();
         /*
         postImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,6 +81,9 @@ public class CreatePostActivity extends AppCompatActivity {
                 String title = write_title.getText().toString().trim();
                 String description = user_input.getText().toString().trim();
 
+                sharedPreferences = getApplicationContext().getSharedPreferences("login", Context.MODE_PRIVATE);
+                String name = sharedPreferences.getString("username", "");
+
                 Map<String,Object> posts = new HashMap<>();
                 posts.put("title", title);
                 posts.put("description", description);
@@ -86,7 +91,7 @@ public class CreatePostActivity extends AppCompatActivity {
                 if(TextUtils.isEmpty(title)) {
                     Toast.makeText(CreatePostActivity.this, "Please write a title before posting!", Toast.LENGTH_LONG).show();
                 } else {
-                    DocumentReference documentReference = firestore.collection("posts").document(currentUserID);
+                    DocumentReference documentReference = firestore.collection("posts").document(name);
                     documentReference.set(posts).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
