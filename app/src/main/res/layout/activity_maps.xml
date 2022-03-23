@@ -65,5 +65,4 @@
         app:layout_constraintBottom_toTopOf="@+id/floor1"
         app:layout_constraintEnd_toEndOf="parent" />
 
-
 </androidx.constraintlayout.widget.ConstraintLayout>

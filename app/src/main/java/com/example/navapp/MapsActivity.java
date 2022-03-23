@@ -18,10 +18,13 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.SearchView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -40,6 +43,7 @@ import com.google.android.gms.maps.model.GroundOverlayOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
@@ -90,7 +94,7 @@ public class MapsActivity extends DrawerBaseActivity
 
         String[][] class1 = {{"","","",""},{"","","",""}};
 
-        String[][] re1 = {{"Admin Office" , "", "32.525778000264914","-92.64488641172647"}};/*,
+        String[][] re1 = {{"Admin Office" , "Need assistance?", "32.525778000264914","-92.64488641172647"}};/*,
                 {"Stairs -> Floor 2","","32.52578280595976","-92.64495279639961"}};,{"NETH103: Machinery I","","",""},{"NETH101: Data Mining Rese Lab","","",""},
                 {"NETH100: Power Systems Lab","","",""}, {"NETH102: Electrical Distribution","","",""},
                 {"NETH104: Machinery II","","",""}, {"NETH106: Instrument Room","","",""}, {"Elevator -> Floor 2","","",""},
@@ -166,13 +170,40 @@ public class MapsActivity extends DrawerBaseActivity
 
                     mMap.addGroundOverlay(neth);
 
-                    /*for (int i = 0; i < re1.length; i++) {
+
+                    for (int i = 0; i < re1.length; i++) {
                         double x = Double.parseDouble(re1[i][2]);
                         double y = Double.parseDouble(re1[i][3]);
                         LatLng resource = new LatLng(x, y);
                         mMap.addMarker(new MarkerOptions().position(resource).title(re1[i][0])
-                                .icon(BitmapFromVector(getApplicationContext(), R.drawable.resource_dot)));
-                    }*/
+                                .icon(BitmapFromVector(getApplicationContext(), R.drawable.resource_dot))
+                                .snippet(re1[i][1]));
+
+                        if (mMap != null){
+                        mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+
+                            @Override
+                            public View getInfoWindow(@NonNull Marker marker) {
+                                return null;
+                            }
+
+                            @Override
+                            public View getInfoContents(@NonNull Marker marker) {
+
+                                View row = getLayoutInflater().inflate(R.layout.custom_address,null);
+                                TextView title = (TextView) row.findViewById(R.id.title);
+                                TextView snippet = (TextView) row.findViewById(R.id.snippet);
+                                ImageView image = (ImageView) row.findViewById(R.id.image);
+
+                                title.setText(marker.getTitle());
+                                snippet.setText(marker.getSnippet());
+
+                                return row;
+                            }
+                        });
+                    }
+
+                    }
                 }
             });
 
@@ -250,6 +281,7 @@ public class MapsActivity extends DrawerBaseActivity
         //PLaces markers for services
         public void plotMarker (String service){
             if(service == "Classrooms"){
+
                 return;
             }
 
