@@ -42,6 +42,12 @@ public class AccountActivity extends AppCompatActivity {
 
         //userID = fAuth.getCurrentUser().getUid();
         sharedPreferences = getApplicationContext().getSharedPreferences("login", Context.MODE_PRIVATE);
+        //sharedPreferences = getSharedPreferences("login", Context.MODE_PRIVATE);
+
+        if(!(sharedPreferences.contains(Username))){
+            Intent i = new Intent(AccountActivity.this, LoginActivity.class);
+            startActivity(i);
+        }
         String name = sharedPreferences.getString("username", "");
 
         DocumentReference documentReference = fStore.collection("user_profile").document(name);
