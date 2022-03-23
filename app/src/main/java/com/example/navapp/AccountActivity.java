@@ -56,6 +56,11 @@ public class AccountActivity extends AppCompatActivity {
         log_out.setOnClickListener(new android.view.View.OnClickListener() {
             @Override
             public void onClick(android.view.View view) {
+                sharedPreferences = getApplicationContext().getSharedPreferences("login", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.remove("username");
+                editor.commit();
+
                 FirebaseAuth.getInstance().signOut();
                 startActivity(new Intent(getApplicationContext(), LoginActivity.class));
                 finish();
