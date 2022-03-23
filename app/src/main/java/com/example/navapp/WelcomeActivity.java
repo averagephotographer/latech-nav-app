@@ -23,11 +23,6 @@ public class WelcomeActivity extends FragmentActivity {
 
         // setting up button from activity_welcome
         Button continue_button = findViewById(R.id.btn_continue);
-        sharedPreferences = getSharedPreferences("login", Context.MODE_PRIVATE);
-        if(sharedPreferences.contains(Username)){
-            Intent i = new Intent(WelcomeActivity.this, MapsActivity.class);
-            startActivity(i);
-        }
         continue_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
