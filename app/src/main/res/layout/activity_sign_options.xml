@@ -7,6 +7,19 @@
     android:background="#3D74B8"
     tools:context=".SignOptionsActivity">
 
+    <ImageView
+        android:id="@+id/imageView7"
+        android:layout_width="400dp"
+        android:layout_height="1000dp"
+        android:layout_marginBottom="83dp"
+        android:foreground="@drawable/secondary_background"
+        android:src="@drawable/secondary_background"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.454"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.005" />
+
     <com.google.android.material.button.MaterialButton
         android:id="@+id/sign_up"
         android:layout_width="200dp"
@@ -18,8 +31,9 @@
         android:paddingEnd="45dp"
         android:text="@string/Sign_Up"
         android:textColor="@color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:cornerRadius="24dp"
 
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
@@ -37,6 +51,7 @@
         android:paddingEnd="45dp"
         android:text="@string/Sign_in"
         android:textColor="@color/white"
+        app:cornerRadius="24dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"

@@ -8,6 +8,17 @@
     android:backgroundTint="@color/blue"
     tools:context=".RegisterActivity">
 
+    <ImageView
+        android:id="@+id/imageView9"
+        android:layout_width="400dp"
+        android:layout_height="1000dp"
+        android:foreground="@drawable/secondary_background"
+        android:src="@drawable/secondary_background"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.454"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/circleImageView"
         android:layout_width="110dp"
@@ -24,7 +35,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/inputEmail"
         android:layout_margin="10dp"
-        android:background="#100FFFFF"
+        android:background="@drawable/rounded_corner"
         android:drawableLeft="@drawable/ic_baseline_vpn_key_24"
         android:drawablePadding="20dp"
         android:hint="Confirm Password"
@@ -34,7 +45,7 @@
         android:textColorHint="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.157"
+        app:layout_constraintHorizontal_bias=".157"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/inputPassword"
         app:layout_constraintVertical_bias="0.0" />
@@ -45,7 +56,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/inputEmail"
         android:layout_margin="10dp"
-        android:background="#100FFFFF"
+        android:background="@drawable/rounded_corner"
         android:drawableLeft="@drawable/ic_baseline_vpn_key_24"
         android:drawablePadding="20dp"
         android:hint="Enter Password"
@@ -86,14 +97,15 @@
 
     <TextView
         android:id="@+id/login_instructions"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="359dp"
+        android:layout_height="35dp"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="20dp"
         android:text="Your password must be at least 8 characters with at least 1 upper case letter and 1 special character!"
         android:textAlignment="center"
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/progressBar" />
 
@@ -118,7 +130,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:layout_marginTop="40dp"
-        android:background="#100FFFFF"
+        android:background="@drawable/rounded_corner"
         android:drawableLeft="@drawable/ic_baseline_email_24"
         android:drawablePadding="20dp"
         android:hint="Enter Email"
@@ -139,7 +151,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:background="#100FFFFF"
+        android:background="@drawable/rounded_corner"
         android:drawableLeft="@drawable/ic_baseline_person_outline_24"
         android:drawablePadding="20dp"
         android:ems="10"
@@ -165,7 +177,9 @@
         android:text="Register"
         android:textColor="@color/white"
         android:textColorHint="@color/white"
+        app:cornerRadius="24dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.448"
         app:layout_constraintStart_toStartOf="@+id/login_instructions"
         app:layout_constraintTop_toBottomOf="@+id/login_instructions" />
 

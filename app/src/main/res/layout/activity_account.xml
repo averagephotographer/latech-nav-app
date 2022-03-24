@@ -93,6 +93,7 @@
         android:layout_height="49dp"
         android:backgroundTint="@color/red"
         android:text="Log out"
+        app:cornerRadius="24dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
