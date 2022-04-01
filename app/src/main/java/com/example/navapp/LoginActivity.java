@@ -97,7 +97,9 @@ public class LoginActivity extends AppCompatActivity {
                                 //editor.putString(pass_wrd, DS.get("password").toString());
                                 editor.commit();
                                 startActivity(new Intent(getApplicationContext(), MapsActivity.class));
-                            } else {
+                            }
+
+                            else {
                                 Toast.makeText(LoginActivity.this, "Error! " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
                             }
                         }

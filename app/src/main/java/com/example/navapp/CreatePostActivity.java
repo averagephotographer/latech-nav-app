@@ -92,7 +92,7 @@ public class CreatePostActivity extends AppCompatActivity {
                 if(TextUtils.isEmpty(title)) {
                     Toast.makeText(CreatePostActivity.this, "Please write a title before posting!", Toast.LENGTH_LONG).show();
                 } else {
-                    DocumentReference documentReference = firestore.collection("posts").document(name).collection("myposts").document();
+                    DocumentReference documentReference = firestore.collection("posts").document(name).collection("myposts").document(title);
                     documentReference.set(posts).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {

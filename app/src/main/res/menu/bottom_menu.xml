@@ -17,12 +17,4 @@
         android:tint="@color/blue"/>
 
 
-    <item
-        android:id="@+id/Arrow"
-        android:title="send"
-        app:titleTextColor="@color/blue"
-        app:showAsAction="ifRoom"
-        android:icon="@drawable/send_arrow"
-        android:tint="@color/blue"/>
-
 </menu>
