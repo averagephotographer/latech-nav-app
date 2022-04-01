@@ -85,13 +85,14 @@ public class CreatePostActivity extends AppCompatActivity {
                 String name = sharedPreferences.getString("username", "");
 
                 Map<String,Object> posts = new HashMap<>();
+                //Map<String, Object> myposts = new HashMap<>();
                 posts.put("title", title);
                 posts.put("description", description);
 
                 if(TextUtils.isEmpty(title)) {
                     Toast.makeText(CreatePostActivity.this, "Please write a title before posting!", Toast.LENGTH_LONG).show();
                 } else {
-                    DocumentReference documentReference = firestore.collection("posts").document(name);
+                    DocumentReference documentReference = firestore.collection("posts").document(name).collection("myposts").document();
                     documentReference.set(posts).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
