@@ -22,10 +22,24 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <ImageView
+        android:id="@+id/imageView8"
+        android:layout_width="400dp"
+        android:layout_height="1000dp"
+        android:layout_marginBottom="83dp"
+        android:foreground="@drawable/forum_app_logo_long"
+        android:src="@drawable/forum_app_logo_long"
+        app:layout_constraintBottom_toTopOf="@+id/text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.454"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.005" />
+
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_continue"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="300dp"
+        android:layout_height="70dp"
         android:backgroundTint="@color/red"
         android:drawableEnd="@drawable/arrow_forward"
         android:drawableTint="@color/white"
@@ -41,19 +55,5 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text"
         app:layout_constraintVertical_bias="0.387" />
-
-    <ImageView
-        android:id="@+id/imageView8"
-        android:layout_width="400dp"
-        android:layout_height="1000dp"
-        android:layout_marginBottom="83dp"
-        android:foreground="@drawable/forum_app_logo_long"
-        android:src="@drawable/forum_app_logo_long"
-        app:layout_constraintBottom_toTopOf="@+id/text"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.454"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.005" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -203,15 +203,18 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher {
         if (password.isEmpty()) {
             strengthView.setText("");
             progressBar.setProgress(0);
+            strengthView.setText("");
             return;
         }
         if (isValidPassword(password)){
             progressBar.setProgress(100);
             strengthView.setText("Strong");
+            strengthView.setTextColor(getResources().getColor(R.color.green));
         }
         else {
             progressBar.setProgress(0);
             strengthView.setText("Weak");
+            strengthView.setTextColor(getResources().getColor(R.color.light_red));
         }
     }
     public static boolean isValidPassword(final String password) {
