@@ -19,7 +19,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="239dp"
+            android:layout_height="280dp"
             android:background="@color/white">
 
             <TextView
@@ -30,6 +30,7 @@
                 android:text="Username"
                 android:textColor="@color/black"
                 android:textSize="20sp"
+                android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.052"
                 app:layout_constraintStart_toStartOf="parent"
@@ -44,7 +45,7 @@
                 android:text="03/31/2022"
                 android:textColor="@color/black"
                 android:textSize="15sp"
-                app:layout_constraintBottom_toTopOf="@+id/caption_tv"
+                app:layout_constraintBottom_toTopOf="@+id/show_description"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.05"
                 app:layout_constraintStart_toStartOf="parent"
@@ -52,7 +53,7 @@
                 app:layout_constraintVertical_bias="0.0" />
 
             <TextView
-                android:id="@+id/caption_tv"
+                android:id="@+id/show_description"
                 android:layout_width="386dp"
                 android:layout_height="113dp"
                 android:text="Caption"
@@ -63,7 +64,21 @@
                 app:layout_constraintHorizontal_bias="0.444"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.603" />
+                app:layout_constraintVertical_bias="0.712" />
+
+            <TextView
+                android:id="@+id/show_title"
+                android:layout_width="369dp"
+                android:layout_height="36dp"
+                android:text="Caption"
+                android:textColor="@color/black"
+                android:textSize="15sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.153"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.311" />
 
             <ImageView
                 android:id="@+id/like_btn"
@@ -72,7 +87,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/caption_tv"
+                app:layout_constraintTop_toBottomOf="@+id/show_description"
                 app:srcCompat="@drawable/ic_baseline_favorite_border_24" />
 
             <TextView
