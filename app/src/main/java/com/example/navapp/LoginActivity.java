@@ -91,12 +91,36 @@ public class LoginActivity extends AppCompatActivity {
                         if (DS.exists()) {
                             checkpw = DS.get("password").toString();
                             if (BCrypt.checkpw(passwordAAAA, checkpw)) {
-                                Toast.makeText(LoginActivity.this, "Logged In", Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(LoginActivity.this, "Logged In", Toast.LENGTH_SHORT).show();
                                 SharedPreferences.Editor editor = sharedPreferences.edit();
                                 editor.putString(Username, DS.get("username").toString());
                                 //editor.putString(pass_wrd, DS.get("password").toString());
                                 editor.commit();
-                                startActivity(new Intent(getApplicationContext(), MapsActivity.class));
+                                firebaseAuth.signInWithEmailAndPassword(DS.get("email").toString(),passwordAAAA).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<AuthResult> task) {
+                                        if (task.isSuccessful())
+                                        {
+                                            FirebaseUser user = firebaseAuth.getCurrentUser();
+                                            if (user.isEmailVerified()) {
+                                                Toast.makeText(LoginActivity.this, "Logged In", Toast.LENGTH_SHORT).show();
+                                                System.out.println("samuel 'dabuz' buzby");
+                                                startActivity(new Intent(getApplicationContext(), MapsActivity.class));
+                                            }
+                                            else
+                                            {
+                                                Toast.makeText(LoginActivity.this, "Please Verify your email", Toast.LENGTH_SHORT).show();
+                                            }
+
+                                        }
+                                        else{
+                                            Toast.makeText(LoginActivity.this, "login failed", Toast.LENGTH_SHORT).show();
+                                            System.out.println("no bitches?");
+
+                                        }
+                                    }
+                                });
+                                //startActivity(new Intent(getApplicationContext(), MapsActivity.class));
                             } else {
                                 Toast.makeText(LoginActivity.this, "Error! " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
                             }
