@@ -6,16 +6,26 @@ import com.gimbal.android.Gimbal;
 import com.gimbal.android.Communication;
 import com.gimbal.android.CommunicationListener;
 import com.gimbal.android.CommunicationManager;
+import com.gimbal.android.BeaconEventListener;
+import com.gimbal.android.BeaconSighting;
+import com.gimbal.android.BeaconManager;
 
 public class Beacons extends Application {
-    private static final String GIMBAL_API_KEY = "16cfe38cfcda5d67c9f559e2b63e6d1c";
-
-    private static final String GIMBAL_APP_API_KEY = "YOUR APP'S API KEY HERE";
+    private static final String GIMBAL_API_KEY = "3f3ef8ff-52f3-46d3-9a8b-d784680b4c85";
 
     public void onCreate(Bundle savedInstanceState) {
 
         Gimbal.setApiKey(this, GIMBAL_API_KEY);
 
+        BeaconManager manager = new BeaconManager();
+
+        manager.startListening();
+
+    }
+
+    public void onBeaconSighting(BeaconSighting sighting) {
+        sighting.getRSSI();
+        // This will be invoked upon beacon sighting
     }
 
 
