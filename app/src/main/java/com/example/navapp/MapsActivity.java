@@ -165,7 +165,7 @@ public class MapsActivity extends DrawerBaseActivity
             oButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(view.getContext(), GroundOverlayActivity.class);
+                    Intent intent = new Intent(view.getContext(), BeaconsActivity.class);
                     view.getContext().startActivity(intent);
                 }
             });
