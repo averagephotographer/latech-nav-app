@@ -1,14 +1,15 @@
 package com.example.navapp;
 
-import static com.example.navapp.RegisterActivity.TAG;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
@@ -16,30 +17,20 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.canhub.cropper.CropImage;
-import com.canhub.cropper.CropImageView;
-import com.example.navapp.databinding.ActivityMainBinding;
+
+import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
@@ -48,16 +39,17 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class CreatePostActivity extends AppCompatActivity {
     TextView create_post;
     EditText user_input;
     EditText write_title;
     ImageView postImage;
     SharedPreferences sharedPreferences;
-    StorageReference postImageRef;
+    StorageReference storageReference;
     FirebaseFirestore firestore;
     FirebaseAuth firebaseAuth;
-    FirebaseUser mUser;
     Uri imageUri;
 
     @Override
@@ -71,32 +63,18 @@ public class CreatePostActivity extends AppCompatActivity {
         postImage = findViewById(R.id.postImage);
         firestore = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
-        postImageRef = FirebaseStorage.getInstance().getReference().child("images");
+        storageReference = FirebaseStorage.getInstance().getReference("image");
 
-        ActivityResultLauncher<Intent> someActivityResultLauncher = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(),
-                new ActivityResultCallback<ActivityResult>() {
-                    @Override
-                    public void onActivityResult(ActivityResult result) {
-                        if (result.getResultCode() == Activity.RESULT_OK) {
-                            // There are no request codes
-                            Intent data = result.getData();
-                            imageUri = data.getData();
-                            postImage.setImageURI(imageUri);
-                        }
-                    }
-                });
         postImage.setOnClickListener(new View.OnClickListener() {
              @Override
              public void onClick(View v) {
-                 //Create Intent
-                 Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                 intent.setType("image/*");
-                 intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
-                 someActivityResultLauncher.launch(intent);
+                 ImagePicker.with(CreatePostActivity.this)
+                         .crop()	    			//Crop image(Optional), Check Customization for more option
+                         .compress(1024)			//Final image size will be less than 1 MB(Optional)
+                         .maxResultSize(1080, 1080)	//Final image resolution will be less than 1080 x 1080(Optional)
+                         .start();
              }
         });
-
 
 
         create_post.setOnClickListener(new View.OnClickListener() {
@@ -105,35 +83,36 @@ public class CreatePostActivity extends AppCompatActivity {
                 String title = write_title.getText().toString().trim();
                 String description = user_input.getText().toString().trim();
 
+
                 sharedPreferences = getApplicationContext().getSharedPreferences("login", Context.MODE_PRIVATE);
                 String name = sharedPreferences.getString("username", "");
 
                 Map<String,Object> posts = new HashMap<>();
-
+                posts.put("title", title);
+                posts.put("description", description);
+                Date date = new Date();
+                SimpleDateFormat formatter = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
+                String strDate = formatter.format(date);
+                posts.put("datePost", strDate);
                 if(TextUtils.isEmpty(title)) {
                     Toast.makeText(CreatePostActivity.this, "Please write a title before posting!", Toast.LENGTH_LONG).show();
                 }
                 else {
-                    postImageRef.putFile(imageUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                    storageReference.child(name).putFile(imageUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
                             if (task.isSuccessful()) {
-                                postImageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                storageReference.child(name).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                     @Override
                                     public void onSuccess(Uri uri) {
-                                        Date date = new Date();
-                                        SimpleDateFormat formatter = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
-                                        String strDate = formatter.format(date);
-                                        posts.put("title", title);
-                                        posts.put("description", description);
                                         posts.put("imageURL", uri.toString());
-                                        posts.put("datePost", strDate);
 
                                     }
                                 });
                             }
                         }
                     });
+
                     DocumentReference documentReference = firestore.collection("posts").document(name).collection("myposts").document(title);
                     documentReference.set(posts).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
@@ -146,6 +125,16 @@ public class CreatePostActivity extends AppCompatActivity {
             }});
 
         }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (data != null && data.getData() != null) {
+            imageUri = data.getData();
+            postImage.setImageURI(imageUri);
+        }
+    }
+
 
     @Override
         public void onBackPressed() {
