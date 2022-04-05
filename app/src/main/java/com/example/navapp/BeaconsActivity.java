@@ -70,7 +70,6 @@ public class BeaconsActivity extends AppCompatActivity {
 
         public void onBeaconSighting(BeaconSighting sighting, List<Visit> visits) {
             // This will be invoked when a beacon assigned to a place within a current visit is sighted.
-            android.util.Log.i("beacon name", .getName());
         }
     };
 
