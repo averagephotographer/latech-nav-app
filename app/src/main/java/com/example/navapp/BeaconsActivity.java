@@ -50,28 +50,28 @@ public class BeaconsActivity extends AppCompatActivity {
                 android.util.Log.i("beacon2", String.format("", beaconSighting.getRSSI()));
             }
         });
+
+        PlaceEventListener placeEventListener = new PlaceEventListener() {
+
+            @Override
+            public void onVisitStart(Visit visit) {
+
+                super.onVisitStart(visit);
+                //do anything
+            }
+
+            @Override
+            public void onVisitEnd(Visit visit) {
+
+                super.onVisitEnd(visit);
+                //do anything
+            }
+
+            public void onBeaconSighting(BeaconSighting sighting, List<Visit> visits) {
+                // This will be invoked when a beacon assigned to a place within a current visit is sighted.
+            }
+        };
     }
-
-    PlaceEventListener placeEventListener = new PlaceEventListener() {
-
-        @Override
-        public void onVisitStart(Visit visit) {
-
-            super.onVisitStart(visit);
-            //do anything
-        }
-
-        @Override
-        public void onVisitEnd(Visit visit) {
-
-            super.onVisitEnd(visit);
-            //do anything
-        }
-
-        public void onBeaconSighting(BeaconSighting sighting, List<Visit> visits) {
-            // This will be invoked when a beacon assigned to a place within a current visit is sighted.
-        }
-    };
 
     public void onVisitStart(Visit visit) {
         // This will be invoked when a place is entered
