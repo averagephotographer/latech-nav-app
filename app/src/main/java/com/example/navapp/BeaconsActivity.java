@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.gimbal.android.Beacon;
 import com.gimbal.android.Gimbal;
 import com.gimbal.android.Communication;
 import com.gimbal.android.CommunicationListener;
@@ -12,10 +13,13 @@ import com.gimbal.android.BeaconEventListener;
 import com.gimbal.android.BeaconSighting;
 import com.gimbal.android.BeaconManager;
 
-import com.gimbal.android.PlaceEventListener;
 import com.gimbal.android.Place;
+import com.gimbal.android.PlaceEventListener;
+import com.gimbal.android.PlaceManager;
 import com.gimbal.android.Visit;
 import com.gimbal.location.established.Location;
+
+import java.util.List;
 
 
 public class BeaconsActivity extends AppCompatActivity {
@@ -25,24 +29,29 @@ public class BeaconsActivity extends AppCompatActivity {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         Gimbal.setApiKey(this.getApplication(), GIMBAL_API_KEY);
+        Gimbal.start();
 
         BeaconManager manager = new BeaconManager();
-
         manager.startListening();
+
+        android.util.Log.i("place_manager", "" + PlaceManager.getInstance().currentVisits());
     }
 
     public void onVisitStart(Visit visit) {
         // This will be invoked when a place is entered
-        android.util.Log.i("Notification: ", "Inside onVisitStart");
+        android.util.Log.i("Notification ", "Inside onVisitStart");
     }
 
 
     // This will be invoked upon beacon sighting
-    public void onBeaconSighting(BeaconSighting sighting) {
-        sighting.getBeacon();
+    public void onBeaconSighting(BeaconSighting sighting, List<Visit> visits) {
+        Beacon beacon = sighting.getBeacon();
+        android.util.Log.i("beacon name", beacon.getName());
         android.util.Log.i("RSSI: ", sighting.getRSSI().toString());
         android.util.Log.i("Beacon Name: ", sighting.getBeacon().toString());
+        android.util.Log.i("visits", visits.toString());
     }
 
     public void locationDetected(Location location) {
