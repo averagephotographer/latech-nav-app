@@ -94,10 +94,10 @@ public class MapsActivity extends DrawerBaseActivity
         String[] countries={"India","Australia","West indies","indonesia","Indiana",
                 "South Africa","England","Bangladesh","Srilanka","singapore"};
 
-        String[][] prof1 = {{"Dr. Turner","","32.52577997908046","-92.64494910836221"},{"Dr. Choi","","32.525781675208066","-92.64499101787806"},{"Dr. Prather","","32.52578337133561","-92.64502856880426"},
-                {"Dr. O'Neal","","32.52578478477521","-92.64506410807371"},{"Dr. Cox","","32.52551481740722","-92.64453705400229"},{"Dr. Biggs","","32.525479481304224","-92.64453705400229"},
-                {"Dr. Glisson","","32.52558124924317","-92.64442943036556"},{"Dr. Bowman","","32.52576584468266","-92.64450687915087"},{"Dr. Abdoulahi","","32.525768106186476","-92.64454644173385"},
-                {"Dr. Gates","","32.52576980231428","-92.64459673315288"}, {"Dr. Hyde","","32.525772346505946","-92.64470033347605"}};
+        String[][] prof1 = {{"Dr. Galen Turner","Professor, Academic Director for Mathematics and Statistics","32.52577997908046","-92.64494910836221"},{"Dr. Ben Choi","Associate Professor, Computer Science","32.525781675208066","-92.64499101787806"},{"Kyle Prather","Creative Development Director, Thingery; Adjunct Instructor, Computer Science","32.52578337133561","-92.64502856880426"},
+                {"Dr. Michael O’Neal","Professor, Academic Director for Computer Science, Cyber Engineering, and Electrical Engineering","32.52578478477521","-92.64506410807371"},{"Dr. Mickey Cox","Professor","32.52551481740722","-92.64453705400229"},{"Justin Biggs","","32.525479481304224","-92.64453705400229"},
+                {"Dr. Brad Glisson","Associate Professor, Computer Science","32.52558124924317","-92.64442943036556"},{"Thomas Bowman","Lecturer","32.52576584468266","-92.64450687915087"},{"Dr. Ibrahim Abdoulahi","Lecturer, Computer Science","32.525768106186476","-92.64454644173385"},
+                {"Dr. Miguel Gates","Program Chair, Lecturer","32.52576980231428","-92.64459673315288"}, {"Dr. Johnathan Hyde","Professor, Computer Science","32.525772346505946","-92.64470033347605"}};
 
         String[][] class1 = {{"NETH105","","32.52568132093739","-92.64510601758957"},{"NETH120","","32.525668882653775","-92.64491591602562"},
                 {"Tom Emory Lecture Hall","","32.5255343229301","-92.64472112059592"},{"NETH153","","32.52564146188608","-92.64442540705204"}};
@@ -113,12 +113,12 @@ public class MapsActivity extends DrawerBaseActivity
                 {"Artificial Intelligence","","32.52552160193739","-92.64443177729844"},{"Optoelectronics Lab","","32.52576273511486","-92.64445658773184"},
                 {"Student Organizations","","32.52576838887443","-92.64465440064669"}};
 
-        String[][] prof2 = {{"Dr. Hartmann","","32.52578817703018","-92.6450765132904"}, {"Dr. El-Awadi","","32.52578704627854","-92.64502689242363"},
-                {"Dr. Bhattari","","32.5257859155269","-92.64498800039291"}, {"Dr. Hutchinson","","32.5257861982148","-92.64495078474283"}, {"Dr. Chen","","32.52578082714428","-92.64491323381662"},
-                {"Dr. Green","","32.52578082714428","-92.64487367123365"},{"Dr. Liu","","32.52578082714428","-92.64484014362097"},{"Dr. Nassar","","32.52577884832872","-92.64480259269475"},
-                {"Dr. Cox","","32.525774608009584","-92.64470435678959"},{"Dr. Dai","","32.525774608009584","-92.64459773898123"},{"Dr. Chowriappa","","32.525771215754105","-92.64455180615187"},
-                {"Dr. Box","","32.525769236938345","-92.64451425522566"},{"Dr. Cherry","","32.52576754081052","-92.64447435736656"},{"Dr. Greechie","","32.52576754081052","-92.64444317668676"},
-                {"Dr. Min", "", "32.52559001258808","-92.64442641288042"}};
+        String[][] prof2 = {{"Dr. Matthew Hartmann","Program Chair and Lecturer","32.52578817703018","-92.6450765132904"}, {"Zakaria El-Awadi","","32.52578704627854","-92.64502689242363"},
+                {"Dr. Prashanna Bhattari","Assistant Professor","32.5257859155269","-92.64498800039291"}, {"Aaron Hutchinson","Assistant Professor","32.5257861982148","-92.64495078474283"}, {"Dr. Jinyuan Chen","Assistant Professor","32.52578082714428","-92.64491323381662"},
+                {"Nathan Green","Assistant Professor","32.52578082714428","-92.64487367123365"},{"Dr. Don Liu","Professor","32.52578082714428","-92.64484014362097"},{"Dr. Raj Nassar","Professor Emeritus","32.52577884832872","-92.64480259269475"},
+                {"Dr. Weizhong Dai","Professor – Mathematics and Statistics, Program Chair – Computational Analysis Modeling","32.525774608009584","-92.64459773898123"},{"Dr. Pradeep Chowriappa","Assistant Professor","32.525771215754105","-92.64455180615187"},
+                {"Dr. Kevin Cherry","Lecturer","32.52576754081052","-92.64447435736656"},{"Dr. Richard Greechie","Professor Emeritus","32.52576754081052","-92.64444317668676"},
+                {"Dr. Manki Min", "Associate Professor", "32.52559001258808","-92.64442641288042"}};
 
         String[][] class2 = {{"NETH209","","32.52568697470208","-92.64510668814181"},{"NETH243","","32.52565700974508","-92.64442473649979"},
                 {"NETH244","","32.525579553111804","-92.64452900737524"},{"NETH216","","32.52567905943139","-92.64496352523565"}};
