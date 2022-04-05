@@ -34,10 +34,45 @@ public class BeaconsActivity extends AppCompatActivity {
         Gimbal.start();
 
         BeaconManager manager = new BeaconManager();
+
         manager.startListening();
 
         android.util.Log.i("place_manager", "" + PlaceManager.getInstance().currentVisits());
+
+        BeaconManager bm = new BeaconManager();
+        bm.addListener(new BeaconEventListener() {
+            @Override
+            public void onBeaconSighting(BeaconSighting beaconSighting) {
+
+                super.onBeaconSighting(beaconSighting);
+
+                android.util.Log.i("beacon1", beaconSighting.getBeacon().toString());
+                android.util.Log.i("beacon2", String.format("", beaconSighting.getRSSI()));
+            }
+        });
     }
+
+    PlaceEventListener placeEventListener = new PlaceEventListener() {
+
+        @Override
+        public void onVisitStart(Visit visit) {
+
+            super.onVisitStart(visit);
+            //do anything
+        }
+
+        @Override
+        public void onVisitEnd(Visit visit) {
+
+            super.onVisitEnd(visit);
+            //do anything
+        }
+
+        public void onBeaconSighting(BeaconSighting sighting, List<Visit> visits) {
+            // This will be invoked when a beacon assigned to a place within a current visit is sighted.
+            android.util.Log.i("beacon name", .getName());
+        }
+    };
 
     public void onVisitStart(Visit visit) {
         // This will be invoked when a place is entered
