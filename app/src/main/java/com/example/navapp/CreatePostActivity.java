@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -39,8 +40,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import de.hdodenhof.circleimageview.CircleImageView;
-
 public class CreatePostActivity extends AppCompatActivity {
     TextView create_post;
     EditText user_input;
@@ -63,7 +62,6 @@ public class CreatePostActivity extends AppCompatActivity {
         postImage = findViewById(R.id.postImage);
         firestore = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
-        storageReference = FirebaseStorage.getInstance().getReference("image");
 
         postImage.setOnClickListener(new View.OnClickListener() {
              @Override
@@ -86,6 +84,7 @@ public class CreatePostActivity extends AppCompatActivity {
 
                 sharedPreferences = getApplicationContext().getSharedPreferences("login", Context.MODE_PRIVATE);
                 String name = sharedPreferences.getString("username", "");
+                storageReference = FirebaseStorage.getInstance().getReference(name);
 
                 Map<String,Object> posts = new HashMap<>();
                 posts.put("title", title);
@@ -98,11 +97,11 @@ public class CreatePostActivity extends AppCompatActivity {
                     Toast.makeText(CreatePostActivity.this, "Please write a title before posting!", Toast.LENGTH_LONG).show();
                 }
                 else {
-                    storageReference.child(name).putFile(imageUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                    storageReference.child(title).putFile(imageUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
                             if (task.isSuccessful()) {
-                                storageReference.child(name).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                storageReference.child(title).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                     @Override
                                     public void onSuccess(Uri uri) {
                                         posts.put("imageURL", uri.toString());
@@ -131,7 +130,7 @@ public class CreatePostActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (data != null && data.getData() != null) {
             imageUri = data.getData();
-            postImage.setImageURI(imageUri);
+            postImage.setImageURI(data.getData());
         }
     }
 

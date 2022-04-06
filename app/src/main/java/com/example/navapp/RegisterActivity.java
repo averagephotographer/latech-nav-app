@@ -154,8 +154,7 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher {
             }
         });
     }
-    
-    // not functionable atm, trying to figure out whats wrong
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

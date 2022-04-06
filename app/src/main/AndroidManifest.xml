@@ -51,8 +51,12 @@
             android:name=".CreatePostActivity"
             android:exported="false" />
         <activity
+            android:name=".MainActivity"
+            android:exported="false"/>
+        <activity
             android:name=".WelcomeActivity"
             android:exported="true">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -62,9 +66,6 @@
         <activity
             android:name=".DrawerBaseActivity"
             android:exported="false" />
-        <activity
-            android:name="com.canhub.cropper.CropImageActivity"
-            android:theme="@style/Base.Theme.AppCompat" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
