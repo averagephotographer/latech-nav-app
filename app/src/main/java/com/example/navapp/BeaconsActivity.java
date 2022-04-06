@@ -33,28 +33,12 @@ public class BeaconsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         Gimbal.setApiKey(this.getApplication(), GIMBAL_API_KEY);
+        setUpGimbalPlaceManager();
         Gimbal.start(); // note: make sure to get location permission from user before this, see docs
 
-        BeaconManager manager = new BeaconManager();
+    }
 
-
-
-        manager.startListening();
-
-        android.util.Log.i("pm_isMonitoring", "" + PlaceManager.getInstance().isMonitoring());
-        android.util.Log.i("pm_currentVisits", "" + PlaceManager.getInstance().currentVisits());
-
-        BeaconManager bm = new BeaconManager();
-        bm.addListener(new BeaconEventListener() {
-            @Override
-            public void onBeaconSighting(BeaconSighting beaconSighting) {
-
-                super.onBeaconSighting(beaconSighting);
-
-                android.util.Log.i("beacon1", beaconSighting.getBeacon().toString());
-                android.util.Log.i("beacon2", "" + beaconSighting.getRSSI());
-            }
-        });
+    private void setUpGimbalPlaceManager() {
 
         PlaceEventListener placeEventListener = new PlaceEventListener() {
 
@@ -73,35 +57,11 @@ public class BeaconsActivity extends AppCompatActivity {
             public void onBeaconSighting(BeaconSighting sighting, List<Visit> visits) {
                 android.util.Log.i("onBeaconSighting", "" + sighting.getBeacon().getName());
                 // This will be invoked when a beacon assigned to a place within a current visit is sighted.
-
             }
         };
 
-        placeManager = PlaceManager.getInstance();
-        placeManager.addListener(placeEventListener);
-        placeManager.startMonitoring();
-
-        CommunicationManager.getInstance().startReceivingCommunications();
+        PlaceManager.getInstance().addListener(placeEventListener);
 
     }
 
-    public void onVisitStart(Visit visit) {
-        // This will be invoked when a place is entered
-        android.util.Log.i("Notification ", "Inside onVisitStart");
-    }
-
-
-    // This will be invoked upon beacon sighting
-    public void onBeaconSighting(BeaconSighting sighting, List<Visit> visits) {
-        Beacon beacon = sighting.getBeacon();
-        android.util.Log.i("beacon name", beacon.getName());
-        android.util.Log.i("RSSI: ", sighting.getRSSI().toString());
-        android.util.Log.i("Beacon Name: ", sighting.getBeacon().toString());
-        android.util.Log.i("visits", visits.toString());
-    }
-
-    public void locationDetected(Location location) {
-        // this will be invoked when Gimbal has detected a reliable location
-        android.util.Log.i("Notification: ", "Inside locationDetected");
-    }
 }
