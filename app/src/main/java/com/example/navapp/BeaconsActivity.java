@@ -72,6 +72,8 @@ public class BeaconsActivity extends AppCompatActivity {
             }
 
             public void onBeaconSighting(BeaconSighting sighting, List<Visit> visits) {
+                android.util.Log.i("beacon1", sighting.getBeacon().toString());
+                android.util.Log.i("beacon2", String.format("", sighting.getRSSI()));
                 // This will be invoked when a beacon assigned to a place within a current visit is sighted.
             }
         };
@@ -81,7 +83,7 @@ public class BeaconsActivity extends AppCompatActivity {
         placeManager.startMonitoring();
 
         CommunicationManager.getInstance().startReceivingCommunications();
-        
+
     }
 
     public void onVisitStart(Visit visit) {
