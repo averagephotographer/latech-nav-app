@@ -22,10 +22,12 @@ import com.gimbal.location.established.Location;
 import java.util.List;
 
 
+
 public class BeaconsActivity extends AppCompatActivity {
     private static final String GIMBAL_API_KEY = "3f3ef8ff-52f3-46d3-9a8b-d784680b4c85";
     private static int r = 0;
     private static final String RSSI = "";
+    private PlaceManager placeManager;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,6 +36,8 @@ public class BeaconsActivity extends AppCompatActivity {
         Gimbal.start();
 
         BeaconManager manager = new BeaconManager();
+
+
 
         manager.startListening();
 
@@ -71,6 +75,13 @@ public class BeaconsActivity extends AppCompatActivity {
                 // This will be invoked when a beacon assigned to a place within a current visit is sighted.
             }
         };
+
+        placeManager = PlaceManager.getInstance();
+        placeManager.addListener(placeEventListener);
+        placeManager.startMonitoring();
+
+        CommunicationManager.getInstance().startReceivingCommunications();
+        
     }
 
     public void onVisitStart(Visit visit) {
