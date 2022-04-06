@@ -3,16 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.navapp">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-
-    <uses-permission
-        android:name="android.permission.ACCESS_FINE_LOCATION"/>
-
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -21,7 +17,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/ThemeNavApp_Light">
-
+        <activity
+            android:name=".ui.login.twofactorregister"
+            android:exported="false"
+            android:label="@string/title_activity_twofactorregister" />
+        <activity
+            android:name=".ui.login.twofactorauthregister"
+            android:exported="false"
+            android:label="@string/title_activity_twofactorauthregister" />
         <activity
             android:name=".LoginActivity"
             android:exported="false" />
@@ -36,7 +39,7 @@
             android:exported="false" />
         <activity
             android:name=".GroundOverlayActivity"
-            android:exported="false"/>
+            android:exported="false" />
         <activity
             android:name=".SettingsActivity"
             android:exported="false" />
@@ -51,7 +54,7 @@
             android:exported="false" />
         <activity
             android:name=".CreatePostActivity"
-            android:exported="false"/>
+            android:exported="false" />
         <activity
             android:name=".WelcomeActivity"
             android:exported="true">
@@ -64,9 +67,9 @@
         <activity
             android:name=".DrawerBaseActivity"
             android:exported="false" />
-
-        <activity android:name="com.canhub.cropper.CropImageActivity"
-            android:theme="@style/Base.Theme.AppCompat"/>
+        <activity
+            android:name="com.canhub.cropper.CropImageActivity"
+            android:theme="@style/Base.Theme.AppCompat" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
