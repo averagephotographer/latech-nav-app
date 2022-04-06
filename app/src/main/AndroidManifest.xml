@@ -18,6 +18,9 @@
         android:supportsRtl="true"
         android:theme="@style/ThemeNavApp_Light">
         <activity
+            android:name=".twofareg"
+            android:exported="false" />
+        <activity
             android:name=".ui.login.twofactorregister"
             android:exported="false"
             android:label="@string/title_activity_twofactorregister" />
