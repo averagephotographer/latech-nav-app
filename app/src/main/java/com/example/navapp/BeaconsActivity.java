@@ -33,7 +33,7 @@ public class BeaconsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         Gimbal.setApiKey(this.getApplication(), GIMBAL_API_KEY);
-        Gimbal.start();
+        Gimbal.start(); // note: make sure to get location permission from user before this, see docs
 
         BeaconManager manager = new BeaconManager();
 
@@ -41,7 +41,8 @@ public class BeaconsActivity extends AppCompatActivity {
 
         manager.startListening();
 
-        android.util.Log.i("place_manager", "" + PlaceManager.getInstance().currentVisits());
+        android.util.Log.i("pm_isMonitoring", "" + PlaceManager.getInstance().isMonitoring());
+        android.util.Log.i("pm_currentVisits", "" + PlaceManager.getInstance().currentVisits());
 
         BeaconManager bm = new BeaconManager();
         bm.addListener(new BeaconEventListener() {
@@ -51,7 +52,7 @@ public class BeaconsActivity extends AppCompatActivity {
                 super.onBeaconSighting(beaconSighting);
 
                 android.util.Log.i("beacon1", beaconSighting.getBeacon().toString());
-                android.util.Log.i("beacon2", String.format("", beaconSighting.getRSSI()));
+                android.util.Log.i("beacon2", "" + beaconSighting.getRSSI());
             }
         });
 
@@ -59,22 +60,20 @@ public class BeaconsActivity extends AppCompatActivity {
 
             @Override
             public void onVisitStart(Visit visit) {
-
                 super.onVisitStart(visit);
-                //do anything
+                android.util.Log.i("onVisitStart", "overridden");
             }
 
             @Override
             public void onVisitEnd(Visit visit) {
-
+                android.util.Log.i("onVisitEnd", "overridden");
                 super.onVisitEnd(visit);
-                //do anything
             }
 
             public void onBeaconSighting(BeaconSighting sighting, List<Visit> visits) {
-                android.util.Log.i("beacon1", sighting.getBeacon().toString());
-                android.util.Log.i("beacon2", String.format("", sighting.getRSSI()));
+                android.util.Log.i("onBeaconSighting", "" + sighting.getBeacon().getName());
                 // This will be invoked when a beacon assigned to a place within a current visit is sighted.
+
             }
         };
 
