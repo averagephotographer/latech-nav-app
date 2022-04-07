@@ -93,25 +93,24 @@ public class CreatePostActivity extends AppCompatActivity {
                 SimpleDateFormat formatter = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
                 String strDate = formatter.format(date);
                 posts.put("datePost", strDate);
+
                 if(TextUtils.isEmpty(title)) {
                     Toast.makeText(CreatePostActivity.this, "Please write a title before posting!", Toast.LENGTH_LONG).show();
                 }
                 else {
-                    storageReference.child(title).putFile(imageUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+
+                    storageReference.child(title).putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
-                        public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                            if (task.isSuccessful()) {
-                                storageReference.child(title).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                    @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            storageReference.child(title).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                @Override
                                     public void onSuccess(Uri uri) {
                                         posts.put("imageURL", uri.toString());
 
                                     }
-                                });
-                            }
+                            });
                         }
                     });
-
                     DocumentReference documentReference = firestore.collection("posts").document(name).collection("myposts").document(title);
                     documentReference.set(posts).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
@@ -130,7 +129,7 @@ public class CreatePostActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (data != null && data.getData() != null) {
             imageUri = data.getData();
-            postImage.setImageURI(data.getData());
+            postImage.setImageURI(imageUri);
         }
     }
 

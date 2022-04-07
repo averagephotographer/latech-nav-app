@@ -20,15 +20,15 @@
         android:layout_gravity="bottom"
         android:background="@color/white"
         app:fabCradleRoundedCornerRadius="50dp"
-        app:hideOnScroll="true">
+        app:hideOnScroll="false">
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottomNavigationView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:menu="@menu/bottom_menu"
             android:background="@android:color/transparent"
-            app:labelVisibilityMode="labeled"/>
+            app:labelVisibilityMode="labeled"
+            app:menu="@menu/bottom_menu" />
     </com.google.android.material.bottomappbar.BottomAppBar>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -39,5 +39,11 @@
         android:src="@drawable/ic_baseline_add_24"
         app:layout_anchor="@id/bottomAppBar"
         app:maxImageSize="50dp" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="526dp"
+        android:layout_gravity="top" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -70,8 +70,8 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                String username = mUsername.getText().toString();
-                String passwordAAAA = mPassword.getText().toString();
+                    String username = mUsername.getText().toString();
+                    String passwordAAAA = mPassword.getText().toString();
 
                 if (TextUtils.isEmpty(username)) {
                     mUsername.setError("Username is required!");
