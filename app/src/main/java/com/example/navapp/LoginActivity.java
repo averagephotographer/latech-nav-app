@@ -96,7 +96,7 @@ public class LoginActivity extends AppCompatActivity {
                                 editor.putString(Username, DS.get("username").toString());
                                 //editor.putString(pass_wrd, DS.get("password").toString());
                                 editor.commit();
-                                startActivity(new Intent(getApplicationContext(), MapsActivity.class));
+                                startActivity(new Intent(getApplicationContext(), twofareg.class));
                             } else {
                                 Toast.makeText(LoginActivity.this, "Error! " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
                             }
