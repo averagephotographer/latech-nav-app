@@ -70,8 +70,8 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                String username = mUsername.getText().toString();
-                String passwordAAAA = mPassword.getText().toString();
+                    String username = mUsername.getText().toString();
+                    String passwordAAAA = mPassword.getText().toString();
 
                 if (TextUtils.isEmpty(username)) {
                     mUsername.setError("Username is required!");
@@ -97,8 +97,10 @@ public class LoginActivity extends AppCompatActivity {
                                 //editor.putString(pass_wrd, DS.get("password").toString());
                                 editor.commit();
                                 startActivity(new Intent(getApplicationContext(), MapsActivity.class));
-                            } else {
-                                Toast.makeText(LoginActivity.this, "Error! " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                            }
+
+                            else {
+                                Toast.makeText(LoginActivity.this, "Wrong username or password!", Toast.LENGTH_LONG).show();
                             }
                         }
                         else{
