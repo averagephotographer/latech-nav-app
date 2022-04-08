@@ -31,6 +31,11 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.example.navapp.databinding.ActivityMapsBinding;
+import com.gimbal.android.BeaconSighting;
+import com.gimbal.android.Gimbal;
+import com.gimbal.android.PlaceEventListener;
+import com.gimbal.android.PlaceManager;
+import com.gimbal.android.Visit;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMyLocationButtonClickListener;
@@ -50,7 +55,11 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Dictionary;
+import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 
 /**
  * This demo shows how GMS Location can be used to check for changes to the users location.  The
@@ -75,6 +84,16 @@ public class MapsActivity extends DrawerBaseActivity
         SharedPreferences sharedPreferences;
         public static final String fileName = "login";
         public static final String Username = "username";
+        private static final String GIMBAL_API_KEY = "3f3ef8ff-52f3-46d3-9a8b-d784680b4c85";
+        private PlaceManager placeManager;
+
+        int[][] beaconDistance = {{1,0},{2,0},{3,0},{4,0},{5,0},{6,0},{7,0},{8,0},{9,0},{10,0}};
+
+        private int min = 0;
+
+        private String beaconName;
+
+        private int beaconVal;
 
         /**
          * Flag indicating whether a requested permission has been denied after returning in
@@ -86,6 +105,8 @@ public class MapsActivity extends DrawerBaseActivity
 
         private int floor;
 
+        LatLng nethken = new LatLng(32.525665490440126,-92.64472849667071);
+
         Button textView;
         boolean [] selectedService;
         ArrayList<Integer> servList = new ArrayList<>();
@@ -93,31 +114,29 @@ public class MapsActivity extends DrawerBaseActivity
         String[] countries={"India","Australia","West indies","indonesia","Indiana",
                 "South Africa","England","Bangladesh","Srilanka","singapore"};
 
-        String[][] prof1 = {{"Dr. Turner","","32.52577997908046","-92.64494910836221"},{"Dr. Choi","","32.525781675208066","-92.64499101787806"},{"Dr. Prather","","32.52578337133561","-92.64502856880426"},
-                {"Dr. O'Neal","","32.52578478477521","-92.64506410807371"},{"Dr. Cox","","32.52551481740722","-92.64453705400229"},{"Dr. Biggs","","32.525479481304224","-92.64453705400229"},
-                {"Dr. Glisson","","32.52558124924317","-92.64442943036556"},{"Dr. Bowman","","32.52576584468266","-92.64450687915087"},{"Dr. Abdoulahi","","32.525768106186476","-92.64454644173385"},
-                {"Dr. Gates","","32.52576980231428","-92.64459673315288"}, {"Dr. Hyde","","32.525772346505946","-92.64470033347605"}};
+        String[][] prof1 = {{"Dr. Turner","","32.525801180673014","-92.6449068635702"},{"Dr. Choi","","32.525801180673014","-92.64494743198156"},{"Dr. Prather","","32.525801180673014","-92.64498598873614"},
+                {"Dr. O'Neal","","32.525801180673014","-92.64502186328173"},{"Dr. Cox","","32.525540824770104","-92.6444934681058"},{"Dr. Biggs","","32.52550350985576","-92.6444934681058"},
+                {"Dr. Glisson","","32.52560160281711","-92.64438852667809"},{"Dr. Bowman","","32.52578224058392","-92.64446564018726"},{"Dr. Abdoulahi","","32.52578224058392","-92.64450185000896"},
+                {"Dr. Gates","","32.52578224058392","-92.64455012977122"}, {"Dr. Hyde","","32.52578224058392","-92.64465942978859"}};
 
-        String[][] class1 = {{"NETH105","","32.52568132093739","-92.64510601758957"},{"NETH120","","32.525668882653775","-92.64491591602562"},
-                {"Tom Emory Lecture Hall","","32.5255343229301","-92.64472112059592"},{"NETH153","","32.52564146188608","-92.64442540705204"}};
+        String[][] class1 = {{"NETH105","","32.52570252255319","-92.64506142586468"},{"NETH120","","32.52568697470208","-92.64487635344267"},
+                {"NETH140","Tom Emory Lecture Hall","32.525549588118956","-92.64468055218458"},{"NETH153","","32.52566944803032","-92.64438852667809"}};
 
-        String[][] re1 = {{"Admin Office" , "Need assistance?", "32.52577997908046","-92.6448592543602"},
-                {"NETH103: Machinery I","","32.52561630261767","-92.64510802924633"},{"NETH101: Data Mining Rese Lab","","32.52555128425088","-92.6451164111495"},
-                {"NETH100: Power Systems Lab","","32.525540824770104","-92.64499738812447"}, {"NETH102: Electrical Distribution","","32.52559340485038","-92.64499738812447"},
-                {"NETH104: Machinery II","","32.52562676208967","-92.64499101787806"}, {"NETH106: Instrument Room","","32.52567255760138","-92.64502018690108"},
-                {"Mens Bathroom","","32.5256883881432","-92.64481533318758"},
-                {"Women Bathroom","","32.52563552543013","-92.64481734484436"},
-                {"The Grid","","32.52565390017351","-92.64469999819994"}, {"Computer Lab I","","32.52564485414647","-92.64462288469075"}, {"Computer Lab II","","32.52564683296495","-92.64457024633883"},
-                {"Mens Bathroom","","32.52566633845918","-92.64451190829277"},
-                {"Artificial Intelligence","","32.52552160193739","-92.64443177729844"},{"Optoelectronics Lab","","32.52576273511486","-92.64445658773184"},
-                {"Student Organizations","","32.52576838887443","-92.64465440064669"}};
+        String[][] re1 = {{"Admin Office" , "Need assistance?", "32.525801180673014","-92.64481633901596"},
+                {"NETH103: Machinery I","","32.525644571458116","-92.64506142586468"},{"NETH101: Data Mining Rese Lab","","32.5255767262261","-92.64506142586468"},
+                {"NETH100: Power Systems Lab","","32.525561461041846","-92.64495413750412"}, {"NETH104: Machinery II","","32.52565333479684","-92.64495413750412"},
+                {"Professor's Lounge","","32.52568697470208","-92.64482203871012"},{"Mens Bathroom","","32.52571072050998","-92.64477141201495"},{"Women Bathroom","","32.52568527857272","-92.64477141201495"},
+                {"The Grid","","32.5256751017958","-92.64465607702734"}, {"Computer Lab I","","32.5256751017958","-92.64458365738392"}, {"Computer Lab II","","32.5256751017958","-92.6445249840617"},
+                {"Mens Bathroom","","32.5256883881432","-92.64446698129177"},
+                {"Artificial Intelligence","","32.52554421703429","-92.64438852667809"},{"Optoelectronics Lab","","32.52578224058392","-92.64441300183535"},
+                {"Student Organizations","","32.52578224058392","-92.6446084678173"}};
 
-        String[][] prof2 = {{"Dr. Hartmann","","32.52578817703018","-92.6450765132904"}, {"Dr. El-Awadi","","32.52578704627854","-92.64502689242363"},
-                {"Dr. Bhattari","","32.5257859155269","-92.64498800039291"}, {"Dr. Hutchinson","","32.5257861982148","-92.64495078474283"}, {"Dr. Chen","","32.52578082714428","-92.64491323381662"},
-                {"Dr. Green","","32.52578082714428","-92.64487367123365"},{"Dr. Liu","","32.52578082714428","-92.64484014362097"},{"Dr. Nassar","","32.52577884832872","-92.64480259269475"},
-                {"Dr. Cox","","32.525774608009584","-92.64470435678959"},{"Dr. Dai","","32.525774608009584","-92.64459773898123"},{"Dr. Chowriappa","","32.525771215754105","-92.64455180615187"},
-                {"Dr. Box","","32.525769236938345","-92.64451425522566"},{"Dr. Cherry","","32.52576754081052","-92.64447435736656"},{"Dr. Greechie","","32.52576754081052","-92.64444317668676"},
-                {"Dr. Min", "", "32.52559001258808","-92.64442641288042"}};
+        String[][] prof2 = {{"Dr. Matthew Hartmann","Program Chair and Lecturer","32.52578817703018","-92.6450765132904"}, {"Zakaria El-Awadi","","32.52578704627854","-92.64502689242363"},
+                {"Dr. Prashanna Bhattari","Assistant Professor","32.5257859155269","-92.64498800039291"}, {"Aaron Hutchinson","Assistant Professor","32.5257861982148","-92.64495078474283"}, {"Dr. Jinyuan Chen","Assistant Professor","32.52578082714428","-92.64491323381662"},
+                {"Nathan Green","Assistant Professor","32.52578082714428","-92.64487367123365"},{"Dr. Don Liu","Professor","32.52578082714428","-92.64484014362097"},{"Dr. Raj Nassar","Professor Emeritus","32.52577884832872","-92.64480259269475"},
+                {"Dr. Weizhong Dai","Professor – Mathematics and Statistics, Program Chair – Computational Analysis Modeling","32.525774608009584","-92.64459773898123"},{"Dr. Pradeep Chowriappa","Assistant Professor","32.525771215754105","-92.64455180615187"},
+                {"Dr. Kevin Cherry","Lecturer","32.52576754081052","-92.64447435736656"},{"Dr. Richard Greechie","Professor Emeritus","32.52576754081052","-92.64444317668676"},
+                {"Dr. Manki Min", "Associate Professor", "32.52559001258808","-92.64442641288042"}};
 
         String[][] class2 = {{"NETH209","","32.52568697470208","-92.64510668814181"},{"NETH243","","32.52565700974508","-92.64442473649979"},
                 {"NETH244","","32.525579553111804","-92.64452900737524"},{"NETH216","","32.52567905943139","-92.64496352523565"}};
@@ -161,10 +180,16 @@ public class MapsActivity extends DrawerBaseActivity
             textView.setThreshold(3);
             textView.setAdapter(adapter);
 
+            Gimbal.setApiKey(this.getApplication(), GIMBAL_API_KEY);
+            setUpGimbalPlaceManager();
+            Gimbal.start();
+
+
+
             oButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(view.getContext(), GroundOverlayActivity.class);
+                    Intent intent = new Intent(view.getContext(), BeaconsActivity.class);
                     view.getContext().startActivity(intent);
                 }
             });
@@ -174,7 +199,7 @@ public class MapsActivity extends DrawerBaseActivity
                 public void onClick(View view) {
                     floor = 1;
                     mMap.clear();
-                    LatLng nethken = new LatLng(32.525641920516314, -92.64477126104399);
+                    //LatLng nethken = new LatLng(32.525665490440126,-92.64472849667071);
 
                     GroundOverlayOptions neth = new GroundOverlayOptions()
                             .image(BitmapDescriptorFactory.fromResource(R.drawable.nethken_floor1))
@@ -190,7 +215,7 @@ public class MapsActivity extends DrawerBaseActivity
                 public void onClick(View view) {
                     floor = 2;
                     mMap.clear();
-                    LatLng nethken = new LatLng(32.525641920516314, -92.64477126104399);
+                    //LatLng nethken = new LatLng(32.525665490440126,-92.64472849667071);
 
                     GroundOverlayOptions neth = new GroundOverlayOptions()
                             .image(BitmapDescriptorFactory.fromResource(R.drawable.nethken_floor2))
@@ -272,6 +297,76 @@ public class MapsActivity extends DrawerBaseActivity
             });
         }
 
+        private void setUpGimbalPlaceManager() {
+
+
+            PlaceEventListener placeEventListener = new PlaceEventListener() {
+
+                @Override
+                public void onVisitStart(Visit visit) {
+                    super.onVisitStart(visit);
+                    android.util.Log.i("onVisitStart", "overridden");
+                }
+
+                @Override
+                public void onVisitEnd(Visit visit) {
+                    android.util.Log.i("onVisitEnd", "overridden");
+                    super.onVisitEnd(visit);
+                }
+
+                public void onBeaconSighting(BeaconSighting sighting, List<Visit> visits) {
+
+                    //Gets name of the beacon that was sighted
+                    beaconName = sighting.getBeacon().toString();
+
+                    //Gets the number at the end of the beacon
+                    beaconVal = Integer.parseInt(beaconName.substring(beaconName.length() - 1)) -1;
+
+                    //Sets the RSSI value according to the scanned beacon
+                    beaconDistance[beaconVal][1] = sighting.getRSSI();
+
+                    //Checks for the smallest RSSI value among all 10 beacons
+                    for(int i = 0; i < beaconDistance.length; i++){
+                        if (beaconDistance[i][1] < min){
+                            min = beaconDistance[i][1];
+                            if(i < 6){
+                                floor = 1;
+                                mMap.clear();
+                                //LatLng nethken = new LatLng(32.525665490440126,-92.64472849667071);
+
+                                GroundOverlayOptions neth = new GroundOverlayOptions()
+                                        .image(BitmapDescriptorFactory.fromResource(R.drawable.nethken_floor1))
+                                        .position(nethken, 76f, 46f);
+
+                                mMap.addGroundOverlay(neth);
+                            }
+
+                            else{
+                                floor = 2;
+                                mMap.clear();
+                                //LatLng nethken = new LatLng(32.525665490440126,-92.64472849667071);
+
+                                GroundOverlayOptions neth = new GroundOverlayOptions()
+                                        .image(BitmapDescriptorFactory.fromResource(R.drawable.nethken_floor2))
+                                        .position(nethken, 76f, 46f);
+
+                                mMap.addGroundOverlay(neth);
+                            }
+                        }
+                    }
+
+
+
+                    android.util.Log.i("oBS: sighting", "" + sighting.toString());
+                    android.util.Log.i("oBS: visits", "" + visits.toString());
+                    // This will be invoked when a beacon assigned to a place within a current visit is sighted.
+                }
+            };
+
+            PlaceManager.getInstance().addListener(placeEventListener);
+
+        }
+
         //PLaces markers for services
         public void plotMarker (String service){
             if(floor == 2) {
@@ -315,6 +410,11 @@ public class MapsActivity extends DrawerBaseActivity
                     for (int i = 0; i < prof2.length; i++) {
                         double x = Double.parseDouble(prof2[i][2]);
                         double y = Double.parseDouble(prof2[i][3]);
+
+                        String name = prof2[i][4];
+                        int id = getResources().getIdentifier(name, "drawable", getPackageName());
+                        Drawable drawable = getResources().getDrawable(id);
+
                         LatLng resource = new LatLng(x, y);
                         mMap.addMarker(new MarkerOptions().position(resource).title(prof2[i][0])
                                 .icon(BitmapFromVector(getApplicationContext(), R.drawable.professor_dot))
@@ -336,6 +436,7 @@ public class MapsActivity extends DrawerBaseActivity
                                     TextView snippet = (TextView) row.findViewById(R.id.snippet);
                                     ImageView image = (ImageView) row.findViewById(R.id.image);
 
+                                    row.setBackground(drawable);
                                     title.setText(marker.getTitle());
                                     snippet.setText(marker.getSnippet());
 
@@ -499,11 +600,11 @@ public class MapsActivity extends DrawerBaseActivity
             mMap = googleMap;
 
             //Add nethken overlay
-            LatLng neth = new LatLng(32.525641920516314, -92.64477126104399);
-            GroundOverlayOptions nethken = new GroundOverlayOptions()
+            //LatLng neth = new LatLng(32.525665490440126,-92.64472849667071);
+            GroundOverlayOptions neth = new GroundOverlayOptions()
                     .image(BitmapDescriptorFactory.fromResource(R.drawable.nethken))
-                    .position(neth, 76f, 46f);
-            mMap.addGroundOverlay(nethken);
+                    .position(nethken, 76f, 46f);
+            mMap.addGroundOverlay(neth);
 
             mMap.setOnMyLocationButtonClickListener(this);
             mMap.setOnMyLocationClickListener(this);
@@ -569,6 +670,10 @@ public class MapsActivity extends DrawerBaseActivity
             // Permission to access the location is missing. Show rationale and request permission
             PermissionUtils.requestPermission(this, LOCATION_PERMISSION_REQUEST_CODE,
                     Manifest.permission.ACCESS_FINE_LOCATION, true);
+        }
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_SCAN)
+               == PackageManager.PERMISSION_DENIED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.BLUETOOTH_SCAN}, 2);
         }
         // [END maps_check_location_permission]
     }

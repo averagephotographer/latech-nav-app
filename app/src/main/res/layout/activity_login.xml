@@ -7,6 +7,18 @@
     android:background="#3D74B8"
     tools:context=".LoginActivity">
 
+    <ImageView
+        android:id="@+id/imageView10"
+        android:layout_width="400dp"
+        android:layout_height="1000dp"
+        android:foreground="@drawable/forum_app_logo_long"
+        android:rotationY="0"
+        android:src="@drawable/secondary_background"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.454"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
         android:id="@+id/dontHaveAcc"
         android:layout_width="wrap_content"
@@ -24,26 +36,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/progressBarLoading" />
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="411dp"
-        android:layout_height="300dp"
-        android:src="@drawable/login_background"
-        android:scaleType="centerCrop"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHeight_percent=".27"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0"
-        app:tint = "@color/white"/>
-
     <EditText
         android:id="@+id/username"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:background="#100FFFFF"
+        android:background="@drawable/rounded_corner"
         android:drawableLeft="@drawable/ic_baseline_person_outline_24"
         android:drawablePadding="20dp"
         android:hint="Username"
@@ -53,10 +51,10 @@
         android:textColorHint="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.2"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView"
-        app:layout_constraintVertical_bias="0.1"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.503"
         tools:ignore="TextContrastCheck" />
 
     <EditText
@@ -65,7 +63,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/username"
         android:layout_margin="10dp"
-        android:background="#100FFFFF"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/rounded_corner"
         android:drawableLeft="@drawable/ic_baseline_vpn_key_24"
         android:drawablePadding="20dp"
         android:hint="Password"
@@ -78,12 +77,12 @@
         app:layout_constraintHorizontal_bias="0.526"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/username"
-        app:layout_constraintVertical_bias="0.05" />
+        app:layout_constraintVertical_bias="0.0" />
 
     <Button
         android:id="@+id/login_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="200dp"
+        android:layout_height="70dp"
         android:layout_margin="20dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
@@ -92,6 +91,7 @@
         android:backgroundTint="@color/red"
         android:backgroundTintMode="add"
         android:text="Login"
+        app:cornerRadius="24dp"
         app:layout_constraintBottom_toTopOf="@+id/frgt_pass"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.51"
@@ -113,10 +113,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/login_btn" />
-
-
-
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

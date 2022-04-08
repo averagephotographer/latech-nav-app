@@ -36,9 +36,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.xml.transform.Result;
 import com.canhub.cropper.CropImage;
-import com.google.firebase.storage.UploadTask;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 //import org.mindrot.jbcrypt.*;
@@ -60,7 +58,7 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.register_activity);
+        setContentView(R.layout.activity_register);
         db = FirebaseFirestore.getInstance();
         db.setLoggingEnabled(true);
 
@@ -211,21 +209,25 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher {
 
         ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar);
         TextView strengthView = (TextView) findViewById(R.id.password_strength);
-        if (TextView.VISIBLE != strengthView.getVisibility())
-            return;
+//        if (TextView.VISIBLE != strengthView.getVisibility())
+//            return;
 
         if (password.isEmpty()) {
             strengthView.setText("");
             progressBar.setProgress(0);
+            strengthView.setText("");
             return;
         }
         if (isValidPassword(password)){
             progressBar.setProgress(100);
             strengthView.setText("Strong");
+            strengthView.setTextColor(getResources().getColor(R.color.green));
         }
         else {
+            strengthView.setVisibility(View.VISIBLE);
             progressBar.setProgress(0);
             strengthView.setText("Weak");
+            strengthView.setTextColor(getResources().getColor(R.color.light_red));
         }
     }
     public static boolean isValidPassword(final String password) {

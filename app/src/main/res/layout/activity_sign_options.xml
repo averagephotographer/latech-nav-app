@@ -7,10 +7,23 @@
     android:background="#3D74B8"
     tools:context=".SignOptionsActivity">
 
+    <ImageView
+        android:id="@+id/imageView7"
+        android:layout_width="400dp"
+        android:layout_height="1000dp"
+        android:layout_marginBottom="83dp"
+        android:foreground="@drawable/secondary_background"
+        android:src="@drawable/secondary_background"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.454"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.005" />
+
     <com.google.android.material.button.MaterialButton
         android:id="@+id/sign_up"
         android:layout_width="200dp"
-        android:layout_height="wrap_content"
+        android:layout_height="70dp"
         android:backgroundTint="@color/red"
         android:drawableEnd="@drawable/arrow_forward"
         android:drawableTint="@color/white"
@@ -18,8 +31,9 @@
         android:paddingEnd="45dp"
         android:text="@string/Sign_Up"
         android:textColor="@color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:cornerRadius="24dp"
 
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
@@ -29,39 +43,20 @@
     <com.google.android.material.button.MaterialButton
         android:id="@+id/sign_in"
         android:layout_width="200dp"
-        android:layout_height="wrap_content"
+        android:layout_height="70dp"
+        android:layout_marginTop="8dp"
         android:backgroundTint="@color/red"
         android:drawableEnd="@drawable/arrow_forward"
         android:drawableTint="@color/white"
-        android:paddingStart="50dp"
-        android:paddingEnd="45dp"
         android:text="@string/Sign_in"
         android:textColor="@color/white"
+        app:cornerRadius="24dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/sign_up"
-        app:layout_constraintVertical_bias="0.085" />
-
-    <TextView
-        android:id="@+id/frgt_pass"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:padding="20dp"
-        android:text="Don't have an account?"
-        android:textColor="@color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/sign_in"
         app:layout_constraintVertical_bias="0.0" />
 
-    
 
 </androidx.constraintlayout.widget.ConstraintLayout>
