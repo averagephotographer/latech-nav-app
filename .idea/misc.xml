@@ -8,14 +8,13 @@
         <entry key="..\:/Users/cdtv1/Documents/GitHub/latech-nav-app/app/src/main/res/layout/activity_about.xml" value="0.2513586956521739" />
         <entry key="..\:/Users/cdtv1/Documents/GitHub/latech-nav-app/app/src/main/res/layout/activity_account.xml" value="0.2513586956521739" />
         <entry key="..\:/Users/cdtv1/Documents/GitHub/latech-nav-app/app/src/main/res/layout/activity_account_history.xml" value="0.2513586956521739" />
-        <entry key="..\:/Users/cdtv1/Documents/GitHub/latech-nav-app/app/src/main/res/layout/activity_beacons.xml" value="0.4" />
         <entry key="..\:/Users/cdtv1/Documents/GitHub/latech-nav-app/app/src/main/res/layout/activity_create_post.xml" value="0.2513586956521739" />
         <entry key="..\:/Users/cdtv1/Documents/GitHub/latech-nav-app/app/src/main/res/layout/activity_drawer_base.xml" value="0.2513586956521739" />
         <entry key="..\:/Users/cdtv1/Documents/GitHub/latech-nav-app/app/src/main/res/layout/activity_forum.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/cdtv1/Documents/GitHub/latech-nav-app/app/src/main/res/layout/activity_ground.xml" value="0.2418478260869565" />
         <entry key="..\:/Users/cdtv1/Documents/GitHub/latech-nav-app/app/src/main/res/layout/activity_login.xml" value="0.176" />
         <entry key="..\:/Users/cdtv1/Documents/GitHub/latech-nav-app/app/src/main/res/layout/activity_main.xml" value="0.12360688956433637" />
-        <entry key="..\:/Users/cdtv1/Documents/GitHub/latech-nav-app/app/src/main/res/layout/activity_maps.xml" value="0.536" />
+        <entry key="..\:/Users/cdtv1/Documents/GitHub/latech-nav-app/app/src/main/res/layout/activity_maps.xml" value="0.2" />
         <entry key="..\:/Users/cdtv1/Documents/GitHub/latech-nav-app/app/src/main/res/layout/activity_register.xml" value="0.2164855072463768" />
         <entry key="..\:/Users/cdtv1/Documents/GitHub/latech-nav-app/app/src/main/res/layout/activity_settings.xml" value="0.536" />
         <entry key="..\:/Users/cdtv1/Documents/GitHub/latech-nav-app/app/src/main/res/layout/activity_sign_options.xml" value="0.30984126984126986" />
@@ -88,7 +87,8 @@
         <entry key="..\:/Users/sadia/OneDrive/Documents/GitHub/latech-nav-app/app/src/main/res/layout/activity_welcome.xml" value="0.17527173913043478" />
         <entry key="app/src/main/res/drawable/printer.xml" value="0.15" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.16927083333333334" />
-        <entry key="app/src/main/res/layout/activity_maps.xml" value="0.2409090909090909" />
+        <entry key="app/src/main/res/layout/activity_maps.xml" value="0.335" />
+        <entry key="app/src/main/res/layout/custom_address.xml" value="0.16236068895643363" />
       </map>
     </option>
   </component>

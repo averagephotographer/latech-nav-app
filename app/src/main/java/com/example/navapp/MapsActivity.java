@@ -55,7 +55,11 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Dictionary;
+import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 
 /**
  * This demo shows how GMS Location can be used to check for changes to the users location.  The
@@ -83,6 +87,14 @@ public class MapsActivity extends DrawerBaseActivity
         private static final String GIMBAL_API_KEY = "3f3ef8ff-52f3-46d3-9a8b-d784680b4c85";
         private PlaceManager placeManager;
 
+        int[][] beaconDistance = {{1,0},{2,0},{3,0},{4,0},{5,0},{6,0},{7,0},{8,0},{9,0},{10,0}};
+
+        private int min = 0;
+
+        private String beaconName;
+
+        private int beaconVal;
+
         /**
          * Flag indicating whether a requested permission has been denied after returning in
          * {@link #onRequestPermissionsResult(int, String[], int[])}.
@@ -92,6 +104,8 @@ public class MapsActivity extends DrawerBaseActivity
         private GoogleMap mMap;
 
         private int floor;
+
+        LatLng nethken = new LatLng(32.525665490440126,-92.64472849667071);
 
         Button textView;
         boolean [] selectedService;
@@ -185,7 +199,7 @@ public class MapsActivity extends DrawerBaseActivity
                 public void onClick(View view) {
                     floor = 1;
                     mMap.clear();
-                    LatLng nethken = new LatLng(32.525665490440126,-92.64472849667071);
+                    //LatLng nethken = new LatLng(32.525665490440126,-92.64472849667071);
 
                     GroundOverlayOptions neth = new GroundOverlayOptions()
                             .image(BitmapDescriptorFactory.fromResource(R.drawable.nethken_floor1))
@@ -201,7 +215,7 @@ public class MapsActivity extends DrawerBaseActivity
                 public void onClick(View view) {
                     floor = 2;
                     mMap.clear();
-                    LatLng nethken = new LatLng(32.525665490440126,-92.64472849667071);
+                    //LatLng nethken = new LatLng(32.525665490440126,-92.64472849667071);
 
                     GroundOverlayOptions neth = new GroundOverlayOptions()
                             .image(BitmapDescriptorFactory.fromResource(R.drawable.nethken_floor2))
@@ -285,6 +299,7 @@ public class MapsActivity extends DrawerBaseActivity
 
         private void setUpGimbalPlaceManager() {
 
+
             PlaceEventListener placeEventListener = new PlaceEventListener() {
 
                 @Override
@@ -300,6 +315,47 @@ public class MapsActivity extends DrawerBaseActivity
                 }
 
                 public void onBeaconSighting(BeaconSighting sighting, List<Visit> visits) {
+
+                    //Gets name of the beacon that was sighted
+                    beaconName = sighting.getBeacon().toString();
+
+                    //Gets the number at the end of the beacon
+                    beaconVal = Integer.parseInt(beaconName.substring(beaconName.length() - 1)) -1;
+
+                    //Sets the RSSI value according to the scanned beacon
+                    beaconDistance[beaconVal][1] = sighting.getRSSI();
+
+                    //Checks for the smallest RSSI value among all 10 beacons
+                    for(int i = 0; i < beaconDistance.length; i++){
+                        if (beaconDistance[i][1] < min){
+                            min = beaconDistance[i][1];
+                            if(i < 6){
+                                floor = 1;
+                                mMap.clear();
+                                //LatLng nethken = new LatLng(32.525665490440126,-92.64472849667071);
+
+                                GroundOverlayOptions neth = new GroundOverlayOptions()
+                                        .image(BitmapDescriptorFactory.fromResource(R.drawable.nethken_floor1))
+                                        .position(nethken, 76f, 46f);
+
+                                mMap.addGroundOverlay(neth);
+                            }
+
+                            else{
+                                floor = 2;
+                                mMap.clear();
+                                //LatLng nethken = new LatLng(32.525665490440126,-92.64472849667071);
+
+                                GroundOverlayOptions neth = new GroundOverlayOptions()
+                                        .image(BitmapDescriptorFactory.fromResource(R.drawable.nethken_floor2))
+                                        .position(nethken, 76f, 46f);
+
+                                mMap.addGroundOverlay(neth);
+                            }
+                        }
+                    }
+
+
 
                     android.util.Log.i("oBS: sighting", "" + sighting.toString());
                     android.util.Log.i("oBS: visits", "" + visits.toString());
@@ -354,6 +410,11 @@ public class MapsActivity extends DrawerBaseActivity
                     for (int i = 0; i < prof2.length; i++) {
                         double x = Double.parseDouble(prof2[i][2]);
                         double y = Double.parseDouble(prof2[i][3]);
+
+                        String name = prof2[i][4];
+                        int id = getResources().getIdentifier(name, "drawable", getPackageName());
+                        Drawable drawable = getResources().getDrawable(id);
+
                         LatLng resource = new LatLng(x, y);
                         mMap.addMarker(new MarkerOptions().position(resource).title(prof2[i][0])
                                 .icon(BitmapFromVector(getApplicationContext(), R.drawable.professor_dot))
@@ -375,6 +436,7 @@ public class MapsActivity extends DrawerBaseActivity
                                     TextView snippet = (TextView) row.findViewById(R.id.snippet);
                                     ImageView image = (ImageView) row.findViewById(R.id.image);
 
+                                    row.setBackground(drawable);
                                     title.setText(marker.getTitle());
                                     snippet.setText(marker.getSnippet());
 
@@ -538,11 +600,11 @@ public class MapsActivity extends DrawerBaseActivity
             mMap = googleMap;
 
             //Add nethken overlay
-            LatLng neth = new LatLng(32.525665490440126,-92.64472849667071);
-            GroundOverlayOptions nethken = new GroundOverlayOptions()
+            //LatLng neth = new LatLng(32.525665490440126,-92.64472849667071);
+            GroundOverlayOptions neth = new GroundOverlayOptions()
                     .image(BitmapDescriptorFactory.fromResource(R.drawable.nethken))
-                    .position(neth, 76f, 46f);
-            mMap.addGroundOverlay(nethken);
+                    .position(nethken, 76f, 46f);
+            mMap.addGroundOverlay(neth);
 
             mMap.setOnMyLocationButtonClickListener(this);
             mMap.setOnMyLocationClickListener(this);
