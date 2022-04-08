@@ -399,7 +399,7 @@ public class MapsActivity extends DrawerBaseActivity
                     .icon(BitmapFromVector(getApplicationContext(), R.drawable.professor_dot))
                     .snippet(prof1[i][1]));
 
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(searchedRoom, 22));
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(searchedRoom, 22));
             marker.showInfoWindow();
         }
 
