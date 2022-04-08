@@ -19,10 +19,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
-import com.canhub.cropper.CropImageView;
+import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -36,10 +34,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.canhub.cropper.CropImage;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-//import org.mindrot.jbcrypt.*;
 import org.mindrot.jbcrypt.BCrypt;
 
 
@@ -69,17 +65,13 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher {
         circleImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    // checks to see if user gave permission to access storage in phone
-                    if (ContextCompat.checkSelfPermission(RegisterActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                        ActivityCompat.requestPermissions(RegisterActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
-                    } else {
-                        CropImage.activity()
-                                .setGuidelines(CropImageView.Guidelines.ON)
-                                .setAspectRatio(1, 1)
-                                .start(RegisterActivity.this);
-                    }
-                }
+                ImagePicker.with(RegisterActivity.this)
+                        .galleryOnly()
+                        .crop()                 //Crop image(Optional), Check Customization for more option
+                        .cropSquare()
+                        .compress(1024)			//Final image size will be less than 1 MB(Optional)
+                        .maxResultSize(1080, 1080)	//Final image resolution will be less than 1080 x 1080(Optional)
+                        .start();
             }
         });
 
@@ -162,23 +154,13 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher {
             }
         });
     }
-    
-    // not functionable atm, trying to figure out whats wrong
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
-            CropImage.ActivityResult result = CropImage.getActivityResult(data);
-            if (resultCode == RESULT_OK) {
-                //mImageUri = result.getUri();
-                circleImageView.setImageURI(mImageUri);
-
-                isPhotoSelected = true;
-            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
-                Toast.makeText(this, "Action canceled", Toast.LENGTH_SHORT).show();
-            }
-        }
+        mImageUri = data.getData();
+        circleImageView.setImageURI(mImageUri);
     }
 
     @Override
@@ -195,25 +177,21 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher {
 
         ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar);
         TextView strengthView = (TextView) findViewById(R.id.password_strength);
-//        if (TextView.VISIBLE != strengthView.getVisibility())
-//            return;
+        if (TextView.VISIBLE != strengthView.getVisibility())
+            return;
 
         if (password.isEmpty()) {
             strengthView.setText("");
             progressBar.setProgress(0);
-            strengthView.setText("");
             return;
         }
         if (isValidPassword(password)){
             progressBar.setProgress(100);
             strengthView.setText("Strong");
-            strengthView.setTextColor(getResources().getColor(R.color.green));
         }
         else {
-            strengthView.setVisibility(View.VISIBLE);
             progressBar.setProgress(0);
             strengthView.setText("Weak");
-            strengthView.setTextColor(getResources().getColor(R.color.light_red));
         }
     }
     public static boolean isValidPassword(final String password) {

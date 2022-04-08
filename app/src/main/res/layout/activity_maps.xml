@@ -17,15 +17,24 @@
 
     <AutoCompleteTextView
         android:id="@+id/txtcountries"
-        android:layout_width="250dp"
+        android:layout_width="200dp"
         android:layout_height="60dp"
-        android:layout_marginStart="52dp"
+        android:layout_marginStart="15dp"
         android:hint="Search Nethken..."
-        android:imeOptions="actionSearch"
+        android:imeOptions="actionDone"
         android:inputType="text"
         app:layout_constraintStart_toStartOf="@+id/map"
         app:layout_constraintTop_toTopOf="@+id/map"
         tools:ignore="MissingConstraints" />
+
+    <Button
+        android:id="@+id/search"
+        android:layout_width="30dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:layout_marginStart="8dp"
+        app:layout_constraintStart_toEndOf="@+id/txtcountries"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/filter"
@@ -33,8 +42,7 @@
         android:layout_height="70dp"
         android:background="@android:color/transparent"
         android:drawableLeft="@drawable/filter"
-        app:layout_constraintStart_toEndOf="@+id/txtcountries"
-        app:layout_constraintTop_toTopOf="@+id/map"
+        app:layout_constraintStart_toEndOf="@+id/search"
         tools:ignore="MissingConstraints" />
 
     <Button
