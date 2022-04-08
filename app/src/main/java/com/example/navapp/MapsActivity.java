@@ -93,24 +93,22 @@ public class MapsActivity extends DrawerBaseActivity
         String[] countries={"India","Australia","West indies","indonesia","Indiana",
                 "South Africa","England","Bangladesh","Srilanka","singapore"};
 
-        String[][] prof1 = {{"Dr. Turner","","32.52577997908046","-92.64494910836221"},{"Dr. Choi","","32.525781675208066","-92.64499101787806"},{"Dr. Prather","","32.52578337133561","-92.64502856880426"},
-                {"Dr. O'Neal","","32.52578478477521","-92.64506410807371"},{"Dr. Cox","","32.52551481740722","-92.64453705400229"},{"Dr. Biggs","","32.525479481304224","-92.64453705400229"},
-                {"Dr. Glisson","","32.52558124924317","-92.64442943036556"},{"Dr. Bowman","","32.52576584468266","-92.64450687915087"},{"Dr. Abdoulahi","","32.525768106186476","-92.64454644173385"},
-                {"Dr. Gates","","32.52576980231428","-92.64459673315288"}, {"Dr. Hyde","","32.525772346505946","-92.64470033347605"}};
+        String[][] prof1 = {{"Dr. Turner","","32.525801180673014","-92.6449068635702"},{"Dr. Choi","","32.525801180673014","-92.64494743198156"},{"Dr. Prather","","32.525801180673014","-92.64498598873614"},
+                {"Dr. O'Neal","","32.525801180673014","-92.64502186328173"},{"Dr. Cox","","32.525540824770104","-92.6444934681058"},{"Dr. Biggs","","32.52550350985576","-92.6444934681058"},
+                {"Dr. Glisson","","32.52560160281711","-92.64438852667809"},{"Dr. Bowman","","32.52578224058392","-92.64446564018726"},{"Dr. Abdoulahi","","32.52578224058392","-92.64450185000896"},
+                {"Dr. Gates","","32.52578224058392","-92.64455012977122"}, {"Dr. Hyde","","32.52578224058392","-92.64465942978859"}};
 
-        String[][] class1 = {{"NETH105","","32.52568132093739","-92.64510601758957"},{"NETH120","","32.525668882653775","-92.64491591602562"},
-                {"Tom Emory Lecture Hall","","32.5255343229301","-92.64472112059592"},{"NETH153","","32.52564146188608","-92.64442540705204"}};
+        String[][] class1 = {{"NETH105","","32.52570252255319","-92.64506142586468"},{"NETH120","","32.52568697470208","-92.64487635344267"},
+                {"NETH140","Tom Emory Lecture Hall","32.525549588118956","-92.64468055218458"},{"NETH153","","32.52566944803032","-92.64438852667809"}};
 
-        String[][] re1 = {{"Admin Office" , "Need assistance?", "32.52577997908046","-92.6448592543602"},
-                {"NETH103: Machinery I","","32.52561630261767","-92.64510802924633"},{"NETH101: Data Mining Rese Lab","","32.52555128425088","-92.6451164111495"},
-                {"NETH100: Power Systems Lab","","32.525540824770104","-92.64499738812447"}, {"NETH102: Electrical Distribution","","32.52559340485038","-92.64499738812447"},
-                {"NETH104: Machinery II","","32.52562676208967","-92.64499101787806"}, {"NETH106: Instrument Room","","32.52567255760138","-92.64502018690108"},
-                {"Mens Bathroom","","32.5256883881432","-92.64481533318758"},
-                {"Women Bathroom","","32.52563552543013","-92.64481734484436"},
-                {"The Grid","","32.52565390017351","-92.64469999819994"}, {"Computer Lab I","","32.52564485414647","-92.64462288469075"}, {"Computer Lab II","","32.52564683296495","-92.64457024633883"},
-                {"Mens Bathroom","","32.52566633845918","-92.64451190829277"},
-                {"Artificial Intelligence","","32.52552160193739","-92.64443177729844"},{"Optoelectronics Lab","","32.52576273511486","-92.64445658773184"},
-                {"Student Organizations","","32.52576838887443","-92.64465440064669"}};
+        String[][] re1 = {{"Admin Office" , "Need assistance?", "32.525801180673014","-92.64481633901596"},
+                {"NETH103: Machinery I","","32.525644571458116","-92.64506142586468"},{"NETH101: Data Mining Rese Lab","","32.5255767262261","-92.64506142586468"},
+                {"NETH100: Power Systems Lab","","32.525561461041846","-92.64495413750412"}, {"NETH104: Machinery II","","32.52565333479684","-92.64495413750412"},
+                {"Professor's Lounge","","32.52568697470208","-92.64482203871012"},{"Mens Bathroom","","32.52571072050998","-92.64477141201495"},{"Women Bathroom","","32.52568527857272","-92.64477141201495"},
+                {"The Grid","","32.5256751017958","-92.64465607702734"}, {"Computer Lab I","","32.5256751017958","-92.64458365738392"}, {"Computer Lab II","","32.5256751017958","-92.6445249840617"},
+                {"Mens Bathroom","","32.5256883881432","-92.64446698129177"},
+                {"Artificial Intelligence","","32.52554421703429","-92.64438852667809"},{"Optoelectronics Lab","","32.52578224058392","-92.64441300183535"},
+                {"Student Organizations","","32.52578224058392","-92.6446084678173"}};
 
         String[][] prof2 = {{"Dr. Hartmann","","32.52578817703018","-92.6450765132904"}, {"Dr. El-Awadi","","32.52578704627854","-92.64502689242363"},
                 {"Dr. Bhattari","","32.5257859155269","-92.64498800039291"}, {"Dr. Hutchinson","","32.5257861982148","-92.64495078474283"}, {"Dr. Chen","","32.52578082714428","-92.64491323381662"},
@@ -174,7 +172,7 @@ public class MapsActivity extends DrawerBaseActivity
                 public void onClick(View view) {
                     floor = 1;
                     mMap.clear();
-                    LatLng nethken = new LatLng(32.525641920516314, -92.64477126104399);
+                    LatLng nethken = new LatLng(32.525665490440126,-92.64472849667071);
 
                     GroundOverlayOptions neth = new GroundOverlayOptions()
                             .image(BitmapDescriptorFactory.fromResource(R.drawable.nethken_floor1))
@@ -190,7 +188,7 @@ public class MapsActivity extends DrawerBaseActivity
                 public void onClick(View view) {
                     floor = 2;
                     mMap.clear();
-                    LatLng nethken = new LatLng(32.525641920516314, -92.64477126104399);
+                    LatLng nethken = new LatLng(32.525665490440126,-92.64472849667071);
 
                     GroundOverlayOptions neth = new GroundOverlayOptions()
                             .image(BitmapDescriptorFactory.fromResource(R.drawable.nethken_floor2))
@@ -499,7 +497,7 @@ public class MapsActivity extends DrawerBaseActivity
             mMap = googleMap;
 
             //Add nethken overlay
-            LatLng neth = new LatLng(32.525641920516314, -92.64477126104399);
+            LatLng neth = new LatLng(32.525665490440126,-92.64472849667071);
             GroundOverlayOptions nethken = new GroundOverlayOptions()
                     .image(BitmapDescriptorFactory.fromResource(R.drawable.nethken))
                     .position(neth, 76f, 46f);
