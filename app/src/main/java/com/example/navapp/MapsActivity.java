@@ -31,6 +31,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.example.navapp.databinding.ActivityMapsBinding;
+import com.gimbal.android.Gimbal;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMyLocationButtonClickListener;
@@ -110,12 +111,12 @@ public class MapsActivity extends DrawerBaseActivity
                 {"Artificial Intelligence","","32.52554421703429","-92.64438852667809"},{"Optoelectronics Lab","","32.52578224058392","-92.64441300183535"},
                 {"Student Organizations","","32.52578224058392","-92.6446084678173"}};
 
-        String[][] prof2 = {{"Dr. Hartmann","","32.52578817703018","-92.6450765132904"}, {"Dr. El-Awadi","","32.52578704627854","-92.64502689242363"},
-                {"Dr. Bhattari","","32.5257859155269","-92.64498800039291"}, {"Dr. Hutchinson","","32.5257861982148","-92.64495078474283"}, {"Dr. Chen","","32.52578082714428","-92.64491323381662"},
-                {"Dr. Green","","32.52578082714428","-92.64487367123365"},{"Dr. Liu","","32.52578082714428","-92.64484014362097"},{"Dr. Nassar","","32.52577884832872","-92.64480259269475"},
-                {"Dr. Cox","","32.525774608009584","-92.64470435678959"},{"Dr. Dai","","32.525774608009584","-92.64459773898123"},{"Dr. Chowriappa","","32.525771215754105","-92.64455180615187"},
-                {"Dr. Box","","32.525769236938345","-92.64451425522566"},{"Dr. Cherry","","32.52576754081052","-92.64447435736656"},{"Dr. Greechie","","32.52576754081052","-92.64444317668676"},
-                {"Dr. Min", "", "32.52559001258808","-92.64442641288042"}};
+        String[][] prof2 = {{"Dr. Matthew Hartmann","Program Chair and Lecturer","32.52578817703018","-92.6450765132904"}, {"Zakaria El-Awadi","","32.52578704627854","-92.64502689242363"},
+                {"Dr. Prashanna Bhattari","Assistant Professor","32.5257859155269","-92.64498800039291"}, {"Aaron Hutchinson","Assistant Professor","32.5257861982148","-92.64495078474283"}, {"Dr. Jinyuan Chen","Assistant Professor","32.52578082714428","-92.64491323381662"},
+                {"Nathan Green","Assistant Professor","32.52578082714428","-92.64487367123365"},{"Dr. Don Liu","Professor","32.52578082714428","-92.64484014362097"},{"Dr. Raj Nassar","Professor Emeritus","32.52577884832872","-92.64480259269475"},
+                {"Dr. Weizhong Dai","Professor – Mathematics and Statistics, Program Chair – Computational Analysis Modeling","32.525774608009584","-92.64459773898123"},{"Dr. Pradeep Chowriappa","Assistant Professor","32.525771215754105","-92.64455180615187"},
+                {"Dr. Kevin Cherry","Lecturer","32.52576754081052","-92.64447435736656"},{"Dr. Richard Greechie","Professor Emeritus","32.52576754081052","-92.64444317668676"},
+                {"Dr. Manki Min", "Associate Professor", "32.52559001258808","-92.64442641288042"}};
 
         String[][] class2 = {{"NETH209","","32.52568697470208","-92.64510668814181"},{"NETH243","","32.52565700974508","-92.64442473649979"},
                 {"NETH244","","32.525579553111804","-92.64452900737524"},{"NETH216","","32.52567905943139","-92.64496352523565"}};
@@ -162,7 +163,7 @@ public class MapsActivity extends DrawerBaseActivity
             oButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(view.getContext(), GroundOverlayActivity.class);
+                    Intent intent = new Intent(view.getContext(), BeaconsActivity.class);
                     view.getContext().startActivity(intent);
                 }
             });
@@ -567,6 +568,10 @@ public class MapsActivity extends DrawerBaseActivity
             // Permission to access the location is missing. Show rationale and request permission
             PermissionUtils.requestPermission(this, LOCATION_PERMISSION_REQUEST_CODE,
                     Manifest.permission.ACCESS_FINE_LOCATION, true);
+        }
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_SCAN)
+               == PackageManager.PERMISSION_DENIED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.BLUETOOTH_SCAN}, 2);
         }
         // [END maps_check_location_permission]
     }
