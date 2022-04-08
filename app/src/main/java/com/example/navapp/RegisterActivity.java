@@ -54,7 +54,7 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.register_activity);
+        setContentView(R.layout.activity_register);
         db = FirebaseFirestore.getInstance();
         db.setLoggingEnabled(true);
 

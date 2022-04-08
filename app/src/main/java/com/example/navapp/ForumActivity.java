@@ -25,9 +25,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.example.navapp.Utils.Posts;
 import com.example.navapp.databinding.ActivityDrawerBaseBinding;
 import com.example.navapp.databinding.ActivityForumBinding;
-import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
-import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.firebase.ui.firestore.paging.FirestorePagingAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -62,7 +59,6 @@ public class ForumActivity extends DrawerBaseActivity {
     String description;
     ImageView commentbtn;
     SwipeRefreshLayout swipeRefreshLayout;
-    FirestorePagingAdapter firestorePagingAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -68,7 +68,9 @@ dependencies {
     androidTestImplementation 'junit:junit:4.12'
 
     implementation 'de.hdodenhof:circleimageview:3.1.0'
-    implementation 'com.github.CanHub:Android-Image-Cropper:3.3.6'
+    implementation 'com.github.dhaval2404:imagepicker:2.1'
+    implementation 'com.github.bumptech.glide:glide:4.13.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.13.0'
 
     implementation 'com.gimbal.android.v4:gimbal-sdk:4.7.0'
     implementation 'com.gimbal.android.v4:gimbal-slf4j-impl:4.7.0'
