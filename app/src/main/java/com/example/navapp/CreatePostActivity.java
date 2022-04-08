@@ -30,11 +30,13 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -84,9 +86,10 @@ public class CreatePostActivity extends AppCompatActivity {
 
                 sharedPreferences = getApplicationContext().getSharedPreferences("login", Context.MODE_PRIVATE);
                 String name = sharedPreferences.getString("username", "");
-                storageReference = FirebaseStorage.getInstance().getReference(name);
+                storageReference = FirebaseStorage.getInstance().getReference();
 
                 Map<String,Object> posts = new HashMap<>();
+                posts.put("username", name);
                 posts.put("title", title);
                 posts.put("description", description);
                 Date date = new Date();
@@ -98,27 +101,42 @@ public class CreatePostActivity extends AppCompatActivity {
                     Toast.makeText(CreatePostActivity.this, "Please write a title before posting!", Toast.LENGTH_LONG).show();
                 }
                 else {
-
-                    storageReference.child(title).putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            storageReference.child(title).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                @Override
+                    if (imageUri != null) {
+                        StorageReference postRef = storageReference.child("post_images").child(FieldValue.serverTimestamp().toString() + "jpg");
+                        postRef.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                postRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                    @Override
                                     public void onSuccess(Uri uri) {
                                         posts.put("imageURL", uri.toString());
+                                        firestore.collection("posts").add(posts).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<DocumentReference> task) {
+                                                if (task.isSuccessful()) {
+                                                    Toast.makeText(CreatePostActivity.this, "Posted!", Toast.LENGTH_LONG).show();
+                                                }
+
+                                            }
+                                        });
 
                                     }
-                            });
-                        }
-                    });
-                    Task<DocumentReference> documentReference = firestore.collection("posts").document(name).collection("myposts").add(posts)
-                            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                                @Override
-                                public void onSuccess(DocumentReference documentReference) {
+                                });
+                            }
+                        });
+                    }
+                    else {
+                        firestore.collection("posts").add(posts).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentReference> task) {
+                                if (task.isSuccessful()) {
                                     Toast.makeText(CreatePostActivity.this, "Posted!", Toast.LENGTH_LONG).show();
-
                                 }
-                            });
+
+                            }
+                        });
+                    }
+                    //Task<DocumentReference> documentReference = firestore.collection("posts").document(name).collection("myposts").add(posts)
                     startActivity(new Intent(getApplicationContext(),ForumActivity.class));
 
 

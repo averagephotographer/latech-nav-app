@@ -2,6 +2,7 @@ package com.example.navapp;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,13 +12,18 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.navapp.Utils.Posts;
 
+import java.text.CollationElementIterator;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.TimeZone;
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
-    Context context;
+    static Context context;
     ArrayList<Posts> postsArrayList;
     SharedPreferences sharedPreferences;
 
@@ -39,13 +45,29 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         sharedPreferences = context.getApplicationContext().getSharedPreferences("login", Context.MODE_PRIVATE);
         String name = sharedPreferences.getString("username", "");
 
-        Posts  myposts = postsArrayList.get(position);
+        Posts posts = postsArrayList.get(position);
 
-        holder.postDesc.setText(myposts.getDescription());
-        holder.postTitle.setText(myposts.getTitle());
-        holder.postDate.setText(myposts.getDatePost());
-        holder.username.setText(myposts.name);
+        holder.postDesc.setText(posts.getDescription());
+        holder.postTitle.setText(posts.getTitle());
+        String timeAgo = calculateTimeAgo(posts.getDatePost());
+        holder.postDate.setText(timeAgo);
+        holder.username.setText(posts.getUsername());
 
+
+    }
+
+    private String calculateTimeAgo(String datePost) {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
+        try {
+            long time = sdf.parse(datePost).getTime();
+            long now = System.currentTimeMillis();
+            CharSequence ago =
+                    DateUtils.getRelativeTimeSpanString(time, now, DateUtils.MINUTE_IN_MILLIS);
+            return ago+"";
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 
     @Override
@@ -54,7 +76,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView postDesc, postTitle, username, postDate, likeCount;
+        TextView postDesc, postTitle, username, likeCount, postDate;
         ImageView likeButton, commentButton;
 
 

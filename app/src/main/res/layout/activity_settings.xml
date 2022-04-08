@@ -20,8 +20,7 @@
         app:layout_constraintHorizontal_bias="0.084"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintVertical_bias="0.086"
-        app:srcCompat="@drawable/ic_person"
-        app:tint="?attr/tint" />
+        app:srcCompat="@drawable/ic_person" />
 
     <TextView
         android:id="@+id/textView4"
@@ -47,8 +46,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/textView4"
         app:layout_constraintVertical_bias="1.0"
-        app:srcCompat="@drawable/ic_right_arrow"
-        app:tint="?attr/tint" />
+        app:srcCompat="@drawable/ic_right_arrow" />
 
     <ImageView
         android:id="@+id/imageView5"
@@ -60,8 +58,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/user_icon"
         app:layout_constraintVertical_bias="0.08"
-        app:srcCompat="@drawable/ic_night"
-        app:tint="?attr/tint" />
+        app:srcCompat="@drawable/ic_night" />
 
     <TextView
         android:id="@+id/textView5"
@@ -99,8 +96,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView5"
         app:layout_constraintVertical_bias="0.091"
-        app:srcCompat="@drawable/ic_info"
-        app:tint = "?attr/tint"/>
+        app:srcCompat="@drawable/ic_info" />
 
     <TextView
         android:id="@+id/textView6"
@@ -125,8 +121,7 @@
         app:layout_constraintStart_toEndOf="@+id/textView6"
         app:layout_constraintTop_toTopOf="@+id/textView6"
         app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@drawable/ic_right_arrow"
-        app:tint = "?attr/tint" />
+        app:srcCompat="@drawable/ic_right_arrow" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

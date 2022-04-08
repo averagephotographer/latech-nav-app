@@ -10,6 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.RenderProcessGoneDetail;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,12 +20,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.navapp.Utils.Posts;
 import com.example.navapp.databinding.ActivityDrawerBaseBinding;
 import com.example.navapp.databinding.ActivityForumBinding;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.firebase.ui.firestore.paging.FirestorePagingAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -56,6 +60,9 @@ public class ForumActivity extends DrawerBaseActivity {
     ProgressDialog progressDialog;
     String titlepost;
     String description;
+    ImageView commentbtn;
+    SwipeRefreshLayout swipeRefreshLayout;
+    FirestorePagingAdapter firestorePagingAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +72,7 @@ public class ForumActivity extends DrawerBaseActivity {
         allocateActivityTitle("Forum");
         showPost = (TextView) findViewById(R.id.show_post);
         Intent intent = getIntent();
-        String string=intent.getStringExtra("Value");
+        String string = intent.getStringExtra("Value");
         showPost.setText(string);
 
         recyclerView = findViewById(R.id.recyclerView);
@@ -77,9 +84,9 @@ public class ForumActivity extends DrawerBaseActivity {
         progressDialog.setMessage("Fetching Data...");
         //progressDialog.show();
 
-        bottomNavigationView=findViewById(R.id.bottomNavigationView);
+        bottomNavigationView = findViewById(R.id.bottomNavigationView);
         bottomNavigationView.setBackground(null);
-        floatingActionButton=findViewById(R.id.floatingActionButton);
+        floatingActionButton = findViewById(R.id.floatingActionButton);
 
         firestore = FirebaseFirestore.getInstance();
         postsArrayList = new ArrayList<Posts>();
@@ -88,7 +95,6 @@ public class ForumActivity extends DrawerBaseActivity {
         recyclerView.setAdapter(myAdapter);
         EventChangeListener();
 
-
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -96,57 +102,54 @@ public class ForumActivity extends DrawerBaseActivity {
                 startActivity(intent);
             }
         });
+
     }
 
     private void EventChangeListener() {
-        
+
         sharedPreferences = getApplicationContext().getSharedPreferences("login", Context.MODE_PRIVATE);
         String name = sharedPreferences.getString("username", "");
-        String title = sharedPreferences.getString("title", "");
 
 
-        DocumentReference documentReference = firestore.collection("posts").document(name).collection("myposts").document(title);
-        documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                DocumentSnapshot DS = task.getResult();
-                titlepost = DS.get("title").toString();
-                description = DS.get("description").toString();
-                Toast.makeText(ForumActivity.this, titlepost, Toast.LENGTH_LONG);
-            }
-        });
-                /*
+        firestore.collection("posts").orderBy("datePost",Query.Direction.DESCENDING)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
 
                         if (error != null) {
 
-                            /*if (progressDialog != null && progressDialog.isShowing())
+                            if (progressDialog != null && progressDialog.isShowing())
                                 progressDialog.dismiss();
-                                Log.e("Firestore Error",error.getMessage());
-                                return;
-
-                             */
+                            Log.e("Firestore Error", error.getMessage());
+                            return;
 
                         }
-/*
+
                         for (DocumentChange dc : value.getDocumentChanges()) {
                             if (dc.getType() == DocumentChange.Type.ADDED) {
                                 postsArrayList.add(dc.getDocument().toObject(Posts.class));
+                                myAdapter.notifyDataSetChanged();
+
                             }
                         }
 
-                            myAdapter.notifyDataSetChanged();
+                        swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
+                        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                            @Override
+                            public void onRefresh() {
+                                myAdapter.notifyDataSetChanged();
+                                swipeRefreshLayout.setRefreshing(false);
 
-                            if (progressDialog != null && progressDialog.isShowing())
-                                progressDialog.dismiss();
+                            }
+                        });
+                        myAdapter.notifyDataSetChanged();
+                        if (progressDialog != null && progressDialog.isShowing())
+                            progressDialog.dismiss();
 
 
+                    }
+                });
 
-
-            }
-        });
-        */
     }
+}
 
