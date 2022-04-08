@@ -126,7 +126,7 @@ public class LoginActivity extends AppCompatActivity {
                                             FirebaseUser user = firebaseAuth.getCurrentUser();
                                             if (user.isEmailVerified()) {
                                                 Toast.makeText(LoginActivity.this, "Logged In", Toast.LENGTH_SHORT).show();
-                                                System.out.println("samuel 'dabuz' buzby");
+                                                //System.out.println("samuel 'dabuz' buzby");
                                                 startActivity(new Intent(getApplicationContext(), twofareg.class));
                                             }
                                             else
