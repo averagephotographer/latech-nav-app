@@ -133,8 +133,21 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if(task.isSuccessful()) {
-                                Toast.makeText(RegisterActivity.this, "User Created", Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(RegisterActivity.this, "User Created", Toast.LENGTH_SHORT).show();
                                 //userID = fAuth.getCurrentUser().getUid();
+                                fAuth.getCurrentUser().sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task)
+                                    {
+                                        if (task.isSuccessful())
+                                        {
+                                            Toast.makeText(RegisterActivity.this, "verification email sent", Toast.LENGTH_LONG).show();
+                                        }
+                                        else{
+                                            Toast.makeText(RegisterActivity.this, "verification email not sent", Toast.LENGTH_LONG).show();
+                                        }
+                                    }
+                                });
                                 DocumentReference documentReference = db.collection("user_profile").document(username_str);
                                 documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
