@@ -17,9 +17,21 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseException;
+import com.google.firebase.FirebaseTooManyRequestsException;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthMultiFactorException;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.MultiFactorAssertion;
+import com.google.firebase.auth.MultiFactorInfo;
+import com.google.firebase.auth.MultiFactorResolver;
+import com.google.firebase.auth.PhoneAuthCredential;
+import com.google.firebase.auth.PhoneAuthOptions;
+import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.auth.PhoneMultiFactorGenerator;
+import com.google.firebase.auth.PhoneMultiFactorInfo;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -27,6 +39,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import org.mindrot.jbcrypt.BCrypt;
+
+import java.util.concurrent.TimeUnit;
 
 public class LoginActivity extends AppCompatActivity {
     private EditText mUsername;
@@ -39,6 +53,9 @@ public class LoginActivity extends AppCompatActivity {
     SharedPreferences sharedPreferences;
     public static final String Username = "username";
     public static final String pass_wrd = "password";
+    private PhoneAuthCredential cred;
+    private String VID;
+    private PhoneAuthProvider.ForceResendingToken Token;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,9 +113,7 @@ public class LoginActivity extends AppCompatActivity {
                                 editor.putString(Username, DS.get("username").toString());
                                 //editor.putString(pass_wrd, DS.get("password").toString());
                                 editor.commit();
-<<<<<<< HEAD
-                                startActivity(new Intent(getApplicationContext(), twofareg.class));
-=======
+
                                 firebaseAuth.signInWithEmailAndPassword(DS.get("email").toString(),passwordAAAA).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                                     @Override
                                     public void onComplete(@NonNull Task<AuthResult> task) {
@@ -108,7 +123,7 @@ public class LoginActivity extends AppCompatActivity {
                                             if (user.isEmailVerified()) {
                                                 Toast.makeText(LoginActivity.this, "Logged In", Toast.LENGTH_SHORT).show();
                                                 System.out.println("samuel 'dabuz' buzby");
-                                                startActivity(new Intent(getApplicationContext(), MapsActivity.class));
+                                                startActivity(new Intent(getApplicationContext(), twofareg.class));
                                             }
                                             else
                                             {
@@ -116,15 +131,105 @@ public class LoginActivity extends AppCompatActivity {
                                             }
 
                                         }
-                                        else{
-                                            Toast.makeText(LoginActivity.this, "login failed", Toast.LENGTH_SHORT).show();
-                                            System.out.println("no bitches?");
 
+                                        if (task.getException() instanceof FirebaseAuthMultiFactorException)
+                                        {
+                                            FirebaseAuthMultiFactorException e =
+                                                    (FirebaseAuthMultiFactorException) task.getException();
+
+                                            MultiFactorResolver multiFactorResolver = e.getResolver();
+
+                                            PhoneAuthProvider.OnVerificationStateChangedCallbacks callbacks =
+                                                    new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+
+
+
+                                                        @Override
+                                                        public void onVerificationCompleted(PhoneAuthCredential credential) {
+                                                            // This callback will be invoked in two situations:
+                                                            // 1) Instant verification. In some cases, the phone number can be
+                                                            //    instantly verified without needing to send or enter a verification
+                                                            //    code. You can disable this feature by calling
+                                                            //    PhoneAuthOptions.builder#requireSmsValidation(true) when building
+                                                            //    the options to pass to PhoneAuthProvider#verifyPhoneNumber().
+                                                            // 2) Auto-retrieval. On some devices, Google Play services can
+                                                            //    automatically detect the incoming verification SMS and perform
+                                                            //    verification without user action.
+                                                            cred = credential;
+                                                        }
+                                                        @Override
+                                                        public void onVerificationFailed(FirebaseException e) {
+                                                            // This callback is invoked in response to invalid requests for
+                                                            // verification, like an incorrect phone number.
+                                                            if (e instanceof FirebaseAuthInvalidCredentialsException) {
+                                                                // Invalid request
+                                                                // ...
+                                                            } else if (e instanceof FirebaseTooManyRequestsException) {
+                                                                // The SMS quota for the project has been exceeded
+                                                                // ...
+                                                            }
+                                                            // Show a message and update the UI
+                                                            // ...
+                                                        }
+                                                        @Override
+                                                        public void onCodeSent(
+                                                                String verificationId, PhoneAuthProvider.ForceResendingToken token) {
+                                                            // The SMS verification code has been sent to the provided phone number.
+                                                            // We now need to ask the user to enter the code and then construct a
+                                                            // credential by combining the code with a verification ID.
+                                                            // Save the verification ID and resending token for later use.
+                                                            VID = verificationId;
+                                                            Token = token;
+                                                            // ...
+                                                        }
+                                                    };
+
+                                            // Ask user which second factor to use.
+
+                                            String phonenumber = multiFactorResolver.getFirebaseAuth().getCurrentUser().getPhoneNumber();
+                                            // Send the SMS verification code.
+                                            PhoneAuthProvider.verifyPhoneNumber(
+                                                    PhoneAuthOptions.newBuilder()
+                                                            .setActivity(LoginActivity.this)
+                                                            .setMultiFactorSession(multiFactorResolver.getSession())
+                                                            .setPhoneNumber(phonenumber)
+                                                            .setCallbacks(callbacks)
+                                                            .setTimeout(30L, TimeUnit.SECONDS)
+                                                            .build());
+
+
+                                            String verificationCode = "";
+
+                                            // Ask user for the SMS verification code.
+                                            PhoneAuthCredential credential =
+                                                    PhoneAuthProvider.getCredential(VID, verificationCode);
+
+                                            // Initialize a MultiFactorAssertion object with the
+                                            // PhoneAuthCredential.
+                                            MultiFactorAssertion multiFactorAssertion =
+                                                    PhoneMultiFactorGenerator.getAssertion(credential);
+
+                                            // Complete sign-in.
+                                            multiFactorResolver
+                                                    .resolveSignIn(multiFactorAssertion)
+                                                    .addOnCompleteListener(
+                                                            new OnCompleteListener<AuthResult>() {
+                                                                @Override
+                                                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                                                    if (task.isSuccessful()) {
+                                                                        // User successfully signed in with the
+                                                                        // second factor phone number.
+                                                                    }
+                                                                    // ...
+                                                                }
+                                                            });
+                                        } else {
+                                            // Handle other errors such as wrong password.
                                         }
                                     }
+
                                 });
                                 //startActivity(new Intent(getApplicationContext(), MapsActivity.class));
->>>>>>> parent of 70ab4ff (Revert "Added Email Verification to the app")
                             } else {
                                 Toast.makeText(LoginActivity.this, "Error! " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
                             }

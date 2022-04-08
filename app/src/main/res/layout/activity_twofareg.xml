@@ -10,26 +10,34 @@
         android:id="@+id/Skipbutton"
         android:layout_width="123dp"
         android:layout_height="70dp"
+        android:layout_marginStart="60dp"
+        android:layout_marginTop="396dp"
         android:text="Skip For Now"
-        tools:layout_editor_absoluteX="48dp"
-        tools:layout_editor_absoluteY="621dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextPhone" />
 
     <Button
         android:id="@+id/button3"
         android:layout_width="114dp"
         android:layout_height="75dp"
+        android:layout_marginStart="72dp"
+        android:layout_marginTop="396dp"
         android:text="Register 2FA"
-        tools:layout_editor_absoluteX="223dp"
-        tools:layout_editor_absoluteY="620dp" />
+        app:layout_constraintStart_toEndOf="@+id/Skipbutton"
+        app:layout_constraintTop_toBottomOf="@+id/editTextPhone" />
 
     <EditText
         android:id="@+id/editTextPhone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="100dp"
-        android:layout_marginBottom="412dp"
+        android:layout_marginStart="116dp"
+        android:layout_marginTop="100dp"
+        android:layout_marginBottom="288dp"
+        android:contentDescription='"Phone Number"'
         android:ems="10"
+        android:hint="Phone Number"
         android:inputType="phone"
         app:layout_constraintBottom_toTopOf="@+id/button3"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
