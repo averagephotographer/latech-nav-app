@@ -111,14 +111,18 @@ public class CreatePostActivity extends AppCompatActivity {
                             });
                         }
                     });
-                    DocumentReference documentReference = firestore.collection("posts").document(name).collection("myposts").document(title);
-                    documentReference.set(posts).addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            Toast.makeText(CreatePostActivity.this, "Posted!", Toast.LENGTH_LONG).show();
-                        }
-                    });
+                    Task<DocumentReference> documentReference = firestore.collection("posts").document(name).collection("myposts").add(posts)
+                            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                @Override
+                                public void onSuccess(DocumentReference documentReference) {
+                                    Toast.makeText(CreatePostActivity.this, "Posted!", Toast.LENGTH_LONG).show();
+
+                                }
+                            });
                     startActivity(new Intent(getApplicationContext(),ForumActivity.class));
+
+
+                    //startActivity(new Intent(getApplicationContext(),ForumActivity.class));
                 }
             }});
 
