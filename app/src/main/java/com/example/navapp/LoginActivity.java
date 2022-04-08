@@ -1,9 +1,13 @@
 package com.example.navapp;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Parcelable;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -70,8 +74,8 @@ public class LoginActivity extends AppCompatActivity {
         sharedPreferences = getSharedPreferences("login", Context.MODE_PRIVATE);
 
         if(sharedPreferences.contains(Username)){
-            Intent i = new Intent(LoginActivity.this, MapsActivity.class);
-            startActivity(i);
+            //Intent i = new Intent(LoginActivity.this, MapsActivity.class);
+            //startActivity(i);
         }
 
         dontHaveAcc = findViewById(R.id.dontHaveAcc);
@@ -109,10 +113,10 @@ public class LoginActivity extends AppCompatActivity {
                             checkpw = DS.get("password").toString();
                             if (BCrypt.checkpw(passwordAAAA, checkpw)) {
                                 //Toast.makeText(LoginActivity.this, "Logged In", Toast.LENGTH_SHORT).show();
-                                SharedPreferences.Editor editor = sharedPreferences.edit();
-                                editor.putString(Username, DS.get("username").toString());
+                                //SharedPreferences.Editor editor = sharedPreferences.edit();
+                                //editor.putString(Username, DS.get("username").toString());
                                 //editor.putString(pass_wrd, DS.get("password").toString());
-                                editor.commit();
+                                //editor.commit();
 
                                 firebaseAuth.signInWithEmailAndPassword(DS.get("email").toString(),passwordAAAA).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                                     @Override
@@ -183,46 +187,83 @@ public class LoginActivity extends AppCompatActivity {
                                                             // ...
                                                         }
                                                     };
-
+                                            MultiFactorInfo selectedHint = multiFactorResolver.getHints().get(0);
+                                            PhoneMultiFactorInfo PMFI = null;
                                             // Ask user which second factor to use.
+                                            if (selectedHint.getFactorId() == PhoneMultiFactorGenerator.FACTOR_ID)
+                                            {
 
-                                            String phonenumber = multiFactorResolver.getFirebaseAuth().getCurrentUser().getPhoneNumber();
+                                                PMFI = (PhoneMultiFactorInfo) selectedHint;
+                                            }
+
+
+
                                             // Send the SMS verification code.
                                             PhoneAuthProvider.verifyPhoneNumber(
                                                     PhoneAuthOptions.newBuilder()
                                                             .setActivity(LoginActivity.this)
                                                             .setMultiFactorSession(multiFactorResolver.getSession())
-                                                            .setPhoneNumber(phonenumber)
+                                                            .setMultiFactorHint(PMFI)
                                                             .setCallbacks(callbacks)
                                                             .setTimeout(30L, TimeUnit.SECONDS)
                                                             .build());
 
 
-                                            String verificationCode = "";
 
-                                            // Ask user for the SMS verification code.
-                                            PhoneAuthCredential credential =
-                                                    PhoneAuthProvider.getCredential(VID, verificationCode);
 
-                                            // Initialize a MultiFactorAssertion object with the
-                                            // PhoneAuthCredential.
-                                            MultiFactorAssertion multiFactorAssertion =
-                                                    PhoneMultiFactorGenerator.getAssertion(credential);
 
-                                            // Complete sign-in.
-                                            multiFactorResolver
-                                                    .resolveSignIn(multiFactorAssertion)
-                                                    .addOnCompleteListener(
-                                                            new OnCompleteListener<AuthResult>() {
-                                                                @Override
-                                                                public void onComplete(@NonNull Task<AuthResult> task) {
-                                                                    if (task.isSuccessful()) {
-                                                                        // User successfully signed in with the
-                                                                        // second factor phone number.
-                                                                    }
-                                                                    // ...
-                                                                }
-                                                            });
+                                            AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
+                                            builder.setTitle("Verification Code");
+
+// Set up the input
+                                            final EditText input = new EditText(LoginActivity.this);
+// Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+                                            input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                                            builder.setView(input);
+
+// Set up the buttons
+                                            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+
+                                                    String javascript = input.getText().toString();
+                                                    // Ask user for the SMS verification code.
+                                                    PhoneAuthCredential credential =
+                                                            PhoneAuthProvider.getCredential(VID, javascript);
+
+                                                    // Initialize a MultiFactorAssertion object with the
+                                                    // PhoneAuthCredential.
+                                                    MultiFactorAssertion multiFactorAssertion =
+                                                            PhoneMultiFactorGenerator.getAssertion(credential);
+
+                                                    // Complete sign-in.
+                                                    multiFactorResolver
+                                                            .resolveSignIn(multiFactorAssertion)
+                                                            .addOnCompleteListener(
+                                                                    new OnCompleteListener<AuthResult>() {
+                                                                        @Override
+                                                                        public void onComplete(@NonNull Task<AuthResult> task) {
+                                                                            if (task.isSuccessful()) {
+                                                                                // User successfully signed in with the
+                                                                                // second factor phone number.
+                                                                                Toast.makeText(LoginActivity.this, "TWO FACTOR LOGGED IN", Toast.LENGTH_SHORT).show();
+                                                                                startActivity(new Intent(LoginActivity.this, MapsActivity.class));
+                                                                            }
+                                                                            // ...
+                                                                        }
+                                                                    });
+
+                                                }
+                                            });
+                                            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    dialog.cancel();
+                                                }
+                                            });
+
+                                            builder.show();
+
                                         } else {
                                             // Handle other errors such as wrong password.
                                         }

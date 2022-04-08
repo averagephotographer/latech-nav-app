@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.icu.text.SymbolTable;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.View;
@@ -110,11 +111,11 @@ public class twofareg extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             MultiFactorSession multiFactorSession = task.getResult();
                             PhoneAuthOptions phoneAuthOptions =
-                                    PhoneAuthOptions.newBuilder()
+                                    PhoneAuthOptions.newBuilder().setActivity(twofareg.this)
                                             .setPhoneNumber(phoneNumber)
                                             .setTimeout(30L, TimeUnit.SECONDS)
                                             .setMultiFactorSession(multiFactorSession)
-                                            .setCallbacks(callbacks).setActivity(twofareg.this)
+                                            .setCallbacks(callbacks)
                                             .build();
                             // Send SMS verification code.
                             PhoneAuthProvider.verifyPhoneNumber(phoneAuthOptions);
@@ -135,7 +136,27 @@ public class twofareg extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
-                        UserVerificationCode[0] = input.getText().toString();
+                        String javascript = input.getText().toString();
+                        PhoneAuthCredential credential= PhoneAuthProvider.getCredential(VID, javascript);
+
+                        MultiFactorAssertion multiFactorAssertion = PhoneMultiFactorGenerator.getAssertion(credential);
+// Complete enrollment.
+                        FirebaseAuth.getInstance()
+                                .getCurrentUser()
+                                .getMultiFactor()
+                                .enroll(multiFactorAssertion, "My personal phone number")
+                                .addOnCompleteListener(
+                                        new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                // ...
+                                                if (task.isSuccessful())
+                                                {
+                                                    Toast.makeText(twofareg.this, "Successful 2Factor Enrollment", Toast.LENGTH_SHORT).show();
+                                                    //startActivity(new Intent(getApplicationContext(), MapsActivity.class));
+                                                }
+                                            }
+                                        });
                     }
                 });
                 builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -144,34 +165,15 @@ public class twofareg extends AppCompatActivity {
                         dialog.cancel();
                     }
                 });
-
+                System.out.println(VID);
                 builder.show();
-
-/*
-
+               // VID = "696969";
+                //UserVerificationCode[0] = "696969";
 // Ask user for the verification code.
-               // PhoneAuthCredential credential= PhoneAuthProvider.getCredential(VID, UserVerificationCode[0]);
+                System.out.println("buh");
 
-               // MultiFactorAssertion multiFactorAssertion = PhoneMultiFactorGenerator.getAssertion(credential);
-// Complete enrollment.
-                FirebaseAuth.getInstance()
-                        .getCurrentUser()
-                        .getMultiFactor()
-                        .enroll(multiFactorAssertion, "My personal phone number")
-                        .addOnCompleteListener(
-                                new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        // ...
-                                        if (task.isSuccessful())
-                                        {
-                                            Toast.makeText(twofareg.this, "Successful 2Factor Enrollment", Toast.LENGTH_SHORT).show();
-                                            //startActivity(new Intent(getApplicationContext(), MapsActivity.class));
-                                        }
-                                    }
-                                });
 
- */
+ /**/
             }
         });
     }
