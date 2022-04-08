@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
@@ -111,13 +112,14 @@ public class MapsActivity extends DrawerBaseActivity
         boolean [] selectedService;
         ArrayList<Integer> servList = new ArrayList<>();
         String[] servArray = {"Classrooms", "Professors", "Resources"};
-        String[] countries={"India","Australia","West indies","indonesia","Indiana",
-                "South Africa","England","Bangladesh","Srilanka","singapore"};
+        String[] countries={"Dr. Turner","Dr. Choi","Dr. Prather","Dr. O'Neal","Dr. Cox","Dr. Biggs","Dr. Glisson","Dr. Bowman","Dr. Abdoulahi","Dr. Gates","Dr. Hyde","Dr. Hyde",
+                "NETH105","NETH120","NETH140","NETH153","Admin Office","NETH103: Machinery I","NETH101: Data Mining Rese Lab","NETH100: Power Systems Lab","NETH104: Machinery II",
+                "Professor's Lounge","Mens Bathroom","Women Bathroom","The Grid","Computer Lab I","Computer Lab II","Artificial Intelligence","Optoelectronics Lab","Student Organizations"};
 
-        String[][] prof1 = {{"Dr. Turner","","32.525801180673014","-92.6449068635702"},{"Dr. Choi","","32.525801180673014","-92.64494743198156"},{"Dr. Prather","","32.525801180673014","-92.64498598873614"},
-                {"Dr. O'Neal","","32.525801180673014","-92.64502186328173"},{"Dr. Cox","","32.525540824770104","-92.6444934681058"},{"Dr. Biggs","","32.52550350985576","-92.6444934681058"},
-                {"Dr. Glisson","","32.52560160281711","-92.64438852667809"},{"Dr. Bowman","","32.52578224058392","-92.64446564018726"},{"Dr. Abdoulahi","","32.52578224058392","-92.64450185000896"},
-                {"Dr. Gates","","32.52578224058392","-92.64455012977122"}, {"Dr. Hyde","","32.52578224058392","-92.64465942978859"}};
+        String[][] prof1 = {{"Dr. Turner","","32.525801180673014","-92.6449068635702", "turner"},{"Dr. Choi","","32.525801180673014","-92.64494743198156", "choi"},{"Dr. Prather","","32.525801180673014","-92.64498598873614", "prather"},
+                {"Dr. O'Neal","","32.525801180673014","-92.64502186328173", "oneal"},{"Dr. Cox","","32.525540824770104","-92.6444934681058", "empty"},{"Dr. Biggs","","32.52550350985576","-92.6444934681058", "biggs"},
+                {"Dr. Glisson","","32.52560160281711","-92.64438852667809", "glisson"},{"Dr. Bowman","","32.52578224058392","-92.64446564018726", "bowman"},{"Dr. Abdoulahi","","32.52578224058392","-92.64450185000896", "empty"},
+                {"Dr. Gates","","32.52578224058392","-92.64455012977122", "gates"}, {"Dr. Hyde","","32.52578224058392","-92.64465942978859", "glisson"}};
 
         String[][] class1 = {{"NETH105","","32.52570252255319","-92.64506142586468"},{"NETH120","","32.52568697470208","-92.64487635344267"},
                 {"NETH140","Tom Emory Lecture Hall","32.525549588118956","-92.64468055218458"},{"NETH153","","32.52566944803032","-92.64438852667809"}};
@@ -174,6 +176,8 @@ public class MapsActivity extends DrawerBaseActivity
             Button floor1 = findViewById(R.id.floor1);
 
             Button floor2 = findViewById(R.id.floor2);
+
+            Button search = findViewById(R.id.search);
 
             ArrayAdapter<String> adapter=new ArrayAdapter<String>(this,android.R.layout.simple_dropdown_item_1line,countries);
             AutoCompleteTextView textView=(AutoCompleteTextView)findViewById(R.id.txtcountries);
@@ -295,6 +299,26 @@ public class MapsActivity extends DrawerBaseActivity
                     builder.show();
                 }
             });
+
+            search.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    String desiredRoom = textView.getText().toString();
+                    android.util.Log.i("onVisitEnd", desiredRoom);
+                    for(int i = 0; i < prof1.length; i++){
+                        android.util.Log.i("onVisitEnd", prof1[i][0]);
+                        boolean isEqual = desiredRoom.equals(prof1[i][0]);
+                        if(isEqual){
+                            searchCamera(Double.parseDouble(prof1[i][2]),Double.parseDouble(prof1[i][3]));
+
+                            android.util.Log.i("onVisitEnd", "they equal");
+                            //LatLng searchedRoom = new LatLng(0,0);
+                            //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(searchedRoom, 15));
+                        }
+                    }
+                }
+            });
+
         }
 
         private void setUpGimbalPlaceManager() {
@@ -367,6 +391,11 @@ public class MapsActivity extends DrawerBaseActivity
 
         }
 
+        public void searchCamera (double x, double y) {
+            LatLng searchedRoom = new LatLng(x, y);
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(searchedRoom, 22));
+        }
+
         //PLaces markers for services
         public void plotMarker (String service){
             if(floor == 2) {
@@ -379,29 +408,6 @@ public class MapsActivity extends DrawerBaseActivity
                                 .icon(BitmapFromVector(getApplicationContext(), R.drawable.classroom_dot))
                                 .snippet(class2[i][1]));
 
-                        if (mMap != null){
-                            mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
-
-                                @Override
-                                public View getInfoWindow(@NonNull Marker marker) {
-                                    return null;
-                                }
-
-                                @Override
-                                public View getInfoContents(@NonNull Marker marker) {
-
-                                    View row = getLayoutInflater().inflate(R.layout.custom_address,null);
-                                    TextView title = (TextView) row.findViewById(R.id.title);
-                                    TextView snippet = (TextView) row.findViewById(R.id.snippet);
-                                    ImageView image = (ImageView) row.findViewById(R.id.image);
-
-                                    title.setText(marker.getTitle());
-                                    snippet.setText(marker.getSnippet());
-
-                                    return row;
-                                }
-                            });
-                        }
 
                     }
                 }
@@ -425,22 +431,23 @@ public class MapsActivity extends DrawerBaseActivity
 
                                 @Override
                                 public View getInfoWindow(@NonNull Marker marker) {
-                                    return null;
+                                    View row = getLayoutInflater().inflate(R.layout.custom_address,null);
+                                    TextView title = (TextView) row.findViewById(R.id.title);
+                                    TextView snippet = (TextView) row.findViewById(R.id.snippet);
+                                    ImageView pic = (ImageView) row.findViewById(R.id.image);
+
+                                    pic.setBackground(drawable);
+                                    title.setText(marker.getTitle());
+                                    snippet.setText(marker.getSnippet());
+
+
+                                    return row;
                                 }
 
                                 @Override
                                 public View getInfoContents(@NonNull Marker marker) {
 
-                                    View row = getLayoutInflater().inflate(R.layout.custom_address,null);
-                                    TextView title = (TextView) row.findViewById(R.id.title);
-                                    TextView snippet = (TextView) row.findViewById(R.id.snippet);
-                                    ImageView image = (ImageView) row.findViewById(R.id.image);
-
-                                    row.setBackground(drawable);
-                                    title.setText(marker.getTitle());
-                                    snippet.setText(marker.getSnippet());
-
-                                    return row;
+                                    return null;
                                 }
                             });
                         }
@@ -457,29 +464,6 @@ public class MapsActivity extends DrawerBaseActivity
                                 .icon(BitmapFromVector(getApplicationContext(), R.drawable.resource_dot))
                                 .snippet(re2[i][1]));
 
-                        if (mMap != null){
-                            mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
-
-                                @Override
-                                public View getInfoWindow(@NonNull Marker marker) {
-                                    return null;
-                                }
-
-                                @Override
-                                public View getInfoContents(@NonNull Marker marker) {
-
-                                    View row = getLayoutInflater().inflate(R.layout.custom_address,null);
-                                    TextView title = (TextView) row.findViewById(R.id.title);
-                                    TextView snippet = (TextView) row.findViewById(R.id.snippet);
-                                    ImageView image = (ImageView) row.findViewById(R.id.image);
-
-                                    title.setText(marker.getTitle());
-                                    snippet.setText(marker.getSnippet());
-
-                                    return row;
-                                }
-                            });
-                        }
 
                     }
                 }
@@ -494,30 +478,6 @@ public class MapsActivity extends DrawerBaseActivity
                                 .icon(BitmapFromVector(getApplicationContext(), R.drawable.classroom_dot))
                                 .snippet(class1[i][1]));
 
-                        if (mMap != null){
-                            mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
-
-                                @Override
-                                public View getInfoWindow(@NonNull Marker marker) {
-                                    return null;
-                                }
-
-                                @Override
-                                public View getInfoContents(@NonNull Marker marker) {
-
-                                    View row = getLayoutInflater().inflate(R.layout.custom_address,null);
-                                    TextView title = (TextView) row.findViewById(R.id.title);
-                                    TextView snippet = (TextView) row.findViewById(R.id.snippet);
-                                    ImageView image = (ImageView) row.findViewById(R.id.image);
-
-                                    title.setText(marker.getTitle());
-                                    snippet.setText(marker.getSnippet());
-
-                                    return row;
-                                }
-                            });
-                        }
-
                     }
                 }
 
@@ -526,21 +486,22 @@ public class MapsActivity extends DrawerBaseActivity
                         double x = Double.parseDouble(prof1[i][2]);
                         double y = Double.parseDouble(prof1[i][3]);
                         LatLng resource = new LatLng(x, y);
+
+                        //String name = prof1[i][4];
+                        //int id = getResources().getIdentifier(name, "drawable", getPackageName());
+                        //Drawable drawable = getResources().getDrawable(id);
+
                         mMap.addMarker(new MarkerOptions().position(resource).title(prof1[i][0])
                                 .icon(BitmapFromVector(getApplicationContext(), R.drawable.professor_dot))
                                 .snippet(prof1[i][1]));
+
+                        //android.util.Log.i("onMapClick", String.valueOf(drawable));
 
                         if (mMap != null){
                             mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
 
                                 @Override
                                 public View getInfoWindow(@NonNull Marker marker) {
-                                    return null;
-                                }
-
-                                @Override
-                                public View getInfoContents(@NonNull Marker marker) {
-
                                     View row = getLayoutInflater().inflate(R.layout.custom_address,null);
                                     TextView title = (TextView) row.findViewById(R.id.title);
                                     TextView snippet = (TextView) row.findViewById(R.id.snippet);
@@ -548,8 +509,15 @@ public class MapsActivity extends DrawerBaseActivity
 
                                     title.setText(marker.getTitle());
                                     snippet.setText(marker.getSnippet());
+                                    //image.setBackground(drawable);
 
                                     return row;
+                                }
+
+                                @Override
+                                public View getInfoContents(@NonNull Marker marker) {
+
+                                    return null;
                                 }
                             });
                         }
@@ -566,29 +534,6 @@ public class MapsActivity extends DrawerBaseActivity
                                 .icon(BitmapFromVector(getApplicationContext(), R.drawable.resource_dot))
                                 .snippet(re1[i][1]));
 
-                        if (mMap != null){
-                            mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
-
-                                @Override
-                                public View getInfoWindow(@NonNull Marker marker) {
-                                    return null;
-                                }
-
-                                @Override
-                                public View getInfoContents(@NonNull Marker marker) {
-
-                                    View row = getLayoutInflater().inflate(R.layout.custom_address,null);
-                                    TextView title = (TextView) row.findViewById(R.id.title);
-                                    TextView snippet = (TextView) row.findViewById(R.id.snippet);
-                                    ImageView image = (ImageView) row.findViewById(R.id.image);
-
-                                    title.setText(marker.getTitle());
-                                    snippet.setText(marker.getSnippet());
-
-                                    return row;
-                                }
-                            });
-                        }
 
                     }
                 }
