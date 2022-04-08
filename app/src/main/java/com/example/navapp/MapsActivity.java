@@ -309,7 +309,8 @@ public class MapsActivity extends DrawerBaseActivity
                         android.util.Log.i("onVisitEnd", prof1[i][0]);
                         boolean isEqual = desiredRoom.equals(prof1[i][0]);
                         if(isEqual){
-                            searchCamera(Double.parseDouble(prof1[i][2]),Double.parseDouble(prof1[i][3]));
+
+                            searchCamera(Double.parseDouble(prof1[i][2]),Double.parseDouble(prof1[i][3]), i);
 
                             android.util.Log.i("onVisitEnd", "they equal");
                             //LatLng searchedRoom = new LatLng(0,0);
@@ -341,7 +342,7 @@ public class MapsActivity extends DrawerBaseActivity
                 public void onBeaconSighting(BeaconSighting sighting, List<Visit> visits) {
 
                     //Gets name of the beacon that was sighted
-                    beaconName = sighting.getBeacon().toString();
+                    beaconName = sighting.getBeacon().getName();
 
                     //Gets the number at the end of the beacon
                     beaconVal = Integer.parseInt(beaconName.substring(beaconName.length() - 1)) -1;
@@ -391,9 +392,15 @@ public class MapsActivity extends DrawerBaseActivity
 
         }
 
-        public void searchCamera (double x, double y) {
+        public void searchCamera (double x, double y, int i) {
             LatLng searchedRoom = new LatLng(x, y);
+
+            Marker marker = mMap.addMarker(new MarkerOptions().position(searchedRoom).title(prof1[i][0])
+                    .icon(BitmapFromVector(getApplicationContext(), R.drawable.professor_dot))
+                    .snippet(prof1[i][1]));
+
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(searchedRoom, 22));
+            marker.showInfoWindow();
         }
 
         //PLaces markers for services
