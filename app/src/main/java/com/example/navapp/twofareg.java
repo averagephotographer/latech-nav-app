@@ -153,7 +153,7 @@ public class twofareg extends AppCompatActivity {
                                                 if (task.isSuccessful())
                                                 {
                                                     Toast.makeText(twofareg.this, "Successful 2Factor Enrollment", Toast.LENGTH_SHORT).show();
-                                                    //startActivity(new Intent(getApplicationContext(), MapsActivity.class));
+                                                    startActivity(new Intent(getApplicationContext(), MapsActivity.class));
                                                 }
                                             }
                                         });
