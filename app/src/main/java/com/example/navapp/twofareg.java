@@ -53,6 +53,11 @@ public class twofareg extends AppCompatActivity {
             public void onClick(View view) {
                 String phoneNumber = phonenumber.getText().toString();
                 final String[] UserVerificationCode = new String[1];
+                phoneNumber = phoneNumber.replaceAll("-","");
+                if (phoneNumber.charAt(0) != '+')
+                {
+                    phoneNumber = "+1" + phoneNumber;
+                }
 
 
                 PhoneAuthProvider.OnVerificationStateChangedCallbacks callbacks =
