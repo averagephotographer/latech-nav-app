@@ -58,7 +58,7 @@ public class twofareg extends AppCompatActivity {
                 {
                     phoneNumber = "+1" + phoneNumber;
                 }
-
+                final String PN = phoneNumber;
 
                 PhoneAuthProvider.OnVerificationStateChangedCallbacks callbacks =
                         new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
@@ -117,7 +117,7 @@ public class twofareg extends AppCompatActivity {
                             MultiFactorSession multiFactorSession = task.getResult();
                             PhoneAuthOptions phoneAuthOptions =
                                     PhoneAuthOptions.newBuilder().setActivity(twofareg.this)
-                                            .setPhoneNumber(phoneNumber)
+                                            .setPhoneNumber(PN)
                                             .setTimeout(30L, TimeUnit.SECONDS)
                                             .setMultiFactorSession(multiFactorSession)
                                             .setCallbacks(callbacks)
