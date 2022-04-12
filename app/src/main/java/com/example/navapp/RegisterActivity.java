@@ -190,21 +190,26 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher {
 
         ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar);
         TextView strengthView = (TextView) findViewById(R.id.password_strength);
-        if (TextView.VISIBLE != strengthView.getVisibility())
-            return;
 
         if (password.isEmpty()) {
             strengthView.setText("");
             progressBar.setProgress(0);
+            strengthView.setVisibility(View.INVISIBLE);
+            strengthView.setTextColor(getResources().getColor(R.color.light_red));
             return;
         }
         if (isValidPassword(password)){
             progressBar.setProgress(100);
             strengthView.setText("Strong");
+            strengthView.setTextColor(getResources().getColor(R.color.green));
+
         }
         else {
             progressBar.setProgress(0);
+            strengthView.setVisibility(View.VISIBLE);
             strengthView.setText("Weak");
+            strengthView.setTextColor(getResources().getColor(R.color.light_red));
+
         }
     }
     public static boolean isValidPassword(final String password) {
