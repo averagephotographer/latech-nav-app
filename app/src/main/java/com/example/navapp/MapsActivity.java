@@ -186,9 +186,9 @@ public class MapsActivity extends DrawerBaseActivity
             textView.setThreshold(3);
             textView.setAdapter(adapter);
 
-            Gimbal.setApiKey(this.getApplication(), GIMBAL_API_KEY);
-            setUpGimbalPlaceManager();
-            Gimbal.start();
+            //Gimbal.setApiKey(this.getApplication(), GIMBAL_API_KEY);
+            //setUpGimbalPlaceManager();
+            //Gimbal.start();
 
             android.util.Log.i("isStarted", "" + Gimbal.isStarted());
 

@@ -88,6 +88,12 @@
         <entry key="..\:/Users/sadia/OneDrive/Documents/GitHub/latech-nav-app/app/src/main/res/layout/activity_sign_options.xml" value="0.1796875" />
         <entry key="..\:/Users/sadia/OneDrive/Documents/GitHub/latech-nav-app/app/src/main/res/layout/activity_welcome.xml" value="0.17527173913043478" />
         <entry key="app/src/main/res/drawable/printer.xml" value="0.15" />
+        <entry key="app/src/main/res/layout/activity_about.xml" value="0.19895833333333332" />
+        <entry key="app/src/main/res/layout/activity_account.xml" value="0.21145833333333333" />
+        <entry key="app/src/main/res/layout/activity_account_history.xml" value="0.21145833333333333" />
+        <entry key="app/src/main/res/layout/activity_beacons.xml" value="0.21145833333333333" />
+        <entry key="app/src/main/res/layout/activity_comments.xml" value="0.21145833333333333" />
+        <entry key="app/src/main/res/layout/activity_create_post.xml" value="0.21145833333333333" />
         <entry key="app/src/main/res/layout/activity_forum.xml" value="0.2006340579710145" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.2006340579710145" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.16927083333333334" />
