@@ -53,7 +53,12 @@ public class twofareg extends AppCompatActivity {
             public void onClick(View view) {
                 String phoneNumber = phonenumber.getText().toString();
                 final String[] UserVerificationCode = new String[1];
-
+                phoneNumber = phoneNumber.replaceAll("-","");
+                if (phoneNumber.charAt(0) != '+')
+                {
+                    phoneNumber = "+1" + phoneNumber;
+                }
+                final String PN = phoneNumber;
 
                 PhoneAuthProvider.OnVerificationStateChangedCallbacks callbacks =
                         new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
@@ -112,7 +117,7 @@ public class twofareg extends AppCompatActivity {
                             MultiFactorSession multiFactorSession = task.getResult();
                             PhoneAuthOptions phoneAuthOptions =
                                     PhoneAuthOptions.newBuilder().setActivity(twofareg.this)
-                                            .setPhoneNumber(phoneNumber)
+                                            .setPhoneNumber(PN)
                                             .setTimeout(30L, TimeUnit.SECONDS)
                                             .setMultiFactorSession(multiFactorSession)
                                             .setCallbacks(callbacks)
@@ -153,7 +158,7 @@ public class twofareg extends AppCompatActivity {
                                                 if (task.isSuccessful())
                                                 {
                                                     Toast.makeText(twofareg.this, "Successful 2Factor Enrollment", Toast.LENGTH_SHORT).show();
-                                                    //startActivity(new Intent(getApplicationContext(), MapsActivity.class));
+                                                    startActivity(new Intent(getApplicationContext(), MapsActivity.class));
                                                 }
                                             }
                                         });

@@ -127,6 +127,10 @@ public class LoginActivity extends AppCompatActivity {
                                             if (user.isEmailVerified()) {
                                                 Toast.makeText(LoginActivity.this, "Logged In", Toast.LENGTH_SHORT).show();
                                                 //System.out.println("samuel 'dabuz' buzby");
+                                                SharedPreferences.Editor editor = sharedPreferences.edit();
+                                                editor.putString(Username, DS.get("username").toString());
+                                                //editor.putString(pass_wrd, DS.get("password").toString());
+                                                editor.commit();
                                                 startActivity(new Intent(getApplicationContext(), twofareg.class));
                                             }
                                             else
