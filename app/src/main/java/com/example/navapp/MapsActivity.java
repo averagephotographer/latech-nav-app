@@ -133,17 +133,17 @@ public class MapsActivity extends DrawerBaseActivity
                 {"Artificial Intelligence","","32.52554421703429","-92.64438852667809"},{"Optoelectronics Lab","","32.52578224058392","-92.64441300183535"},
                 {"Student Organizations","","32.52578224058392","-92.6446084678173"}};
 
-        String[][] prof2 = {{"Dr. Matthew Hartmann","Program Chair and Lecturer","32.52578817703018","-92.6450765132904"}, {"Zakaria El-Awadi","","32.52578704627854","-92.64502689242363"},
-                {"Dr. Prashanna Bhattari","Assistant Professor","32.5257859155269","-92.64498800039291"}, {"Aaron Hutchinson","Assistant Professor","32.5257861982148","-92.64495078474283"}, {"Dr. Jinyuan Chen","Assistant Professor","32.52578082714428","-92.64491323381662"},
-                {"Nathan Green","Assistant Professor","32.52578082714428","-92.64487367123365"},{"Dr. Don Liu","Professor","32.52578082714428","-92.64484014362097"},{"Dr. Raj Nassar","Professor Emeritus","32.52577884832872","-92.64480259269475"},
-                {"Dr. Weizhong Dai","Professor – Mathematics and Statistics, Program Chair – Computational Analysis Modeling","32.525774608009584","-92.64459773898123"},{"Dr. Pradeep Chowriappa","Assistant Professor","32.525771215754105","-92.64455180615187"},
-                {"Dr. Kevin Cherry","Lecturer","32.52576754081052","-92.64447435736656"},{"Dr. Richard Greechie","Professor Emeritus","32.52576754081052","-92.64444317668676"},
+        String[][] prof2 = {{"Dr. Matthew Hartmann","Program Chair and Lecturer","32.52580966130865","-92.64503292739391"}, {"Zakaria El-Awadi","","32.52580966130865","-92.64498431235552"},
+                {"Dr. Prashanna Bhattari","Assistant Professor","32.52580966130865","-92.64494575560093"}, {"Aaron Hutchinson","Assistant Professor","32.52580966130865","-92.64490719884634"}, {"Dr. Jinyuan Chen","Assistant Professor","32.52580966130865","-92.6448706537485"},
+                {"Nathan Green","Assistant Professor","32.52580966130865","-92.64487367123365"},{"Dr. Don Liu","Professor","32.52580966130865","-92.64484014362097"},{"Dr. Raj Nassar","Professor Emeritus","32.52580966130865","-92.64480259269475"},
+                {"Dr. Weizhong Dai","Professor – Mathematics and Statistics, Program Chair – Computational Analysis Modeling","32.52580966130865","-92.64459773898123"},{"Dr. Pradeep Chowriappa","Assistant Professor","32.52580966130865","-92.64455180615187"},
+                {"Dr. Kevin Cherry","Lecturer","32.52580966130865","-92.64447435736656"},{"Dr. Richard Greechie","Professor Emeritus","32.52580966130865","-92.64444317668676"},
                 {"Dr. Manki Min", "Associate Professor", "32.52559001258808","-92.64442641288042"}};
 
-        String[][] class2 = {{"NETH209","","32.52568697470208","-92.64510668814181"},{"NETH243","","32.52565700974508","-92.64442473649979"},
+        String[][] class2 = {{"NETH209","","32.5257098724455","-92.64506578445436"},{"NETH243","","32.52565700974508","-92.64442473649979"},
                 {"NETH244","","32.525579553111804","-92.64452900737524"},{"NETH216","","32.52567905943139","-92.64496352523565"}};
 
-        String [][] re2 = {{"Electronics I","","32.52554874005298","-92.64511406421663"},{"Computer Room","","32.52561941219054","-92.64511004090309"},{"Mens Bathroom","","32.525688670831435","-92.64450989663601"},
+        String [][] re2 = {{"Electronics I","","32.52557389934032","-92.64506578445436"},{"Computer Room","","32.52563722156045","-92.64506578445436"},{"Mens Bathroom","","32.525688670831435","-92.64450989663601"},
                 {"Womens Bathroom","","32.525662380823015","-92.64456454664469"},{"Access Grid Room","","32.5256654903943","-92.64462489634751"},{"Automatic Controls","","32.52566859996549","-92.6446946337819"},
                 {"Circuits & PLC Lab","","32.52567170953655","-92.64476772397758"},{"Mens Bathroom","","32.52567199222484","-92.64477007091044"},
                 {"Circuits II","","32.525675667172315","-92.64483880251645"},{"Circuits I","","32.525678776743156","-92.64490585774183"},
@@ -180,6 +180,8 @@ public class MapsActivity extends DrawerBaseActivity
             Button search = findViewById(R.id.search);
 
             ArrayAdapter<String> adapter=new ArrayAdapter<String>(this,android.R.layout.simple_dropdown_item_1line,countries);
+            List<Marker> markers = new ArrayList<>();
+            List<GroundOverlayOptions> overlays = new ArrayList<>();
             AutoCompleteTextView textView=(AutoCompleteTextView)findViewById(R.id.txtcountries);
             textView.setThreshold(3);
             textView.setAdapter(adapter);
@@ -187,6 +189,8 @@ public class MapsActivity extends DrawerBaseActivity
             Gimbal.setApiKey(this.getApplication(), GIMBAL_API_KEY);
             setUpGimbalPlaceManager();
             Gimbal.start();
+
+            android.util.Log.i("isStarted", "" + Gimbal.isStarted());
 
 
 
@@ -424,10 +428,6 @@ public class MapsActivity extends DrawerBaseActivity
                         double x = Double.parseDouble(prof2[i][2]);
                         double y = Double.parseDouble(prof2[i][3]);
 
-                        String name = prof2[i][4];
-                        int id = getResources().getIdentifier(name, "drawable", getPackageName());
-                        Drawable drawable = getResources().getDrawable(id);
-
                         LatLng resource = new LatLng(x, y);
                         mMap.addMarker(new MarkerOptions().position(resource).title(prof2[i][0])
                                 .icon(BitmapFromVector(getApplicationContext(), R.drawable.professor_dot))
@@ -441,9 +441,6 @@ public class MapsActivity extends DrawerBaseActivity
                                     View row = getLayoutInflater().inflate(R.layout.custom_address,null);
                                     TextView title = (TextView) row.findViewById(R.id.title);
                                     TextView snippet = (TextView) row.findViewById(R.id.snippet);
-                                    ImageView pic = (ImageView) row.findViewById(R.id.image);
-
-                                    pic.setBackground(drawable);
                                     title.setText(marker.getTitle());
                                     snippet.setText(marker.getSnippet());
 
