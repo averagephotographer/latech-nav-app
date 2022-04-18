@@ -26,6 +26,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     static Context context;
     ArrayList<Posts> postsArrayList;
     SharedPreferences sharedPreferences;
+    ImageView comment_icon;
+
 
 
     public MyAdapter(Context context, ArrayList<Posts> postsArrayList) {
