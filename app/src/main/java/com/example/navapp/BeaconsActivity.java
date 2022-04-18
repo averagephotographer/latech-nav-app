@@ -111,7 +111,7 @@ public class BeaconsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         Gimbal.setApiKey(getApplication(),
-                "MY API KEY ");
+                GIMBAL_API_KEY);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
