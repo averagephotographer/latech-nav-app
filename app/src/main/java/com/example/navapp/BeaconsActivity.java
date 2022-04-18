@@ -113,7 +113,7 @@ public class BeaconsActivity extends AppCompatActivity {
         Gimbal.setApiKey(getApplication(),
                 GIMBAL_API_KEY);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_beacons);
 
 
         initView();
@@ -149,6 +149,8 @@ public class BeaconsActivity extends AppCompatActivity {
         GimbalLogConfig.enableUncaughtExceptionLogging();
         listAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_expandable_list_item_1);
+
+        listView = (ListView) findViewById(R.id.alist);
 
         listView.setAdapter(listAdapter);
         listAdapter.add(" Gimbal API Key got Set Successfuly");
