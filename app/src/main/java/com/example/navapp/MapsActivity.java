@@ -21,6 +21,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,11 +33,15 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.example.navapp.databinding.ActivityMapsBinding;
+import com.gimbal.android.BeaconEventListener;
+import com.gimbal.android.BeaconManager;
 import com.gimbal.android.BeaconSighting;
 import com.gimbal.android.Gimbal;
+import com.gimbal.android.GimbalDebugger;
 import com.gimbal.android.PlaceEventListener;
 import com.gimbal.android.PlaceManager;
 import com.gimbal.android.Visit;
+import com.gimbal.logging.GimbalLogConfig;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMyLocationButtonClickListener;
@@ -62,12 +67,16 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
+import com.example.navapp.BeaconsActivity;
+
+
 /**
  * This demo shows how GMS Location can be used to check for changes to the users location.  The
  * "My Location" button uses GMS Location to set the blue dot representing the users location.
  * Permission for {@link Manifest.permission#ACCESS_FINE_LOCATION} is requested at run
  * time. If the permission has not been granted, the Activity is finished with an error message.
  */
+
 public class MapsActivity extends DrawerBaseActivity
     implements
     OnMyLocationButtonClickListener,
@@ -81,12 +90,17 @@ public class MapsActivity extends DrawerBaseActivity
          *
          * @see #onRequestPermissionsResult(int, String[], int[])
          */
+
         private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
         SharedPreferences sharedPreferences;
         public static final String fileName = "login";
         public static final String Username = "username";
+
         private static final String GIMBAL_API_KEY = "3f3ef8ff-52f3-46d3-9a8b-d784680b4c85";
         private PlaceManager placeManager;
+        private PlaceEventListener placeEventListener;
+        private BeaconEventListener beaconEventListener;
+        private BeaconManager beaconManager;
 
         int[][] beaconDistance = {{1,0},{2,0},{3,0},{4,0},{5,0},{6,0},{7,0},{8,0},{9,0},{10,0}};
 
@@ -154,6 +168,7 @@ public class MapsActivity extends DrawerBaseActivity
         @Override
         protected void onCreate (Bundle savedInstanceState){
             super.onCreate(savedInstanceState);
+
             activityMapBinding = ActivityMapsBinding.inflate(getLayoutInflater());
             setContentView(activityMapBinding.getRoot());
             sharedPreferences = getSharedPreferences(fileName, Context.MODE_PRIVATE);
@@ -186,9 +201,13 @@ public class MapsActivity extends DrawerBaseActivity
             textView.setThreshold(3);
             textView.setAdapter(adapter);
 
-            //Gimbal.setApiKey(this.getApplication(), GIMBAL_API_KEY);
+            Gimbal.setApiKey(this.getApplication(), GIMBAL_API_KEY);
             //setUpGimbalPlaceManager();
-            //Gimbal.start();
+//            Gimbal.start();
+
+            initView();
+            monitorPlace();
+            listenBeacon();
 
             android.util.Log.i("isStarted", "" + Gimbal.isStarted());
 
@@ -323,76 +342,6 @@ public class MapsActivity extends DrawerBaseActivity
                     }
                 }
             });
-
-        }
-
-        private void setUpGimbalPlaceManager() {
-
-
-            PlaceEventListener placeEventListener = new PlaceEventListener() {
-
-                @Override
-                public void onVisitStart(Visit visit) {
-                    super.onVisitStart(visit);
-                    android.util.Log.i("onVisitStart", "overridden");
-                }
-
-                @Override
-                public void onVisitEnd(Visit visit) {
-                    android.util.Log.i("onVisitEnd", "overridden");
-                    super.onVisitEnd(visit);
-                }
-
-                public void onBeaconSighting(BeaconSighting sighting, List<Visit> visits) {
-
-                    //Gets name of the beacon that was sighted
-                    beaconName = sighting.getBeacon().getName();
-
-                    //Gets the number at the end of the beacon
-                    beaconVal = Integer.parseInt(beaconName.substring(beaconName.length() - 1)) -1;
-
-                    //Sets the RSSI value according to the scanned beacon
-                    beaconDistance[beaconVal][1] = sighting.getRSSI();
-
-                    //Checks for the smallest RSSI value among all 10 beacons
-                    for(int i = 0; i < beaconDistance.length; i++){
-                        if (beaconDistance[i][1] < min){
-                            min = beaconDistance[i][1];
-                            if(i < 6){
-                                floor = 1;
-                                mMap.clear();
-                                //LatLng nethken = new LatLng(32.525665490440126,-92.64472849667071);
-
-                                GroundOverlayOptions neth = new GroundOverlayOptions()
-                                        .image(BitmapDescriptorFactory.fromResource(R.drawable.nethken_floor1))
-                                        .position(nethken, 76f, 46f);
-
-                                mMap.addGroundOverlay(neth);
-                            }
-
-                            else{
-                                floor = 2;
-                                mMap.clear();
-                                //LatLng nethken = new LatLng(32.525665490440126,-92.64472849667071);
-
-                                GroundOverlayOptions neth = new GroundOverlayOptions()
-                                        .image(BitmapDescriptorFactory.fromResource(R.drawable.nethken_floor2))
-                                        .position(nethken, 76f, 46f);
-
-                                mMap.addGroundOverlay(neth);
-                            }
-                        }
-                    }
-
-
-
-                    android.util.Log.i("oBS: sighting", "" + sighting.toString());
-                    android.util.Log.i("oBS: visits", "" + visits.toString());
-                    // This will be invoked when a beacon assigned to a place within a current visit is sighted.
-                }
-            };
-
-            PlaceManager.getInstance().addListener(placeEventListener);
 
         }
 
@@ -680,5 +629,86 @@ public class MapsActivity extends DrawerBaseActivity
             PermissionUtils.PermissionDeniedDialog
                 .newInstance(true).show(getSupportFragmentManager(), "dialog");
     }
+
+        private void listenBeacon() {
+            BeaconEventListener beaconEventListener = getBeaconEventListener();
+            BeaconManager beaconManager = new BeaconManager();
+            beaconManager.addListener(beaconEventListener);
+            beaconManager.startListening();
+        }
+
+        private void monitorPlace() {
+            placeEventListener = getPlaceEventListener();
+
+            placeManager = PlaceManager.getInstance();
+            placeManager.addListener(placeEventListener);
+            placeManager.startMonitoring();
+        }
+
+        private void initView() {
+            GimbalLogConfig.enableUncaughtExceptionLogging();
+            GimbalDebugger.enableBeaconSightingsLogging();
+        }
+
+        private BeaconEventListener getBeaconEventListener() {
+            //android.util.Log.i(TAG, "BeaconEventListener started sucessfully...");
+            BeaconEventListener beaconSightingListener = new BeaconEventListener() {
+                @Override
+                public void onBeaconSighting(BeaconSighting beaconSighting) {
+
+                    super.onBeaconSighting(beaconSighting);
+
+
+
+                }
+            };
+            return beaconSightingListener;
+        }
+
+        private PlaceEventListener getPlaceEventListener() {
+
+            PlaceEventListener obj = new PlaceEventListener() {
+                @Override
+                public void onBeaconSighting(BeaconSighting sight, List<Visit> visit) {
+
+
+                    super.onBeaconSighting(sight, visit);
+
+                    android.util.Log.i("PEL", String.format("%s",
+                            sight.getBeacon()));
+                    android.util.Log.i("NOB", String.format("%s", sight
+                            .getBeacon().getName()));
+                    android.util.Log.i("ID" , String.format("%s", sight
+                            .getBeacon().getIdentifier()));
+                    android.util.Log.i("rssi", Integer.toString(sight.getRSSI()));
+                    android.util.Log.i("UUID", sight.getBeacon()
+                            .getUuid());
+
+                    android.util.Log.i("Start Visit for %s", visit
+                            .iterator().toString());
+
+                }
+
+                public void onVisitStart(Visit visit) {
+                    super.onVisitStart(visit);
+
+                    android.util.Log.i("Start Visit for %s", visit
+                            .getPlace().getName());
+
+                }
+
+                @Override
+                public void onVisitEnd(Visit visit) {
+                    // TODO Auto-generated method stub
+                    super.onVisitEnd(visit);
+
+                    android.util.Log.i("End Visit for %s", visit
+                            .getPlace().getName());
+
+                }
+
+            };
+            return obj;
+        }
 
 }
