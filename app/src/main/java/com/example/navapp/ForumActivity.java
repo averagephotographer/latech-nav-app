@@ -83,6 +83,7 @@ public class ForumActivity extends DrawerBaseActivity {
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
         bottomNavigationView.setBackground(null);
         floatingActionButton = findViewById(R.id.floatingActionButton);
+        commentbtn = findViewById(R.id.comments_post);
 
         firestore = FirebaseFirestore.getInstance();
         postsArrayList = new ArrayList<Posts>();
@@ -100,6 +101,9 @@ public class ForumActivity extends DrawerBaseActivity {
         });
 
     }
+
+
+
 
     private void EventChangeListener() {
 

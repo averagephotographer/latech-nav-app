@@ -1,10 +1,11 @@
 package com.example.navapp.Utils;
 
-import android.content.Context;
 import android.net.Uri;
+import android.widget.ImageView;
 
 public class Posts {
     private String datePost, description, title, username;
+    private String likeBtn;
 
     public Posts() {
     }
@@ -14,6 +15,7 @@ public class Posts {
         this.description = description;
         this.title = title;
         this.username = username;
+        this.likeBtn = likeBtn;
     }
 
     public String getDatePost() {
@@ -48,5 +50,12 @@ public class Posts {
         this.username = username;
     }
 
+    public String getLikeBtn() {
+        return likeBtn;
+    }
+
+    public void setLikeBtn(String likeBtn) {
+        this.likeBtn = likeBtn;
+    }
 
 }

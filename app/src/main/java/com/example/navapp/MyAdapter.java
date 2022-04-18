@@ -1,8 +1,10 @@
 package com.example.navapp;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.navapp.Utils.Posts;
+import com.snov.timeagolibrary.PrettyTimeAgo;
 
 import java.text.CollationElementIterator;
 import java.text.ParseException;
@@ -54,7 +57,15 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         String timeAgo = calculateTimeAgo(posts.getDatePost());
         holder.postDate.setText(timeAgo);
         holder.username.setText(posts.getUsername());
+        //holder.likeButton.setText(posts.getLikeBtn());
 
+        holder.commentButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent commentIntent = new Intent(context , CommentsActivity.class);
+                context.startActivity(commentIntent);
+            }
+        });
 
     }
 
@@ -63,6 +74,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         try {
             long time = sdf.parse(datePost).getTime();
             long now = System.currentTimeMillis();
+            Log.e(String.valueOf(now), "");
             CharSequence ago =
                     DateUtils.getRelativeTimeSpanString(time, now, DateUtils.MINUTE_IN_MILLIS);
             return ago+"";
@@ -71,6 +83,9 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         }
         return "";
     }
+
+
+
 
     @Override
     public int getItemCount() {
