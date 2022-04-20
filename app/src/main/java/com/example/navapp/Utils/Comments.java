@@ -1,11 +1,11 @@
-package com.example.navapp;
+package com.example.navapp.Utils;
 
 public class Comments {
 
-    private String comment, user;
+    private String user_comment, user;
 
     public String getComment() {
-        return comment;
+        return user_comment;
     }
 
     public String getUser() {

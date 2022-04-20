@@ -69,38 +69,33 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         holder.username.setText(posts.getUsername());
         //holder.likeButton.setText(posts.getLikeBtn());
 
+        String postId = posts.PostId;
+
 
         holder.commentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent commentIntent = new Intent(context , CommentsActivity.class);
-                commentIntent.putExtra("postid", postId)
+                commentIntent.putExtra("postid", postId);
                 context.startActivity(commentIntent);
             }
         });
 
+
         //like button
-        String postId = posts.PostId;
+        //String postId = posts.PostId;
+
+
         holder.likeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                firestore.collection("posts/" + postId + "/likes").document(name).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (!task.getResult().exists()) {
-                            Map<String, Object> likesMap = new HashMap<>();
-                            likesMap.put("timeStamp", FieldValue.serverTimestamp());
-                            firestore.collection("posts/" + postId + "/likes").add(likesMap);
-                        }
-                        else {
-                            firestore.collection("posts/" + postId + "/likes").document(name).delete();
-
-                        }
-                    }
-                });
+                firestore.collection("posts/" + postId + "/likes").document(name);
             }
         });
 
+
+
+        /*
         // like color change
         firestore.collection("posts/" + postId + "/likes").document(name).addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
@@ -115,6 +110,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                 }
             }
         });
+
+         */
     }
 
     private String calculateTimeAgo(String datePost) {
