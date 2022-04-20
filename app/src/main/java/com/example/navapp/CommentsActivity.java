@@ -66,7 +66,7 @@ public class CommentsActivity extends AppCompatActivity {
         recycle.setAdapter(adapter);
 
 
-        firestore.collection("posts/" + post_id + "/comments").addSnapshotListener(new EventListener<QuerySnapshot>() {
+        firestore.collection("posts/" + post_id + "/comments").addSnapshotListener(CommentsActivity.this, new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
                 for (DocumentChange documentChange : value.getDocumentChanges()){

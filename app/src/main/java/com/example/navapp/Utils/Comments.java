@@ -2,13 +2,13 @@ package com.example.navapp.Utils;
 
 public class Comments {
 
-    private String user_comment, user;
+    private String comment, username;
 
     public String getComment() {
-        return user_comment;
+        return comment;
     }
 
     public String getUser() {
-        return user;
+        return username;
     }
 }
