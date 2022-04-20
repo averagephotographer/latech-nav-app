@@ -12,16 +12,26 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.navapp.Utils.Posts;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.snov.timeagolibrary.PrettyTimeAgo;
 
 import java.text.CollationElementIterator;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.TimeZone;
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
@@ -29,7 +39,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     static Context context;
     ArrayList<Posts> postsArrayList;
     SharedPreferences sharedPreferences;
-    ImageView comment_icon;
+    FirebaseFirestore firestore;
 
 
 
@@ -59,6 +69,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         holder.username.setText(posts.getUsername());
         //holder.likeButton.setText(posts.getLikeBtn());
 
+
         holder.commentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -68,6 +79,42 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             }
         });
 
+        //like button
+        String postId = posts.PostId;
+        holder.likeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                firestore.collection("posts/" + postId + "/likes").document(name).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (!task.getResult().exists()) {
+                            Map<String, Object> likesMap = new HashMap<>();
+                            likesMap.put("timeStamp", FieldValue.serverTimestamp());
+                            firestore.collection("posts/" + postId + "/likes").add(likesMap);
+                        }
+                        else {
+                            firestore.collection("posts/" + postId + "/likes").document(name).delete();
+
+                        }
+                    }
+                });
+            }
+        });
+
+        // like color change
+        firestore.collection("posts/" + postId + "/likes").document(name).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                if (error == null) {
+                    if (value.exists()) {
+                        holder.likeButton.setImageDrawable(context.getDrawable(R.drawable.ic_baseline_favorite_24));
+                    }
+                    else {
+                        holder.likeButton.setImageDrawable(context.getDrawable(R.drawable.ic_baseline_favorite_border_24));
+                    }
+                }
+            }
+        });
     }
 
     private String calculateTimeAgo(String datePost) {
@@ -104,9 +151,13 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             postTitle = itemView.findViewById(R.id.show_title);
             username = itemView.findViewById(R.id.username_tv);
             postDate = itemView.findViewById(R.id.date_tv);
-            likeCount = itemView.findViewById(R.id.like_count_tv);
             likeButton = itemView.findViewById(R.id.like_btn);
             commentButton = itemView.findViewById(R.id.comments_post);
+        }
+
+        public void setPostLike(int count) {
+            likeCount = itemView.findViewById(R.id.like_count_tv);
+            likeCount.setText(count);
         }
     }
 }

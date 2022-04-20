@@ -3,9 +3,9 @@ package com.example.navapp.Utils;
 import android.net.Uri;
 import android.widget.ImageView;
 
-public class Posts {
+public class Posts extends PostId {
     private String datePost, description, title, username;
-    private String likeBtn;
+    private String likeCount;
 
     public Posts() {
     }
@@ -15,7 +15,7 @@ public class Posts {
         this.description = description;
         this.title = title;
         this.username = username;
-        this.likeBtn = likeBtn;
+        this.likeCount = likeCount;
     }
 
     public String getDatePost() {
@@ -50,12 +50,12 @@ public class Posts {
         this.username = username;
     }
 
-    public String getLikeBtn() {
-        return likeBtn;
+    public String getLikeCount() {
+        return likeCount;
     }
 
-    public void setLikeBtn(String likeBtn) {
-        this.likeBtn = likeBtn;
+    public void setLikeCount(String likeCount) {
+        this.likeCount = likeCount;
     }
 
 }
