@@ -69,7 +69,7 @@ public class CommentsActivity extends AppCompatActivity {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
                 for (DocumentChange documentChange : value.getDocumentChanges()){
-                    if(documentChange.getType() == DocumentChange.Type.ADDED){
+                    if (documentChange.getType() == DocumentChange.Type.ADDED){
 
                         Comments comments = documentChange.getDocument().toObject(Comments.class);
                         commList.add(comments);

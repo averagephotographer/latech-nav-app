@@ -63,6 +63,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             @Override
             public void onClick(View v) {
                 Intent commentIntent = new Intent(context , CommentsActivity.class);
+                commentIntent.putExtra("postid", postId)
                 context.startActivity(commentIntent);
             }
         });
