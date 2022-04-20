@@ -127,7 +127,8 @@ public class ForumActivity extends DrawerBaseActivity {
 
                         for (DocumentChange dc : value.getDocumentChanges()) {
                             if (dc.getType() == DocumentChange.Type.ADDED) {
-                                postsArrayList.add(dc.getDocument().toObject(Posts.class));
+                                String postId = dc.getDocument().getId();
+                                postsArrayList.add(dc.getDocument().toObject(Posts.class).withId(postId));
                                 myAdapter.notifyDataSetChanged();
 
                             }
