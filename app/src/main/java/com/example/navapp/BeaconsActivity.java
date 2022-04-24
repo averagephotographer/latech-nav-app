@@ -83,17 +83,11 @@ public class BeaconsActivity extends AppCompatActivity {
 
                 super.onBeaconSighting(beaconSighting);
 
-
-                listAdapter.add(String.format("Name of  Beacon is %s",
-                        beaconSighting.getBeacon().getName()));
-                listAdapter.add(String.format("UUID is %s", beaconSighting
-                        .getBeacon().getUuid()));
-                listAdapter.add(String.format("RSSI is %s",
-                        beaconSighting.getRSSI()));
-                listAdapter.add(String.format("Battery Level is %s",
-                        beaconSighting.getBeacon().getBatteryLevel()));
-                listAdapter.add(String.format("Temprature data is %s",
-                        beaconSighting.getBeacon().getTemperature()));
+                listAdapter.add(beaconSighting.getBeacon().getName() + ": " + beaconSighting.getRSSI() * -1);
+//                listAdapter.add(String.format("UUID is %s", beaconSighting.getBeacon().getUuid()));
+//                listAdapter.add(String.format("RSSI is %s", beaconSighting.getRSSI()));
+//                listAdapter.add(String.format("Battery Level is %s", beaconSighting.getBeacon().getBatteryLevel()));
+//                listAdapter.add(String.format("Temprature data is %s", beaconSighting.getBeacon().getTemperature()));
 
             }
         };
@@ -109,36 +103,26 @@ public class BeaconsActivity extends AppCompatActivity {
 
                 super.onBeaconSighting(sight, visit);
 
-                listAdapter.add(String.format("Beacon Found: %s",
-                        sight.getBeacon()));
-                listAdapter.add(String.format("Name of Beacon is %s", sight
-                        .getBeacon().getName()));
-                listAdapter.add(String.format("Identifier  is %s", sight
-                        .getBeacon().getIdentifier()));
-                listAdapter.add(String.format("RSSI is %s", sight.getRSSI()));
-                listAdapter.add(String.format("UUID is %s", sight.getBeacon()
-                        .getUuid()));
-                listAdapter.add(String.format("Temprature is%s", sight
-                        .getBeacon().getTemperature()));
-                listAdapter.add(String.format("BatteryLevel is %s", sight
-                        .getBeacon().getBatteryLevel()));
-                listAdapter.add(String.format("Icon URL is %s", sight
-                        .getBeacon().getIconURL()));
+//                listAdapter.add(String.format("Beacon Found: %s", sight.getBeacon()));
+//                listAdapter.add(String.format("Name of Beacon is %s", sight.getBeacon().getName()));
+//                listAdapter.add(String.format("Identifier  is %s", sight.getBeacon().getIdentifier()));
+//                listAdapter.add(String.format("RSSI is %s", sight.getRSSI()));
+//                listAdapter.add(String.format("UUID is %s", sight.getBeacon().getUuid()));
+//                listAdapter.add(String.format("Temprature is%s", sight.getBeacon().getTemperature()));
+//                listAdapter.add(String.format("BatteryLevel is %s", sight.getBeacon().getBatteryLevel()));
+//                listAdapter.add(String.format("Icon URL is %s", sight.getBeacon().getIconURL()));
 
-                listAdapter.add(String.format("Start Visit for %s", visit
-                        .iterator().toString()));
+//                listAdapter.add(String.format("Start Visit for %s", visit.iterator().toString()));
 
             }
 
             public void onVisitStart(Visit visit) {
                 super.onVisitStart(visit);
 
-                listAdapter.add(String.format("Start Visit for %s", visit
-                        .getPlace().getName()));
+//                listAdapter.add(String.format("Start Visit for %s", visit.getPlace().getName()));
 
-                Toast.makeText(getApplicationContext(),
-                        visit.getPlace().getName(), Toast.LENGTH_SHORT).show();
-                listAdapter.notifyDataSetChanged();
+                Toast.makeText(getApplicationContext(), visit.getPlace().getName(), Toast.LENGTH_SHORT).show();
+//                listAdapter.notifyDataSetChanged();
 
             }
 
@@ -147,9 +131,8 @@ public class BeaconsActivity extends AppCompatActivity {
                 // TODO Auto-generated method stub
                 super.onVisitEnd(visit);
 
-                listAdapter.add(String.format("End Visit for %s", visit
-                        .getPlace().getName()));
-                listAdapter.notifyDataSetChanged();
+//                listAdapter.add(String.format("End Visit for %s", visit.getPlace().getName()));
+//                listAdapter.notifyDataSetChanged();
 
             }
 

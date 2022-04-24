@@ -176,6 +176,9 @@ public class MapsActivity extends DrawerBaseActivity
 
             Button search = findViewById(R.id.search);
 
+            Button oButton = findViewById(R.id.overlayButton);
+
+
             ArrayAdapter<String> adapter=new ArrayAdapter<String>(this,android.R.layout.simple_dropdown_item_1line,countries);
             List<Marker> markers = new ArrayList<>();
             List<GroundOverlayOptions> overlays = new ArrayList<>();
@@ -190,6 +193,14 @@ public class MapsActivity extends DrawerBaseActivity
             listenBeacon();
 
             android.util.Log.i("isStarted", "" + Gimbal.isStarted());
+
+            oButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(view.getContext(), BeaconsActivity.class);
+                    view.getContext().startActivity(intent);
+                }
+            });
 
             floor1.setOnClickListener(new View.OnClickListener() {
                 @Override
