@@ -10,10 +10,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.view.View;
@@ -21,13 +18,10 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -48,26 +42,17 @@ import com.google.android.gms.maps.GoogleMap.OnMyLocationButtonClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMyLocationClickListener;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.GroundOverlayOptions;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Dictionary;
-import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.List;
-import java.util.Map;
-
-import com.example.navapp.BeaconsActivity;
 
 
 /**
@@ -102,14 +87,11 @@ public class MapsActivity extends DrawerBaseActivity
         private BeaconEventListener beaconEventListener;
         private BeaconManager beaconManager;
 
-        int[][] beaconDistance = {{1,0},{2,0},{3,0},{4,0},{5,0},{6,0},{7,0},{8,0},{9,0},{10,0}};
+        // initializing the beacon rssi values to 100
+        int[] beaconRSSI = {100, 100, 100, 100, 100, 100, 100, 100, 100, 100};
 
-        private int min = 0;
-
-        private String beaconName;
-
-        private int beaconVal;
-
+        private int minRSSI = 100;
+        private int bMin = 0;
         /**
          * Flag indicating whether a requested permission has been denied after returning in
          * {@link #onRequestPermissionsResult(int, String[], int[])}.
@@ -186,7 +168,7 @@ public class MapsActivity extends DrawerBaseActivity
 
             selectedService = new boolean[servArray.length];
 
-            Button oButton = findViewById(R.id.overlayButton);
+//            Button oButton = findViewById(R.id.overlayButton);
 
             Button floor1 = findViewById(R.id.floor1);
 
@@ -202,8 +184,8 @@ public class MapsActivity extends DrawerBaseActivity
             textView.setAdapter(adapter);
 
             Gimbal.setApiKey(this.getApplication(), GIMBAL_API_KEY);
-            //setUpGimbalPlaceManager();
-//            Gimbal.start();
+            // setUpGimbalPlaceManager();
+            // Gimbal.start();
 
             initView();
             monitorPlace();
@@ -213,13 +195,13 @@ public class MapsActivity extends DrawerBaseActivity
 
 
 
-            oButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(view.getContext(), BeaconsActivity.class);
-                    view.getContext().startActivity(intent);
-                }
-            });
+//            oButton.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    Intent intent = new Intent(view.getContext(), BeaconsActivity.class);
+//                    view.getContext().startActivity(intent);
+//                }
+//            });
 
             floor1.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -674,20 +656,44 @@ public class MapsActivity extends DrawerBaseActivity
 
                     super.onBeaconSighting(sight, visit);
 
-                    android.util.Log.i("PEL", String.format("%s",
-                            sight.getBeacon()));
-                    android.util.Log.i("NOB", String.format("%s", sight
-                            .getBeacon().getName()));
-                    android.util.Log.i("ID" , String.format("%s", sight
-                            .getBeacon().getIdentifier()));
-                    android.util.Log.i("rssi", Integer.toString(sight.getRSSI()));
-                    android.util.Log.i("UUID", sight.getBeacon()
-                            .getUuid());
+                    android.util.Log.i("NOB", String.format("%s", sight.getBeacon().getName()));
+                    android.util.Log.i("ID", String.format("%s", sight.getBeacon().getIdentifier()));
+                    android.util.Log.i("rssi", Integer.toString(sight.getRSSI() * -1 ));
+                    android.util.Log.i("Start Visit for %s", visit.iterator().toString());
+                    android.util.Log.i("Floor", Integer.toString(floor));
 
-                    android.util.Log.i("Start Visit for %s", visit
-                            .iterator().toString());
+                    Integer rssi = -1 * sight.getRSSI();
+                    String bName = sight.getBeacon().getName();
 
-                }
+                    Integer beaconNum = Integer.parseInt(bName.substring(bName.length() - 1));
+                    beaconRSSI[beaconNum - 1] = rssi;
+                    // android.util.Log.i("list info", Integer.toString(beaconRSSI[beaconNum - 1]));
+
+                    // get min of current beacons
+                    minRSSI = 10000;
+                    bMin = 0;
+                    for (int i = 0; i < beaconRSSI.length - 1; i++)
+                    {
+                        if (beaconRSSI[i] < minRSSI) {
+                            minRSSI = beaconRSSI[i];
+                            bMin = i;
+                        }
+                    }
+
+                    //check which floor beacon is associated with
+                    if(bMin < 5){
+                        floor = 1;
+                        android.util.Log.i("floor", "1");
+                    }
+                    else {
+                        floor = 2;
+                        android.util.Log.i("floor", "2");
+                    }
+                        //if already on that floor, do not change anything
+                        //else change floor to floor beacon is assigned to
+                    }
+
+
 
                 public void onVisitStart(Visit visit) {
                     super.onVisitStart(visit);
