@@ -100,7 +100,7 @@ public class MapsActivity extends DrawerBaseActivity
 
         private GoogleMap mMap;
 
-        private int floor;
+        private int floor = 0;
 
         LatLng nethken = new LatLng(32.525665490440126,-92.64472849667071);
 
@@ -184,8 +184,6 @@ public class MapsActivity extends DrawerBaseActivity
             textView.setAdapter(adapter);
 
             Gimbal.setApiKey(this.getApplication(), GIMBAL_API_KEY);
-            // setUpGimbalPlaceManager();
-            // Gimbal.start();
 
             initView();
             monitorPlace();
@@ -193,22 +191,11 @@ public class MapsActivity extends DrawerBaseActivity
 
             android.util.Log.i("isStarted", "" + Gimbal.isStarted());
 
-
-
-//            oButton.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    Intent intent = new Intent(view.getContext(), BeaconsActivity.class);
-//                    view.getContext().startActivity(intent);
-//                }
-//            });
-
             floor1.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     floor = 1;
                     mMap.clear();
-                    //LatLng nethken = new LatLng(32.525665490440126,-92.64472849667071);
 
                     GroundOverlayOptions neth = new GroundOverlayOptions()
                             .image(BitmapDescriptorFactory.fromResource(R.drawable.nethken_floor1))
@@ -640,8 +627,6 @@ public class MapsActivity extends DrawerBaseActivity
 
                     super.onBeaconSighting(beaconSighting);
 
-
-
                 }
             };
             return beaconSightingListener;
@@ -665,9 +650,13 @@ public class MapsActivity extends DrawerBaseActivity
                     Integer rssi = -1 * sight.getRSSI();
                     String bName = sight.getBeacon().getName();
 
+                    android.util.Log.i("rssi", Integer.toString((rssi)));
+                    android.util.Log.i("bName", bName);
+
                     Integer beaconNum = Integer.parseInt(bName.substring(bName.length() - 1));
                     beaconRSSI[beaconNum - 1] = rssi;
-                    // android.util.Log.i("list info", Integer.toString(beaconRSSI[beaconNum - 1]));
+
+                    android.util.Log.i("beaconNum", Integer.toString(beaconNum));
 
                     // get min of current beacons
                     minRSSI = 10000;
@@ -677,17 +666,39 @@ public class MapsActivity extends DrawerBaseActivity
                         if (beaconRSSI[i] < minRSSI) {
                             minRSSI = beaconRSSI[i];
                             bMin = i;
+                            android.util.Log.i("bMin : minRSSI", Integer.toString(bMin) + " : " + Integer.toString(minRSSI));
                         }
                     }
 
                     //check which floor beacon is associated with
-                    if(bMin < 5){
-                        floor = 1;
+                    if(bMin < 5) {
                         android.util.Log.i("floor", "1");
+
+                        if(floor != 1) {
+                            mMap.clear();
+
+                            GroundOverlayOptions neth = new GroundOverlayOptions()
+                                    .image(BitmapDescriptorFactory.fromResource(R.drawable.nethken_floor1))
+                                    .position(nethken, 76f, 46f);
+
+                            mMap.addGroundOverlay(neth);
+                            floor = 1;
+                        }
                     }
                     else {
-                        floor = 2;
                         android.util.Log.i("floor", "2");
+
+                        if (floor != 2) {
+                            mMap.clear();
+
+                            GroundOverlayOptions neth = new GroundOverlayOptions()
+                                    .image(BitmapDescriptorFactory.fromResource(R.drawable.nethken_floor2))
+                                    .position(nethken, 76f, 46f);
+
+                            mMap.addGroundOverlay(neth);
+
+                            floor = 2;
+                        }
                     }
                         //if already on that floor, do not change anything
                         //else change floor to floor beacon is assigned to
