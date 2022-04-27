@@ -44,7 +44,7 @@ public class AccountActivity extends AppCompatActivity {
         sharedPreferences = getApplicationContext().getSharedPreferences("login", Context.MODE_PRIVATE);
         //sharedPreferences = getSharedPreferences("login", Context.MODE_PRIVATE);
 
-        if(!(sharedPreferences.contains(Username))){
+        if(fAuth.getCurrentUser() == null){
             Intent i = new Intent(AccountActivity.this, LoginActivity.class);
             startActivity(i);
         }
