@@ -1,5 +1,6 @@
 package com.example.navapp;
 
+import android.accounts.Account;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -87,7 +88,19 @@ public class ForumActivity extends DrawerBaseActivity  {
         //progressDialog.show();
 
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
-        bottomNavigationView.setBackground(null);
+        bottomNavigationView.setSelectedItemId(R.id.Home);
+
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+                switch (item.getItemId()) {
+                    case R.id.Account:
+                        startActivity(new Intent(getApplicationContext(), MyPostsActivity.class));
+                        overridePendingTransition(0,0);
+                        return true;
+                    case R.id.Home:
+                        return true;
+                }
+                return false;
+            });
 
         floatingActionButton = findViewById(R.id.floatingActionButton);
         commentbtn = findViewById(R.id.comments_post);
@@ -108,8 +121,6 @@ public class ForumActivity extends DrawerBaseActivity  {
         });
 
     }
-
-
 
 
     private void EventChangeListener() {

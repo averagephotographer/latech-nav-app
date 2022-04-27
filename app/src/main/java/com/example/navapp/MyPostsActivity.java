@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.navapp.Utils.Posts;
+import com.example.navapp.databinding.ActivityForumBinding;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
@@ -28,7 +30,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MyPostsActivity extends AppCompatActivity {
+public class MyPostsActivity extends DrawerBaseActivity {
     private BottomNavigationView btm_view;
     private FloatingActionButton fab;
     TextView showPost;
@@ -40,17 +42,36 @@ public class MyPostsActivity extends AppCompatActivity {
     private mypostsAdapter adapter;
     private List<Posts> list;
     SharedPreferences sharedpref;
+    ActivityForumBinding activityForumBinding;
+    BottomNavigationView bottomNavigationView;
     private Query query;
     private ListenerRegistration listenerRegistration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_my_posts);
+        activityForumBinding = ActivityForumBinding.inflate(getLayoutInflater());
+        setContentView(activityForumBinding.getRoot());
+        allocateActivityTitle("Forum");
 
         firestore = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
         recycler = findViewById(R.id.recyclerView);
+
+        bottomNavigationView = findViewById(R.id.bottomNavigationView);
+        bottomNavigationView.setSelectedItemId(R.id.Account);
+
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.Account:
+                    return true;
+                case R.id.Home:
+                    startActivity(new Intent(getApplicationContext(), ForumActivity.class));
+                    overridePendingTransition(0,0);
+                    return true;
+            }
+            return false;
+        });
 
         recycler.setHasFixedSize(true);
         recycler.setLayoutManager(new LinearLayoutManager(MyPostsActivity.this));
