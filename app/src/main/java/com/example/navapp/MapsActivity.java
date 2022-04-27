@@ -10,10 +10,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.view.View;
@@ -21,46 +18,42 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.example.navapp.databinding.ActivityMapsBinding;
+import com.gimbal.android.BeaconEventListener;
+import com.gimbal.android.BeaconManager;
 import com.gimbal.android.BeaconSighting;
 import com.gimbal.android.Gimbal;
+import com.gimbal.android.GimbalDebugger;
 import com.gimbal.android.PlaceEventListener;
 import com.gimbal.android.PlaceManager;
 import com.gimbal.android.Visit;
+import com.gimbal.logging.GimbalLogConfig;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMyLocationButtonClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMyLocationClickListener;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.GroundOverlayOptions;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Dictionary;
-import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.List;
-import java.util.Map;
+
 
 /**
  * This demo shows how GMS Location can be used to check for changes to the users location.  The
@@ -68,6 +61,7 @@ import java.util.Map;
  * Permission for {@link Manifest.permission#ACCESS_FINE_LOCATION} is requested at run
  * time. If the permission has not been granted, the Activity is finished with an error message.
  */
+
 public class MapsActivity extends DrawerBaseActivity
     implements
     OnMyLocationButtonClickListener,
@@ -81,21 +75,23 @@ public class MapsActivity extends DrawerBaseActivity
          *
          * @see #onRequestPermissionsResult(int, String[], int[])
          */
+
         private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
         SharedPreferences sharedPreferences;
         public static final String fileName = "login";
         public static final String Username = "username";
+
         private static final String GIMBAL_API_KEY = "3f3ef8ff-52f3-46d3-9a8b-d784680b4c85";
         private PlaceManager placeManager;
+        private PlaceEventListener placeEventListener;
+        private BeaconEventListener beaconEventListener;
+        private BeaconManager beaconManager;
 
-        int[][] beaconDistance = {{1,0},{2,0},{3,0},{4,0},{5,0},{6,0},{7,0},{8,0},{9,0},{10,0}};
+        // initializing the beacon rssi values to 100
+        int[] beaconRSSI = {100, 100, 100, 100, 100, 100, 100, 100, 100, 100};
 
-        private int min = 0;
-
-        private String beaconName;
-
-        private int beaconVal;
-
+        private int minRSSI = 100;
+        private int bMin = 0;
         /**
          * Flag indicating whether a requested permission has been denied after returning in
          * {@link #onRequestPermissionsResult(int, String[], int[])}.
@@ -104,7 +100,7 @@ public class MapsActivity extends DrawerBaseActivity
 
         private GoogleMap mMap;
 
-        private int floor;
+        private int floor = 0;
 
         LatLng nethken = new LatLng(32.525665490440126,-92.64472849667071);
 
@@ -133,17 +129,17 @@ public class MapsActivity extends DrawerBaseActivity
                 {"Artificial Intelligence","","32.52554421703429","-92.64438852667809"},{"Optoelectronics Lab","","32.52578224058392","-92.64441300183535"},
                 {"Student Organizations","","32.52578224058392","-92.6446084678173"}};
 
-        String[][] prof2 = {{"Dr. Matthew Hartmann","Program Chair and Lecturer","32.52578817703018","-92.6450765132904"}, {"Zakaria El-Awadi","","32.52578704627854","-92.64502689242363"},
-                {"Dr. Prashanna Bhattari","Assistant Professor","32.5257859155269","-92.64498800039291"}, {"Aaron Hutchinson","Assistant Professor","32.5257861982148","-92.64495078474283"}, {"Dr. Jinyuan Chen","Assistant Professor","32.52578082714428","-92.64491323381662"},
-                {"Nathan Green","Assistant Professor","32.52578082714428","-92.64487367123365"},{"Dr. Don Liu","Professor","32.52578082714428","-92.64484014362097"},{"Dr. Raj Nassar","Professor Emeritus","32.52577884832872","-92.64480259269475"},
-                {"Dr. Weizhong Dai","Professor – Mathematics and Statistics, Program Chair – Computational Analysis Modeling","32.525774608009584","-92.64459773898123"},{"Dr. Pradeep Chowriappa","Assistant Professor","32.525771215754105","-92.64455180615187"},
-                {"Dr. Kevin Cherry","Lecturer","32.52576754081052","-92.64447435736656"},{"Dr. Richard Greechie","Professor Emeritus","32.52576754081052","-92.64444317668676"},
+        String[][] prof2 = {{"Dr. Matthew Hartmann","Program Chair and Lecturer","32.52580966130865","-92.64503292739391"}, {"Zakaria El-Awadi","","32.52580966130865","-92.64498431235552"},
+                {"Dr. Prashanna Bhattari","Assistant Professor","32.52580966130865","-92.64494575560093"}, {"Aaron Hutchinson","Assistant Professor","32.52580966130865","-92.64490719884634"}, {"Dr. Jinyuan Chen","Assistant Professor","32.52580966130865","-92.6448706537485"},
+                {"Nathan Green","Assistant Professor","32.52580966130865","-92.64487367123365"},{"Dr. Don Liu","Professor","32.52580966130865","-92.64484014362097"},{"Dr. Raj Nassar","Professor Emeritus","32.52580966130865","-92.64480259269475"},
+                {"Dr. Weizhong Dai","Professor – Mathematics and Statistics, Program Chair – Computational Analysis Modeling","32.52580966130865","-92.64459773898123"},{"Dr. Pradeep Chowriappa","Assistant Professor","32.52580966130865","-92.64455180615187"},
+                {"Dr. Kevin Cherry","Lecturer","32.52580966130865","-92.64447435736656"},{"Dr. Richard Greechie","Professor Emeritus","32.52580966130865","-92.64444317668676"},
                 {"Dr. Manki Min", "Associate Professor", "32.52559001258808","-92.64442641288042"}};
 
-        String[][] class2 = {{"NETH209","","32.52568697470208","-92.64510668814181"},{"NETH243","","32.52565700974508","-92.64442473649979"},
+        String[][] class2 = {{"NETH209","","32.5257098724455","-92.64506578445436"},{"NETH243","","32.52565700974508","-92.64442473649979"},
                 {"NETH244","","32.525579553111804","-92.64452900737524"},{"NETH216","","32.52567905943139","-92.64496352523565"}};
 
-        String [][] re2 = {{"Electronics I","","32.52554874005298","-92.64511406421663"},{"Computer Room","","32.52561941219054","-92.64511004090309"},{"Mens Bathroom","","32.525688670831435","-92.64450989663601"},
+        String [][] re2 = {{"Electronics I","","32.52557389934032","-92.64506578445436"},{"Computer Room","","32.52563722156045","-92.64506578445436"},{"Mens Bathroom","","32.525688670831435","-92.64450989663601"},
                 {"Womens Bathroom","","32.525662380823015","-92.64456454664469"},{"Access Grid Room","","32.5256654903943","-92.64462489634751"},{"Automatic Controls","","32.52566859996549","-92.6446946337819"},
                 {"Circuits & PLC Lab","","32.52567170953655","-92.64476772397758"},{"Mens Bathroom","","32.52567199222484","-92.64477007091044"},
                 {"Circuits II","","32.525675667172315","-92.64483880251645"},{"Circuits I","","32.525678776743156","-92.64490585774183"},
@@ -154,6 +150,7 @@ public class MapsActivity extends DrawerBaseActivity
         @Override
         protected void onCreate (Bundle savedInstanceState){
             super.onCreate(savedInstanceState);
+
             activityMapBinding = ActivityMapsBinding.inflate(getLayoutInflater());
             setContentView(activityMapBinding.getRoot());
             sharedPreferences = getSharedPreferences(fileName, Context.MODE_PRIVATE);
@@ -171,7 +168,7 @@ public class MapsActivity extends DrawerBaseActivity
 
             selectedService = new boolean[servArray.length];
 
-            Button oButton = findViewById(R.id.overlayButton);
+//            Button oButton = findViewById(R.id.overlayButton);
 
             Button floor1 = findViewById(R.id.floor1);
 
@@ -179,16 +176,23 @@ public class MapsActivity extends DrawerBaseActivity
 
             Button search = findViewById(R.id.search);
 
+            Button oButton = findViewById(R.id.overlayButton);
+
+
             ArrayAdapter<String> adapter=new ArrayAdapter<String>(this,android.R.layout.simple_dropdown_item_1line,countries);
+            List<Marker> markers = new ArrayList<>();
+            List<GroundOverlayOptions> overlays = new ArrayList<>();
             AutoCompleteTextView textView=(AutoCompleteTextView)findViewById(R.id.txtcountries);
             textView.setThreshold(3);
             textView.setAdapter(adapter);
 
             Gimbal.setApiKey(this.getApplication(), GIMBAL_API_KEY);
-            setUpGimbalPlaceManager();
-            Gimbal.start();
 
+            initView();
+            monitorPlace();
+            listenBeacon();
 
+            android.util.Log.i("isStarted", "" + Gimbal.isStarted());
 
             oButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -203,7 +207,6 @@ public class MapsActivity extends DrawerBaseActivity
                 public void onClick(View view) {
                     floor = 1;
                     mMap.clear();
-                    //LatLng nethken = new LatLng(32.525665490440126,-92.64472849667071);
 
                     GroundOverlayOptions neth = new GroundOverlayOptions()
                             .image(BitmapDescriptorFactory.fromResource(R.drawable.nethken_floor1))
@@ -322,76 +325,6 @@ public class MapsActivity extends DrawerBaseActivity
 
         }
 
-        private void setUpGimbalPlaceManager() {
-
-
-            PlaceEventListener placeEventListener = new PlaceEventListener() {
-
-                @Override
-                public void onVisitStart(Visit visit) {
-                    super.onVisitStart(visit);
-                    android.util.Log.i("onVisitStart", "overridden");
-                }
-
-                @Override
-                public void onVisitEnd(Visit visit) {
-                    android.util.Log.i("onVisitEnd", "overridden");
-                    super.onVisitEnd(visit);
-                }
-
-                public void onBeaconSighting(BeaconSighting sighting, List<Visit> visits) {
-
-                    //Gets name of the beacon that was sighted
-                    beaconName = sighting.getBeacon().getName();
-
-                    //Gets the number at the end of the beacon
-                    beaconVal = Integer.parseInt(beaconName.substring(beaconName.length() - 1)) -1;
-
-                    //Sets the RSSI value according to the scanned beacon
-                    beaconDistance[beaconVal][1] = sighting.getRSSI();
-
-                    //Checks for the smallest RSSI value among all 10 beacons
-                    for(int i = 0; i < beaconDistance.length; i++){
-                        if (beaconDistance[i][1] < min){
-                            min = beaconDistance[i][1];
-                            if(i < 6){
-                                floor = 1;
-                                mMap.clear();
-                                //LatLng nethken = new LatLng(32.525665490440126,-92.64472849667071);
-
-                                GroundOverlayOptions neth = new GroundOverlayOptions()
-                                        .image(BitmapDescriptorFactory.fromResource(R.drawable.nethken_floor1))
-                                        .position(nethken, 76f, 46f);
-
-                                mMap.addGroundOverlay(neth);
-                            }
-
-                            else{
-                                floor = 2;
-                                mMap.clear();
-                                //LatLng nethken = new LatLng(32.525665490440126,-92.64472849667071);
-
-                                GroundOverlayOptions neth = new GroundOverlayOptions()
-                                        .image(BitmapDescriptorFactory.fromResource(R.drawable.nethken_floor2))
-                                        .position(nethken, 76f, 46f);
-
-                                mMap.addGroundOverlay(neth);
-                            }
-                        }
-                    }
-
-
-
-                    android.util.Log.i("oBS: sighting", "" + sighting.toString());
-                    android.util.Log.i("oBS: visits", "" + visits.toString());
-                    // This will be invoked when a beacon assigned to a place within a current visit is sighted.
-                }
-            };
-
-            PlaceManager.getInstance().addListener(placeEventListener);
-
-        }
-
         public void searchCamera (double x, double y, int i) {
             LatLng searchedRoom = new LatLng(x, y);
 
@@ -424,10 +357,6 @@ public class MapsActivity extends DrawerBaseActivity
                         double x = Double.parseDouble(prof2[i][2]);
                         double y = Double.parseDouble(prof2[i][3]);
 
-                        String name = prof2[i][4];
-                        int id = getResources().getIdentifier(name, "drawable", getPackageName());
-                        Drawable drawable = getResources().getDrawable(id);
-
                         LatLng resource = new LatLng(x, y);
                         mMap.addMarker(new MarkerOptions().position(resource).title(prof2[i][0])
                                 .icon(BitmapFromVector(getApplicationContext(), R.drawable.professor_dot))
@@ -441,9 +370,6 @@ public class MapsActivity extends DrawerBaseActivity
                                     View row = getLayoutInflater().inflate(R.layout.custom_address,null);
                                     TextView title = (TextView) row.findViewById(R.id.title);
                                     TextView snippet = (TextView) row.findViewById(R.id.snippet);
-                                    ImageView pic = (ImageView) row.findViewById(R.id.image);
-
-                                    pic.setBackground(drawable);
                                     title.setText(marker.getTitle());
                                     snippet.setText(marker.getSnippet());
 
@@ -683,5 +609,134 @@ public class MapsActivity extends DrawerBaseActivity
             PermissionUtils.PermissionDeniedDialog
                 .newInstance(true).show(getSupportFragmentManager(), "dialog");
     }
+
+        private void listenBeacon() {
+            BeaconEventListener beaconEventListener = getBeaconEventListener();
+            BeaconManager beaconManager = new BeaconManager();
+            beaconManager.addListener(beaconEventListener);
+            beaconManager.startListening();
+        }
+
+        private void monitorPlace() {
+            placeEventListener = getPlaceEventListener();
+
+            placeManager = PlaceManager.getInstance();
+            placeManager.addListener(placeEventListener);
+            placeManager.startMonitoring();
+        }
+
+        private void initView() {
+            GimbalLogConfig.enableUncaughtExceptionLogging();
+            GimbalDebugger.enableBeaconSightingsLogging();
+        }
+
+        private BeaconEventListener getBeaconEventListener() {
+            //android.util.Log.i(TAG, "BeaconEventListener started sucessfully...");
+            BeaconEventListener beaconSightingListener = new BeaconEventListener() {
+                @Override
+                public void onBeaconSighting(BeaconSighting beaconSighting) {
+
+                    super.onBeaconSighting(beaconSighting);
+
+                }
+            };
+            return beaconSightingListener;
+        }
+
+        private PlaceEventListener getPlaceEventListener() {
+
+            PlaceEventListener obj = new PlaceEventListener() {
+                @Override
+                public void onBeaconSighting(BeaconSighting sight, List<Visit> visit) {
+
+
+                    super.onBeaconSighting(sight, visit);
+
+                    android.util.Log.i("NOB", String.format("%s", sight.getBeacon().getName()));
+                    android.util.Log.i("ID", String.format("%s", sight.getBeacon().getIdentifier()));
+                    android.util.Log.i("rssi", Integer.toString(sight.getRSSI() * -1 ));
+                    android.util.Log.i("Start Visit for %s", visit.iterator().toString());
+                    android.util.Log.i("Floor", Integer.toString(floor));
+
+                    Integer rssi = -1 * sight.getRSSI();
+                    String bName = sight.getBeacon().getName();
+
+                    android.util.Log.i("rssi", Integer.toString((rssi)));
+                    android.util.Log.i("bName", bName);
+
+                    Integer beaconNum = Integer.parseInt(bName.substring(bName.length() - 1));
+                    beaconRSSI[beaconNum - 1] = rssi;
+
+                    android.util.Log.i("beaconNum", Integer.toString(beaconNum));
+
+                    // get min of current beacons
+                    minRSSI = 10000;
+                    bMin = 0;
+                    for (int i = 0; i < beaconRSSI.length - 1; i++)
+                    {
+                        if (beaconRSSI[i] < minRSSI) {
+                            minRSSI = beaconRSSI[i];
+                            bMin = i;
+                            android.util.Log.i("bMin : minRSSI", Integer.toString(bMin) + " : " + Integer.toString(minRSSI));
+                        }
+                    }
+
+                    //check which floor beacon is associated with
+                    if(bMin < 5) {
+                        android.util.Log.i("floor", "1");
+
+                        if(floor != 1) {
+                            mMap.clear();
+
+                            GroundOverlayOptions neth = new GroundOverlayOptions()
+                                    .image(BitmapDescriptorFactory.fromResource(R.drawable.nethken_floor1))
+                                    .position(nethken, 76f, 46f);
+
+                            mMap.addGroundOverlay(neth);
+                            floor = 1;
+                        }
+                    }
+                    else {
+                        android.util.Log.i("floor", "2");
+
+                        if (floor != 2) {
+                            mMap.clear();
+
+                            GroundOverlayOptions neth = new GroundOverlayOptions()
+                                    .image(BitmapDescriptorFactory.fromResource(R.drawable.nethken_floor2))
+                                    .position(nethken, 76f, 46f);
+
+                            mMap.addGroundOverlay(neth);
+
+                            floor = 2;
+                        }
+                    }
+                        //if already on that floor, do not change anything
+                        //else change floor to floor beacon is assigned to
+                    }
+
+
+
+                public void onVisitStart(Visit visit) {
+                    super.onVisitStart(visit);
+
+                    android.util.Log.i("Start Visit for %s", visit
+                            .getPlace().getName());
+
+                }
+
+                @Override
+                public void onVisitEnd(Visit visit) {
+                    // TODO Auto-generated method stub
+                    super.onVisitEnd(visit);
+
+                    android.util.Log.i("End Visit for %s", visit
+                            .getPlace().getName());
+
+                }
+
+            };
+            return obj;
+        }
 
 }

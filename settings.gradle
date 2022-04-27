@@ -13,5 +13,5 @@ dependencyResolutionManagement {
         maven { url 'https://jitpack.io' }
     }
 }
-rootProject.name = "navapp"
+rootProject.name = "foruMapp"
 include ':app'
