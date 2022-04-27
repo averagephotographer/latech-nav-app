@@ -110,13 +110,28 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                 context.startActivity(commentIntent);
             }
         });
+        if (uid.equals(myUid)){
+            holder.delete_btn.setVisibility(View.VISIBLE);
+            holder.delete_btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    showMoreOptions(holder.delete_btn, uid, myUid, caption, user, date, description, postId,position);
+                }
+            });
 
+        }
+        else{
+            holder.delete_btn.setVisibility(View.GONE);
+        }
+        
+
+        /*
         holder.delete_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 showMoreOptions(holder.delete_btn, uid, myUid, caption, user, date, description, postId,position);
             }
-        });
+        });*/
 
 
 
@@ -174,31 +189,32 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
 
 
-    private void showMoreOptions(ImageView moreBtn, String uid, String myUid, String postid, String cap, String user_name, String time, String descrip, int index){
+    private void showMoreOptions(ImageView moreBtn, String uid, String myUid, String postid, String cap, String user_name, String time, String descrip, int index) {
         PopupMenu popupMenu = new PopupMenu(context, moreBtn, Gravity.END);
 
         //show delete option in only post(s) of currently signed-in user
-        if(uid.equals(myUid)){
+        if (uid.equals(myUid)) {
             popupMenu.getMenu().add(Menu.NONE, 0, 0, "Delete");
+            popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem menuItem) {
+
+                    int id = menuItem.getItemId();
+                    if (id == 0) {
+                        beginDelete(postid, index);
+                        //delete is clicked
+                    }
+                    return false;
+                }
+            });
+            popupMenu.show();
 
         }
 
 
-        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem menuItem) {
-
-                int id = menuItem.getItemId();
-                if(id==0){
-                    beginDelete(postid, index);
-                    //delete is clicked
-                }
-                return false;
-            }
-        });
-
-        popupMenu.show();
     }
+
+
 
     private void beginDelete(String postId, int pos){
         ProgressDialog pd = new ProgressDialog(context);
@@ -249,6 +265,9 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             likeButton = itemView.findViewById(R.id.like_btn);
             commentButton = itemView.findViewById(R.id.comments_post);
             delete_btn = itemView.findViewById(R.id.more_btn);
+
+
+
         }
 
         public void setPostLike(int count) {
