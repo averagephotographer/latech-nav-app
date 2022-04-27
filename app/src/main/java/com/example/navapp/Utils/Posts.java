@@ -1,19 +1,26 @@
 package com.example.navapp.Utils;
 
-import android.content.Context;
 import android.net.Uri;
+import android.widget.ImageView;
 
-public class Posts {
-    private String datePost, description, title, username;
+public class Posts extends PostId {
+    private String datePost, description, title, username, uid;
+    private String likeCount;
 
     public Posts() {
     }
 
-    public Posts(String datePost, String description, String title, String username) {
+    public String getUid() {
+        return uid;
+    }
+
+    public Posts(String datePost, String description, String title, String username, String uid) {
         this.datePost = datePost;
         this.description = description;
         this.title = title;
         this.username = username;
+        this.likeCount = likeCount;
+        this.uid = uid;
     }
 
     public String getDatePost() {
@@ -48,5 +55,12 @@ public class Posts {
         this.username = username;
     }
 
+    public String getLikeCount() {
+        return likeCount;
+    }
+
+    public void setLikeCount(String likeCount) {
+        this.likeCount = likeCount;
+    }
 
 }

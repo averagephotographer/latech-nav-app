@@ -280,7 +280,7 @@ public class LoginActivity extends AppCompatActivity {
                                 });
                                 //startActivity(new Intent(getApplicationContext(), MapsActivity.class));
                             } else {
-                                Toast.makeText(LoginActivity.this, "Error! " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                                Toast.makeText(LoginActivity.this, "Error! Wrong Password or Username." , Toast.LENGTH_LONG).show();
                             }
                         }
                         else{

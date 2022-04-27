@@ -10,18 +10,22 @@
         android:id="@+id/comment"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="664dp"
+        android:layout_marginBottom="8dp"
         android:background="@drawable/add_comment_bg"
         android:hint="Add a comment"
+        android:inputType="text"
         android:minHeight="48dp"
         android:paddingStart="10dp"
         android:paddingLeft="20dp"
         android:paddingTop="5dp"
+        android:imeOptions="actionDone"
+
+
         android:paddingBottom="5dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <ImageView
         android:id="@+id/send"
@@ -31,16 +35,20 @@
         app:layout_constraintBottom_toBottomOf="@+id/comment"
         app:layout_constraintEnd_toEndOf="@+id/comment"
         app:layout_constraintTop_toTopOf="@+id/comment"
-        app:srcCompat="@drawable/send_arrow" />
+        app:srcCompat="@drawable/send_icon" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycle"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:id="@+id/comment_recyclerView"
+        android:layout_width="410dp"
+        android:layout_height="607dp"
+        android:layout_marginStart="1dp"
+        android:layout_marginTop="1dp"
+        android:layout_marginEnd="1dp"
+        android:layout_marginBottom="1dp"
         app:layout_constraintBottom_toTopOf="@+id/comment"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    android:tint = @color/blue
+
 </androidx.constraintlayout.widget.ConstraintLayout>
