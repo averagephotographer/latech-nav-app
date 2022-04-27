@@ -129,7 +129,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         holder.likeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                firestore.collection("posts/" + postId + "/likes").document(name);
+                holder.likeButton.setImageDrawable(context.getDrawable(R.drawable.ic_baseline_favorite_24));
             }
         });
 
