@@ -1,15 +1,21 @@
 package com.example.navapp;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.text.format.DateUtils;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,13 +23,21 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.navapp.Utils.Posts;
+import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.snov.timeagolibrary.PrettyTimeAgo;
 
 import java.text.CollationElementIterator;
@@ -34,18 +48,29 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TimeZone;
 
+
+
+
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
     static Context context;
     ArrayList<Posts> postsArrayList;
     SharedPreferences sharedPreferences;
     FirebaseFirestore firestore;
+    String myUid;
+    String uid;
+    String caption;
+    String description;
+    String user;
+    String date;
+    //public String  postId = posts.PostId;
 
 
 
     public MyAdapter(Context context, ArrayList<Posts> postsArrayList) {
         this.context = context;
         this.postsArrayList = postsArrayList;
+        myUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
     }
 
     @NonNull
@@ -61,6 +86,11 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         String name = sharedPreferences.getString("username", "");
 
         Posts posts = postsArrayList.get(position);
+        uid = posts.getUid();
+        caption = posts.getTitle();
+        description = posts.getDescription();
+        user = posts.getUsername();
+        date = posts.getDatePost();
 
         holder.postDesc.setText(posts.getDescription());
         holder.postTitle.setText(posts.getTitle());
@@ -81,6 +111,16 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             }
         });
 
+        holder.delete_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showMoreOptions(holder.delete_btn, uid, myUid, caption, user, date, description, postId,position);
+            }
+        });
+
+
+
+
 
         //like button
         //String postId = posts.PostId;
@@ -93,25 +133,28 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             }
         });
 
-
-
+        //comment count
         /*
-        // like color change
-        firestore.collection("posts/" + postId + "/likes").document(name).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+        firestore.collection("posts/" + postId + "/comments").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
-            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-                if (error == null) {
-                    if (value.exists()) {
-                        holder.likeButton.setImageDrawable(context.getDrawable(R.drawable.ic_baseline_favorite_24));
-                    }
-                    else {
-                        holder.likeButton.setImageDrawable(context.getDrawable(R.drawable.ic_baseline_favorite_border_24));
-                    }
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                if(!value.isEmpty()){
+                    int count = value.size();
+                    System.out.println(count);
+                    holder.setCommentno(count);
+
+                }else{
+                    holder.setCommentno(0);
+
                 }
             }
-        });
 
-         */
+        });*/
+
+
+
+
+
     }
 
     private String calculateTimeAgo(String datePost) {
@@ -131,15 +174,70 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
 
 
+    private void showMoreOptions(ImageView moreBtn, String uid, String myUid, String postid, String cap, String user_name, String time, String descrip, int index){
+        PopupMenu popupMenu = new PopupMenu(context, moreBtn, Gravity.END);
+
+        //show delete option in only post(s) of currently signed-in user
+        if(uid.equals(myUid)){
+            popupMenu.getMenu().add(Menu.NONE, 0, 0, "Delete");
+
+        }
+
+
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+
+                int id = menuItem.getItemId();
+                if(id==0){
+                    beginDelete(postid, index);
+                    //delete is clicked
+                }
+                return false;
+            }
+        });
+
+        popupMenu.show();
+    }
+
+    private void beginDelete(String postId, int pos){
+        ProgressDialog pd = new ProgressDialog(context);
+        pd.setMessage("Deleting....");
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+
+        db.collection("posts").document(postsArrayList.get(pos).PostId)
+                .delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task.isSuccessful()){
+                    postsArrayList.remove(postsArrayList.get(pos));
+                    notifyDataSetChanged();
+                    Toast.makeText(context, "Deleted", Toast.LENGTH_SHORT).show();
+
+
+                    pd.dismiss();
+                }else{
+                    Toast.makeText(context, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+
+                }
+            }
+
+        });
+
+
+
+    }
 
     @Override
     public int getItemCount() {
         return postsArrayList.size();
     }
 
-    public static class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView postDesc, postTitle, username, likeCount, postDate;
-        ImageView likeButton, commentButton;
+    public class MyViewHolder extends RecyclerView.ViewHolder {
+        TextView postDesc, postTitle, username, likeCount, postDate,comment_no;
+        ImageView likeButton, commentButton, delete_btn;
 
 
         public MyViewHolder(@NonNull View itemView) {
@@ -150,11 +248,19 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             postDate = itemView.findViewById(R.id.date_tv);
             likeButton = itemView.findViewById(R.id.like_btn);
             commentButton = itemView.findViewById(R.id.comments_post);
+            delete_btn = itemView.findViewById(R.id.more_btn);
         }
 
         public void setPostLike(int count) {
             likeCount = itemView.findViewById(R.id.like_count_tv);
             likeCount.setText(count);
         }
+
+        public void setCommentno(int count){
+            comment_no = itemView.findViewById(R.id.comment_count);
+            comment_no.setText(count + "comments");
+        }
     }
+
+
 }

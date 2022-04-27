@@ -52,6 +52,7 @@ public class CreatePostActivity extends AppCompatActivity {
     FirebaseFirestore firestore;
     FirebaseAuth firebaseAuth;
     Uri imageUri;
+    String current_user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +65,7 @@ public class CreatePostActivity extends AppCompatActivity {
         postImage = findViewById(R.id.postImage);
         firestore = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
+        current_user = firebaseAuth.getCurrentUser().getUid();
 
         postImage.setOnClickListener(new View.OnClickListener() {
              @Override
@@ -92,6 +94,7 @@ public class CreatePostActivity extends AppCompatActivity {
                 posts.put("username", name);
                 posts.put("title", title);
                 posts.put("description", description);
+                posts.put("uid", current_user);
                 Date date = new Date();
                 SimpleDateFormat formatter = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
                 String strDate = formatter.format(date);

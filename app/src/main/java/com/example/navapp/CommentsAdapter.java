@@ -10,18 +10,24 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.navapp.Utils.Comments;
+import com.example.navapp.Utils.Users;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
 
 public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.CommentsViewHolder> {
 
     private Activity context;
+    private List<Users> usersList;
 
     private List<Comments> commentsList;
+    public FirebaseFirestore firestore;
 
-    public CommentsAdapter(Activity context, List<Comments> commentsList){
+
+    public CommentsAdapter(Activity context, List<Comments> commentsList, List<Users> usersList){
         this.context = context;
         this.commentsList = commentsList;
+        this.usersList = usersList;
     }
 
 
@@ -38,6 +44,12 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
 
         holder.setmcomment(comments.getComment());
 
+        Users users = usersList.get(position);
+        holder.setmUserName(users.getUsername());
+
+
+
+
     }
 
     @Override
@@ -46,7 +58,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
     }
 
     public class CommentsViewHolder extends RecyclerView.ViewHolder{
-        TextView mcomment;
+        TextView mcomment, mUserName;
         View mView;
 
         public CommentsViewHolder(@NonNull View itemView) {
@@ -58,5 +70,11 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
             mcomment = mView.findViewById(R.id.comment_tv);
             mcomment.setText(comment);
         }
+
+        public void setmUserName(String username){
+            mUserName = mView.findViewById(R.id.comment_user);
+            mUserName.setText(username);
+        }
+
     }
 }

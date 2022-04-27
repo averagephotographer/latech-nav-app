@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.RenderProcessGoneDetail;
@@ -25,6 +26,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.example.navapp.Utils.Posts;
 import com.example.navapp.databinding.ActivityDrawerBaseBinding;
 import com.example.navapp.databinding.ActivityForumBinding;
+import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -43,7 +45,10 @@ import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 
-public class ForumActivity extends DrawerBaseActivity {
+
+
+
+public class ForumActivity extends DrawerBaseActivity  {
     ActivityForumBinding activityForumBinding;
     BottomNavigationView bottomNavigationView;
     FloatingActionButton floatingActionButton;
@@ -57,6 +62,7 @@ public class ForumActivity extends DrawerBaseActivity {
     ProgressDialog progressDialog;
     String titlepost;
     String description;
+
     ImageView commentbtn;
     SwipeRefreshLayout swipeRefreshLayout;
 
@@ -82,6 +88,7 @@ public class ForumActivity extends DrawerBaseActivity {
 
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
         bottomNavigationView.setBackground(null);
+
         floatingActionButton = findViewById(R.id.floatingActionButton);
         commentbtn = findViewById(R.id.comments_post);
 
@@ -152,5 +159,7 @@ public class ForumActivity extends DrawerBaseActivity {
                 });
 
     }
+
+
 }
 

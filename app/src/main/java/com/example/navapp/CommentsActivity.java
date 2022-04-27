@@ -15,10 +15,12 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.navapp.Utils.Comments;
+import com.example.navapp.Utils.Users;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -38,6 +40,7 @@ public class CommentsActivity extends AppCompatActivity {
     private String post_id;
     private CommentsAdapter adapter;
     private List<Comments> commList;
+    private List<Users> usersList;
 
     SharedPreferences sharedpreferences;
 
@@ -53,7 +56,8 @@ public class CommentsActivity extends AppCompatActivity {
         firestore = FirebaseFirestore.getInstance();
 
         commList = new ArrayList<>();
-        adapter = new CommentsAdapter(CommentsActivity.this , commList);
+        usersList = new ArrayList<>();
+        adapter = new CommentsAdapter(CommentsActivity.this , commList, usersList);
 
         post_id = getIntent().getStringExtra("postid");
 
@@ -73,8 +77,21 @@ public class CommentsActivity extends AppCompatActivity {
                     if (documentChange.getType() == DocumentChange.Type.ADDED){
 
                         Comments comments = documentChange.getDocument().toObject(Comments.class);
-                        commList.add(comments);
-                        adapter.notifyDataSetChanged();
+                        String user = documentChange.getDocument().getString("username");
+                        firestore.collection("user_profile").document(user).get()
+                                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                        if (task.isSuccessful()){
+                                            Users users = task.getResult().toObject(Users.class);
+                                            usersList.add(users);
+                                            commList.add(comments);
+                                            adapter.notifyDataSetChanged();
+                                        }else{
+                                            Toast.makeText(CommentsActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                });
 
                     }else{
                         adapter.notifyDataSetChanged();
@@ -98,7 +115,8 @@ public class CommentsActivity extends AppCompatActivity {
                         public void onComplete(@NonNull Task<DocumentReference> task) {
                             if (task.isSuccessful()){
                                 Toast.makeText(CommentsActivity.this,"Comment Added", Toast.LENGTH_SHORT).show();
-
+                                System.out.println("hi");
+                                comment_post.getText().clear();
                             }else{
                                 Toast.makeText(CommentsActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                             }

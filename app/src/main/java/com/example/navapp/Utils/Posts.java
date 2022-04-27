@@ -4,18 +4,23 @@ import android.net.Uri;
 import android.widget.ImageView;
 
 public class Posts extends PostId {
-    private String datePost, description, title, username;
+    private String datePost, description, title, username, uid;
     private String likeCount;
 
     public Posts() {
     }
 
-    public Posts(String datePost, String description, String title, String username) {
+    public String getUid() {
+        return uid;
+    }
+
+    public Posts(String datePost, String description, String title, String username, String uid) {
         this.datePost = datePost;
         this.description = description;
         this.title = title;
         this.username = username;
         this.likeCount = likeCount;
+        this.uid = uid;
     }
 
     public String getDatePost() {

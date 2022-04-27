@@ -10,17 +10,21 @@
         android:id="@+id/comment"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="8dp"
         android:background="@drawable/add_comment_bg"
         android:hint="Add a comment"
+        android:inputType="text"
         android:minHeight="48dp"
         android:paddingStart="10dp"
         android:paddingLeft="20dp"
         android:paddingTop="5dp"
+        android:imeOptions="actionDone"
+
+
         android:paddingBottom="5dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent" />
 
     <ImageView
@@ -35,8 +39,8 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/comment_recyclerView"
-        android:layout_width="409dp"
-        android:layout_height="665dp"
+        android:layout_width="410dp"
+        android:layout_height="607dp"
         android:layout_marginStart="1dp"
         android:layout_marginTop="1dp"
         android:layout_marginEnd="1dp"
