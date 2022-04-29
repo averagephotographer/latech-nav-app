@@ -18,6 +18,7 @@ import com.example.navapp.Utils.Comments;
 import com.example.navapp.Utils.Users;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -37,6 +38,7 @@ public class CommentsActivity extends AppCompatActivity {
     private ImageView add_comment;
     private RecyclerView recycle;
     private FirebaseFirestore firestore;
+    private FirebaseAuth auth;
     private String post_id;
     private CommentsAdapter adapter;
     private List<Comments> commList;
@@ -54,6 +56,8 @@ public class CommentsActivity extends AppCompatActivity {
         recycle = findViewById(R.id.comment_recyclerView);
 
         firestore = FirebaseFirestore.getInstance();
+        auth = FirebaseAuth.getInstance();
+        String uid = auth.getCurrentUser().getUid();
 
         commList = new ArrayList<>();
         usersList = new ArrayList<>();
@@ -110,6 +114,7 @@ public class CommentsActivity extends AppCompatActivity {
                     commentsMap.put("username", name);
                     commentsMap.put("comment", user_comment);
                     commentsMap.put("time", FieldValue.serverTimestamp());
+                    commentsMap.put("uid", uid);
                     firestore.collection("posts/" + post_id + "/comments").add(commentsMap).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
                         @Override
                         public void onComplete(@NonNull Task<DocumentReference> task) {
