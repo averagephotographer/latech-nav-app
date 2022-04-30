@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.navapp.Utils.Posts;
+import com.example.navapp.databinding.ActivityForumBinding;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
@@ -28,8 +30,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MyPostsActivity extends AppCompatActivity {
-    private BottomNavigationView btm_view;
+public class MyPostsActivity extends DrawerBaseActivity {
     private FloatingActionButton fab;
     TextView showPost;
     SharedPreferences sharedPreferences;
@@ -41,12 +42,16 @@ public class MyPostsActivity extends AppCompatActivity {
     private List<Posts> list;
     SharedPreferences sharedpref;
     private Query query;
+    private BottomNavigationView bottomNavigationView;
+    private ActivityForumBinding activityForumBinding;
     private ListenerRegistration listenerRegistration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_my_posts);
+        activityForumBinding = ActivityForumBinding.inflate(getLayoutInflater());
+        setContentView(activityForumBinding.getRoot());
+        allocateActivityTitle("Forum");
 
         firestore = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
@@ -60,9 +65,21 @@ public class MyPostsActivity extends AppCompatActivity {
         adapter = new mypostsAdapter(MyPostsActivity.this, list);
         recycler.setAdapter(adapter);
 
-        btm_view = findViewById(R.id.bottomNavigationView);
-        btm_view.setBackground(null);
+        bottomNavigationView = findViewById(R.id.bottomNavigationView);
+        bottomNavigationView.setBackground(null);
+        bottomNavigationView.setSelectedItemId(R.id.Account);
 
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.Account:
+                    return true;
+                case R.id.Home:
+                    startActivity(new Intent(getApplicationContext(), ForumActivity.class));
+                    overridePendingTransition(0,0);
+                    return true;
+            }
+            return false;
+        });
         fab = findViewById(R.id.floatingActionButton);
 
         sharedpref = getApplicationContext().getSharedPreferences("login", Context.MODE_PRIVATE);

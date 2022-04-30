@@ -88,6 +88,19 @@ public class ForumActivity extends DrawerBaseActivity  {
 
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
         bottomNavigationView.setBackground(null);
+        bottomNavigationView.setSelectedItemId(R.id.Home);
+
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.Account:
+                    startActivity(new Intent(getApplicationContext(), MyPostsActivity.class));
+                    overridePendingTransition(0,0);
+                    return true;
+                case R.id.Home:
+                    return true;
+            }
+            return false;
+        });
 
         floatingActionButton = findViewById(R.id.floatingActionButton);
         commentbtn = findViewById(R.id.comments_post);
