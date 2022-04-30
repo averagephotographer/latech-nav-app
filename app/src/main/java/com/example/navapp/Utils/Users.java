@@ -2,9 +2,14 @@ package com.example.navapp.Utils;
 
 public class Users {
 
-    private String username;
+    private String profilePicURL , username;
 
-    public String getUsername() {
+    public String getImage() {
+        return profilePicURL;
+    }
+
+    public String getName() {
         return username;
     }
+
 }

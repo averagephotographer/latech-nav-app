@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.navapp.Utils.Posts;
+import com.example.navapp.Utils.Users;
 import com.example.navapp.databinding.ActivityDrawerBaseBinding;
 import com.example.navapp.databinding.ActivityForumBinding;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
@@ -56,6 +57,7 @@ public class ForumActivity extends DrawerBaseActivity  {
     SharedPreferences sharedPreferences;
     RecyclerView recyclerView;
     ArrayList<Posts> postsArrayList;
+    ArrayList<Users> usersArrayList;
     FirebaseFirestore firestore;
     MyAdapter myAdapter;
     StorageReference storageReference;
@@ -107,7 +109,7 @@ public class ForumActivity extends DrawerBaseActivity  {
 
         firestore = FirebaseFirestore.getInstance();
         postsArrayList = new ArrayList<Posts>();
-        myAdapter = new MyAdapter(ForumActivity.this, postsArrayList);
+        myAdapter = new MyAdapter(ForumActivity.this, postsArrayList, usersArrayList);
 
         recyclerView.setAdapter(myAdapter);
         EventChangeListener();
