@@ -19,6 +19,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.navapp.Utils.PostId;
 import com.example.navapp.Utils.Posts;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -117,7 +118,7 @@ public class mypostsAdapter extends RecyclerView.Adapter<mypostsAdapter.PostView
                 }
             }
         });
-        db.collection("posts").document(postID)
+        db.collection("posts").document(mList.get(pos).PostId)
                 .delete().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
