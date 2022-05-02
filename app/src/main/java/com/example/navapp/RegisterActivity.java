@@ -171,6 +171,8 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher {
                                 }
                                 else {
                                     circleImageView.setImageDrawable(getDrawable(R.drawable.elcipse));
+                                    user.put("profilePicURL", "");
+                                    db.collection("user_profile").document(username_str).set(user);
                                 }
                                 startActivity(new Intent(getApplicationContext(),LoginActivity.class));
                             } else {

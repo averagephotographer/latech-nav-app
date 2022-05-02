@@ -106,7 +106,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         //holder.likeButton.setText(posts.getLikeBtn());
 
 
-        /*firestore.collection("user_profile").document(name).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        firestore.collection("user_profile").document(name).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
@@ -119,8 +119,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                 }
             }
         });
-
-         */
 
         String postId = posts.PostId;
 
@@ -147,6 +145,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
         //like button
         //String postId = posts.PostId;
+        System.out.println(postId);
 
 
         holder.likeButton.setOnClickListener(new View.OnClickListener() {
@@ -157,10 +156,11 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         });
 
         //comment count
-        /*
-        firestore.collection("posts/" + postId + "/comments").addSnapshotListener(new EventListener<QuerySnapshot>() {
+
+        /*firestore.collection("posts/" + postId + "/comments").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                System.out.println(postId);
                 if(!value.isEmpty()){
                     int count = value.size();
                     System.out.println(count);
@@ -172,7 +172,9 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                 }
             }
 
-        });*/
+        });
+
+         */
 
 
 
