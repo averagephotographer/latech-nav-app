@@ -129,7 +129,6 @@ public class CommentsActivity extends AppCompatActivity {
                                 Toast.makeText(CommentsActivity.this,"Comment Added", Toast.LENGTH_SHORT).show();
                                 System.out.println("hi");
                                 updateCommentCount(commentsMap);
-                                adapter.notifyDataSetChanged();
                                 comment_post.getText().clear();
                             }else{
                                 Toast.makeText(CommentsActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
