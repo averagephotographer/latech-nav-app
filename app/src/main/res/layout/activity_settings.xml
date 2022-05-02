@@ -63,11 +63,11 @@
         android:id="@+id/imageView5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
+        android:layout_marginEnd="32dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/textView5"
         app:layout_constraintTop_toBottomOf="@+id/user_icon"
-        app:layout_constraintVertical_bias="0.08"
+        app:layout_constraintVertical_bias="0.086"
         app:srcCompat="@drawable/ic_night" />
 
     <TextView
@@ -100,11 +100,11 @@
         android:id="@+id/imageView6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
+        android:layout_marginEnd="32dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/textView6"
         app:layout_constraintTop_toBottomOf="@+id/imageView5"
-        app:layout_constraintVertical_bias="0.091"
+        app:layout_constraintVertical_bias="0.09"
         app:srcCompat="@drawable/ic_info" />
 
     <TextView
