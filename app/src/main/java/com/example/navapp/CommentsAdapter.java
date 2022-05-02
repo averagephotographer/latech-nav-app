@@ -45,7 +45,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
         holder.setmcomment(comments.getComment());
 
         Users users = usersList.get(position);
-        holder.setmUserName(users.getName());
+        holder.setmUserName(users.getUsername());
 
 
 
