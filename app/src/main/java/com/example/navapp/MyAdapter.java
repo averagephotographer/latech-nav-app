@@ -119,7 +119,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         //holder.likeButton.setText(posts.getLikeBtn());
 
 
-        firestore.collection("user_profile").document(name).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        /*firestore.collection("user_profile").document(name).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
@@ -132,6 +132,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                 }
             }
         });
+
+         */
 
         String postId = posts.PostId;
         System.out.println("post" + " " + postId);
