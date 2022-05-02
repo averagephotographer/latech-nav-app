@@ -21,7 +21,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.navapp.Utils.Posts;
+import com.example.navapp.Utils.Users;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -44,15 +46,17 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 
-
+import de.hdodenhof.circleimageview.CircleImageView;
 
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
     static Context context;
+    private List<Users> usersList;
     ArrayList<Posts> postsArrayList;
     SharedPreferences sharedPreferences;
     FirebaseFirestore firestore;
@@ -66,11 +70,13 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
 
 
-    public MyAdapter(Context context, ArrayList<Posts> postsArrayList) {
+    public MyAdapter(Context context, ArrayList<Posts> postsArrayList, List<Users> usersList) {
         this.context = context;
         this.postsArrayList = postsArrayList;
+        this.usersList = usersList;
         myUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
     }
+
 
     @NonNull
     @Override
@@ -90,15 +96,47 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         description = posts.getDescription();
         user = posts.getUsername();
         date = posts.getDatePost();
+        String num = posts.getCommentno();
+
 
         holder.postDesc.setText(posts.getDescription());
         holder.postTitle.setText(posts.getTitle());
         String timeAgo = calculateTimeAgo(posts.getDatePost());
         holder.postDate.setText(timeAgo);
         holder.username.setText(posts.getUsername());
+
+        //String num = posts.getCommentsno();
+        System.out.println("num" + num);
+        //String num1 = String.valueOf(num);
+        if(num != null){
+            holder.comment_no.setText(num);
+
+        }
+        else{
+            System.out.println("null");
+        }
+
         //holder.likeButton.setText(posts.getLikeBtn());
 
+
+        /*firestore.collection("user_profile").document(name).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    String image = task.getResult().getString("profilePicURL");
+
+                    holder.setProfilePic(image);
+                }
+                else {
+                    Toast.makeText(context, task.getException().toString(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+         */
+
         String postId = posts.PostId;
+        System.out.println("post" + " " + postId);
 
 
         holder.commentButton.setOnClickListener(new View.OnClickListener() {
@@ -109,28 +147,13 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                 context.startActivity(commentIntent);
             }
         });
-        if (uid.equals(myUid)){
-            holder.delete_btn.setVisibility(View.VISIBLE);
-            holder.delete_btn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    showMoreOptions(holder.delete_btn, uid, myUid, caption, user, date, description, postId,position);
-                }
-            });
-
-        }
-        else{
-            holder.delete_btn.setVisibility(View.GONE);
-        }
-        
-
         /*
         holder.delete_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 showMoreOptions(holder.delete_btn, uid, myUid, caption, user, date, description, postId,position);
             }
-        });*/
+        }); */
 
 
 
@@ -138,6 +161,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
         //like button
         //String postId = posts.PostId;
+        System.out.println(postId);
 
 
         holder.likeButton.setOnClickListener(new View.OnClickListener() {
@@ -147,24 +171,9 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             }
         });
 
+        System.out.println("post" + " " + postId);
+
         //comment count
-        /*
-        firestore.collection("posts/" + postId + "/comments").addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                if(!value.isEmpty()){
-                    int count = value.size();
-                    System.out.println(count);
-                    holder.setCommentno(count);
-
-                }else{
-                    holder.setCommentno(0);
-
-                }
-            }
-
-        });*/
-
 
 
 
@@ -188,32 +197,31 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
 
 
-    private void showMoreOptions(ImageView moreBtn, String uid, String myUid, String postid, String cap, String user_name, String time, String descrip, int index) {
+    private void showMoreOptions(ImageView moreBtn, String uid, String myUid, String postid, String cap, String user_name, String time, String descrip, int index){
         PopupMenu popupMenu = new PopupMenu(context, moreBtn, Gravity.END);
 
         //show delete option in only post(s) of currently signed-in user
-        if (uid.equals(myUid)) {
+        if(uid.equals(myUid)){
             popupMenu.getMenu().add(Menu.NONE, 0, 0, "Delete");
-            popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(MenuItem menuItem) {
-
-                    int id = menuItem.getItemId();
-                    if (id == 0) {
-                        beginDelete(postid, index);
-                        //delete is clicked
-                    }
-                    return false;
-                }
-            });
-            popupMenu.show();
 
         }
 
 
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+
+                int id = menuItem.getItemId();
+                if(id==0){
+                    beginDelete(postid, index);
+                    //delete is clicked
+                }
+                return false;
+            }
+        });
+
+        popupMenu.show();
     }
-
-
 
     private void beginDelete(String postId, int pos){
         ProgressDialog pd = new ProgressDialog(context);
@@ -253,6 +261,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     public class MyViewHolder extends RecyclerView.ViewHolder {
         TextView postDesc, postTitle, username, likeCount, postDate,comment_no;
         ImageView likeButton, commentButton, delete_btn;
+        CircleImageView profPic;
 
 
         public MyViewHolder(@NonNull View itemView) {
@@ -264,9 +273,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             likeButton = itemView.findViewById(R.id.like_btn);
             commentButton = itemView.findViewById(R.id.comments_post);
             delete_btn = itemView.findViewById(R.id.more_btn);
-
-
-
+            comment_no = itemView.findViewById(R.id.comment_count);
+            profPic = itemView.findViewById(R.id.profile_pic);
         }
 
         public void setPostLike(int count) {
@@ -274,9 +282,14 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             likeCount.setText(count);
         }
 
+        public void setProfilePic(String urlProfile){
+            profPic = itemView.findViewById(R.id.profile_pic);
+            Glide.with(context).load(urlProfile).into(profPic);
+        }
+
         public void setCommentno(int count){
             comment_no = itemView.findViewById(R.id.comment_count);
-            comment_no.setText(count + "comments");
+            comment_no.setText(count);
         }
     }
 

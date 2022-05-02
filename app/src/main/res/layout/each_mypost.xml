@@ -2,9 +2,9 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
-
 
 
     <androidx.cardview.widget.CardView
@@ -57,7 +57,7 @@
                 android:id="@+id/show_description"
                 android:layout_width="372dp"
                 android:layout_height="107dp"
-                android:text="Caption"
+                android:text="post"
                 android:textColor="@color/black"
                 android:textSize="18dp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -71,8 +71,8 @@
                 android:id="@+id/show_title"
                 android:layout_width="347dp"
                 android:layout_height="32dp"
-                android:text="Caption"
                 android:maxLength="20"
+                android:text="Caption"
                 android:textColor="@color/black"
                 android:textSize="20sp"
                 android:textStyle="bold"
@@ -133,19 +133,15 @@
                 app:layout_constraintVertical_bias="0.0"
                 app:srcCompat="@drawable/ic_baseline_image_24" />
 
-            <ImageView
-                android:id="@+id/delete"
-                android:layout_width="79dp"
-                android:layout_height="25dp"
-                android:clickable="true"
-                android:focusable="true"
 
-                android:layout_marginStart="64dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/comments_post"
-                app:layout_constraintTop_toTopOf="@+id/image"
-                app:layout_constraintVertical_bias="0.0"
-                app:srcCompat="@drawable/delete_icon" />
+            <ImageView
+                android:id="@+id/more_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="196dp"
+                app:layout_constraintBottom_toBottomOf="@+id/username_tv"
+                app:layout_constraintStart_toEndOf="@+id/username_tv"
+                app:srcCompat="@drawable/more_button" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

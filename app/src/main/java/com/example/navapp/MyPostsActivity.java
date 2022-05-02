@@ -31,7 +31,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MyPostsActivity extends DrawerBaseActivity {
-    private BottomNavigationView btm_view;
     private FloatingActionButton fab;
     TextView showPost;
     SharedPreferences sharedPreferences;
@@ -42,9 +41,9 @@ public class MyPostsActivity extends DrawerBaseActivity {
     private mypostsAdapter adapter;
     private List<Posts> list;
     SharedPreferences sharedpref;
-    ActivityForumBinding activityForumBinding;
-    BottomNavigationView bottomNavigationView;
     private Query query;
+    private BottomNavigationView bottomNavigationView;
+    private ActivityForumBinding activityForumBinding;
     private ListenerRegistration listenerRegistration;
 
     @Override
@@ -58,7 +57,16 @@ public class MyPostsActivity extends DrawerBaseActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         recycler = findViewById(R.id.recyclerView);
 
+        recycler.setHasFixedSize(true);
+        recycler.setLayoutManager(new LinearLayoutManager(MyPostsActivity.this));
+
+        list = new ArrayList<>();
+
+        adapter = new mypostsAdapter(MyPostsActivity.this, list);
+        recycler.setAdapter(adapter);
+
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
+        bottomNavigationView.setBackground(null);
         bottomNavigationView.setSelectedItemId(R.id.Account);
 
         bottomNavigationView.setOnItemSelectedListener(item -> {
@@ -72,18 +80,6 @@ public class MyPostsActivity extends DrawerBaseActivity {
             }
             return false;
         });
-
-        recycler.setHasFixedSize(true);
-        recycler.setLayoutManager(new LinearLayoutManager(MyPostsActivity.this));
-
-        list = new ArrayList<>();
-
-        adapter = new mypostsAdapter(MyPostsActivity.this, list);
-        recycler.setAdapter(adapter);
-
-        btm_view = findViewById(R.id.bottomNavigationView);
-        btm_view.setBackground(null);
-
         fab = findViewById(R.id.floatingActionButton);
 
         sharedpref = getApplicationContext().getSharedPreferences("login", Context.MODE_PRIVATE);

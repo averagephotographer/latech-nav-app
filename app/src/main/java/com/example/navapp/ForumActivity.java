@@ -1,6 +1,5 @@
 package com.example.navapp;
 
-import android.accounts.Account;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -25,6 +24,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.navapp.Utils.Posts;
+import com.example.navapp.Utils.Users;
 import com.example.navapp.databinding.ActivityDrawerBaseBinding;
 import com.example.navapp.databinding.ActivityForumBinding;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
@@ -57,6 +57,7 @@ public class ForumActivity extends DrawerBaseActivity  {
     SharedPreferences sharedPreferences;
     RecyclerView recyclerView;
     ArrayList<Posts> postsArrayList;
+    ArrayList<Users> usersArrayList;
     FirebaseFirestore firestore;
     MyAdapter myAdapter;
     StorageReference storageReference;
@@ -88,26 +89,27 @@ public class ForumActivity extends DrawerBaseActivity  {
         //progressDialog.show();
 
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
+        bottomNavigationView.setBackground(null);
         bottomNavigationView.setSelectedItemId(R.id.Home);
 
         bottomNavigationView.setOnItemSelectedListener(item -> {
-                switch (item.getItemId()) {
-                    case R.id.Account:
-                        startActivity(new Intent(getApplicationContext(), MyPostsActivity.class));
-                        overridePendingTransition(0,0);
-                        return true;
-                    case R.id.Home:
-                        return true;
-                }
-                return false;
-            });
+            switch (item.getItemId()) {
+                case R.id.Account:
+                    startActivity(new Intent(getApplicationContext(), MyPostsActivity.class));
+                    overridePendingTransition(0,0);
+                    return true;
+                case R.id.Home:
+                    return true;
+            }
+            return false;
+        });
 
         floatingActionButton = findViewById(R.id.floatingActionButton);
         commentbtn = findViewById(R.id.comments_post);
 
         firestore = FirebaseFirestore.getInstance();
         postsArrayList = new ArrayList<Posts>();
-        myAdapter = new MyAdapter(ForumActivity.this, postsArrayList);
+        myAdapter = new MyAdapter(ForumActivity.this, postsArrayList, usersArrayList);
 
         recyclerView.setAdapter(myAdapter);
         EventChangeListener();
@@ -121,6 +123,8 @@ public class ForumActivity extends DrawerBaseActivity  {
         });
 
     }
+
+
 
 
     private void EventChangeListener() {
