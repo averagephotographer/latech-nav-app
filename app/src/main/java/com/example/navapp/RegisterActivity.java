@@ -27,7 +27,11 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -48,6 +52,7 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher {
     private String userID;
     private CircleImageView circleImageView;
     private Uri mImageUri;
+    private StorageReference storageReference;
     private boolean isPhotoSelected = false;
     public static final String TAG = "TAG";
 
@@ -57,7 +62,7 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher {
         setContentView(R.layout.activity_register);
         db = FirebaseFirestore.getInstance();
         db.setLoggingEnabled(true);
-
+        storageReference = FirebaseStorage.getInstance().getReference();
         fAuth = FirebaseAuth.getInstance();
         progressBarInBackground = findViewById(R.id.progressBarLoading);
         circleImageView = findViewById(R.id.circleImageView);
@@ -141,20 +146,34 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher {
                                     {
                                         if (task.isSuccessful())
                                         {
-                                            Toast.makeText(RegisterActivity.this, "verification email sent", Toast.LENGTH_LONG).show();
+                                            Toast.makeText(RegisterActivity.this, "Verification email sent!", Toast.LENGTH_LONG).show();
                                         }
                                         else{
-                                            Toast.makeText(RegisterActivity.this, "verification email not sent", Toast.LENGTH_LONG).show();
+                                            Toast.makeText(RegisterActivity.this, "Verification email not sent!", Toast.LENGTH_LONG).show();
                                         }
                                     }
                                 });
-                                DocumentReference documentReference = db.collection("user_profile").document(username_str);
-                                documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        Log.d(TAG, "onSuccess: user profile is created for " + userID);
-                                    }
-                                });
+
+                                if (mImageUri != null) {
+                                    StorageReference reference = storageReference.child("profile_picture").child(FieldValue.serverTimestamp().toString() + "jpg");
+                                    reference.putFile(mImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                        @Override
+                                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                            reference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                                @Override
+                                                public void onSuccess(Uri uri) {
+                                                    user.put("profilePicURL", uri.toString());
+                                                    db.collection("user_profile").document(username_str).set(user);
+                                                }
+                                            });
+                                        }
+                                    });
+                                }
+                                else {
+                                    circleImageView.setImageDrawable(getDrawable(R.drawable.elcipse));
+                                    user.put("profilePicURL", "");
+                                    db.collection("user_profile").document(username_str).set(user);
+                                }
                                 startActivity(new Intent(getApplicationContext(),LoginActivity.class));
                             } else {
                                 Toast.makeText(RegisterActivity.this, "Error! " + task.getException().getMessage(), Toast.LENGTH_LONG).show();

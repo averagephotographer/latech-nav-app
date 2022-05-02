@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.navapp.Utils.Posts;
+import com.example.navapp.Utils.Users;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -45,15 +46,17 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 
-
+import de.hdodenhof.circleimageview.CircleImageView;
 
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
     static Context context;
+    private List<Users> usersList;
     ArrayList<Posts> postsArrayList;
     SharedPreferences sharedPreferences;
     FirebaseFirestore firestore;
@@ -67,11 +70,13 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
 
 
-    public MyAdapter(Context context, ArrayList<Posts> postsArrayList) {
+    public MyAdapter(Context context, ArrayList<Posts> postsArrayList, List<Users> usersList) {
         this.context = context;
         this.postsArrayList = postsArrayList;
+        this.usersList = usersList;
         myUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
     }
+
 
     @NonNull
     @Override
@@ -93,6 +98,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         date = posts.getDatePost();
         String num = posts.getCommentno();
 
+
         holder.postDesc.setText(posts.getDescription());
         holder.postTitle.setText(posts.getTitle());
         String timeAgo = calculateTimeAgo(posts.getDatePost());
@@ -111,6 +117,21 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         }
 
         //holder.likeButton.setText(posts.getLikeBtn());
+
+
+        firestore.collection("user_profile").document(name).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    String image = task.getResult().getString("profilePicURL");
+
+                    holder.setProfilePic(image);
+                }
+                else {
+                    Toast.makeText(context, task.getException().toString(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
 
         String postId = posts.PostId;
         System.out.println("post" + " " + postId);
@@ -138,6 +159,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
         //like button
         //String postId = posts.PostId;
+        System.out.println(postId);
 
 
         holder.likeButton.setOnClickListener(new View.OnClickListener() {
@@ -237,6 +259,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     public class MyViewHolder extends RecyclerView.ViewHolder {
         TextView postDesc, postTitle, username, likeCount, postDate,comment_no;
         ImageView likeButton, commentButton, delete_btn;
+        CircleImageView profPic;
 
 
         public MyViewHolder(@NonNull View itemView) {
@@ -249,11 +272,17 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             commentButton = itemView.findViewById(R.id.comments_post);
             delete_btn = itemView.findViewById(R.id.more_btn);
             comment_no = itemView.findViewById(R.id.comment_count);
+            profPic = itemView.findViewById(R.id.profile_pic);
         }
 
         public void setPostLike(int count) {
             likeCount = itemView.findViewById(R.id.like_count_tv);
             likeCount.setText(count);
+        }
+
+        public void setProfilePic(String urlProfile){
+            profPic = itemView.findViewById(R.id.profile_pic);
+            Glide.with(context).load(urlProfile).into(profPic);
         }
 
         public void setCommentno(int count){
