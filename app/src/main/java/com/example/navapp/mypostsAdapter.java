@@ -24,6 +24,8 @@ import com.example.navapp.Utils.Posts;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -60,15 +62,17 @@ public class mypostsAdapter extends RecyclerView.Adapter<mypostsAdapter.PostView
         holder.setCaption(post.getDescription());
         holder.setTitle(post.getTitle());
         holder.setPostusername(post.getUsername());
-        String timeAgo = calculateTimeAgo(post.getDatePost());
-        holder.setDate(timeAgo);
+        //String timeAgo = calculateTimeAgo(post.getDatePost());
+        //holder.setDate(timeAgo);
         String postId = post.PostId;
+        System.out.println(postId);
+        int pos = holder.getBindingAdapterPosition();
 
 
         holder.delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showMoreOptions(holder.delete, postId, position);
+                showMoreOptions(holder.delete, postId, pos);
             }
         });
 
@@ -85,6 +89,7 @@ public class mypostsAdapter extends RecyclerView.Adapter<mypostsAdapter.PostView
 
         //show delete option in only post(s) of currently signed-in user
         popupMenu.getMenu().add(Menu.NONE, 0, 0, "Delete");
+        System.out.println("post" + postid);
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
@@ -110,14 +115,35 @@ public class mypostsAdapter extends RecyclerView.Adapter<mypostsAdapter.PostView
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
 
-        db.collection("posts/" + postID + "/comments" ).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+
+        if (postID != null) {
+            System.out.println("post" + postID);
+            /*
+            db.collection("posts").document(mList.get(pos).PostId).collection("comments").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+
+                    for (QueryDocumentSnapshot snapshot : task.getResult()){
+                        db.collection("posts/" + postID + "/comments").document(snapshot.getId()).delete();
+                    }
+                }
+            });*/
+
+        }else{
+            System.out.println("error");
+        }
+        /*
+        db.collection("posts").document(mList.get(pos).PostId).collection("comments").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
+
                 for (QueryDocumentSnapshot snapshot : task.getResult()){
                     db.collection("posts/" + postID + "/comments").document(snapshot.getId()).delete();
                 }
             }
-        });
+        }); */
+
+        /*
         db.collection("posts").document(mList.get(pos).PostId)
                 .delete().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
@@ -135,11 +161,12 @@ public class mypostsAdapter extends RecyclerView.Adapter<mypostsAdapter.PostView
                 }
             }
 
-        });
+        });*/
 
 
 
     }
+
 
     private String calculateTimeAgo(String datePost) {
         SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");

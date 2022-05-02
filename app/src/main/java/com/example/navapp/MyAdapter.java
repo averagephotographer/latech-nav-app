@@ -91,15 +91,29 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         description = posts.getDescription();
         user = posts.getUsername();
         date = posts.getDatePost();
+        String num = posts.getCommentno();
 
         holder.postDesc.setText(posts.getDescription());
         holder.postTitle.setText(posts.getTitle());
         String timeAgo = calculateTimeAgo(posts.getDatePost());
         holder.postDate.setText(timeAgo);
         holder.username.setText(posts.getUsername());
+
+        //String num = posts.getCommentsno();
+        System.out.println("num" + num);
+        //String num1 = String.valueOf(num);
+        if(num != null){
+            holder.comment_no.setText(num);
+
+        }
+        else{
+            System.out.println("null");
+        }
+
         //holder.likeButton.setText(posts.getLikeBtn());
 
         String postId = posts.PostId;
+        System.out.println("post" + " " + postId);
 
 
         holder.commentButton.setOnClickListener(new View.OnClickListener() {
@@ -110,13 +124,13 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                 context.startActivity(commentIntent);
             }
         });
-
+        /*
         holder.delete_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 showMoreOptions(holder.delete_btn, uid, myUid, caption, user, date, description, postId,position);
             }
-        });
+        }); */
 
 
 
@@ -133,24 +147,9 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             }
         });
 
+        System.out.println("post" + " " + postId);
+
         //comment count
-        /*
-        firestore.collection("posts/" + postId + "/comments").addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                if(!value.isEmpty()){
-                    int count = value.size();
-                    System.out.println(count);
-                    holder.setCommentno(count);
-
-                }else{
-                    holder.setCommentno(0);
-
-                }
-            }
-
-        });*/
-
 
 
 
@@ -249,6 +248,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             likeButton = itemView.findViewById(R.id.like_btn);
             commentButton = itemView.findViewById(R.id.comments_post);
             delete_btn = itemView.findViewById(R.id.more_btn);
+            comment_no = itemView.findViewById(R.id.comment_count);
         }
 
         public void setPostLike(int count) {
@@ -258,7 +258,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
         public void setCommentno(int count){
             comment_no = itemView.findViewById(R.id.comment_count);
-            comment_no.setText(count + "comments");
+            comment_no.setText(count);
         }
     }
 

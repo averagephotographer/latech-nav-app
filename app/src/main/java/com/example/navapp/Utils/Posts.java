@@ -4,7 +4,21 @@ import android.net.Uri;
 import android.widget.ImageView;
 
 public class Posts extends PostId {
-    private String datePost, description, title, username, uid;
+    private String datePost;
+    private String description;
+    private String title;
+    private String username;
+    private String uid;
+    private String  commentno;
+
+
+
+
+    public void setCommentno(String commentno) {
+        this.commentno = commentno;
+    }
+
+
     private String likeCount;
 
     public Posts() {
@@ -14,22 +28,30 @@ public class Posts extends PostId {
         return uid;
     }
 
-    public Posts(String datePost, String description, String title, String username, String uid) {
+    public Posts(String datePost, String description, String title, String username, String uid, String commentno) {
         this.datePost = datePost;
         this.description = description;
         this.title = title;
         this.username = username;
         this.likeCount = likeCount;
         this.uid = uid;
+        this.commentno = commentno;
     }
 
     public String getDatePost() {
         return datePost;
     }
 
+
+
     public void setDatePost(String datePost) {
         this.datePost = datePost;
     }
+
+    public String getCommentno() {
+        return commentno;
+    }
+
 
     public String getDescription() {
         return description;

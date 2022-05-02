@@ -54,11 +54,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
 
     @Override
     public int getItemCount() {
-        if(commentsList != null){
-            return commentsList.size();
-
-        }
-        return 0;
+        return commentsList.size();
     }
 
     public class CommentsViewHolder extends RecyclerView.ViewHolder{

@@ -9,16 +9,20 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.navapp.Utils.Comments;
 import com.example.navapp.Utils.Users;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -27,6 +31,7 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.SetOptions;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,6 +40,7 @@ import java.util.Map;
 
 public class CommentsActivity extends AppCompatActivity {
     private EditText comment_post;
+    private TextView comm_num;
     private ImageView add_comment;
     private RecyclerView recycle;
     private FirebaseFirestore firestore;
@@ -43,6 +49,7 @@ public class CommentsActivity extends AppCompatActivity {
     private CommentsAdapter adapter;
     private List<Comments> commList;
     private List<Users> usersList;
+    boolean processComm = false;
 
     SharedPreferences sharedpreferences;
 
@@ -121,6 +128,8 @@ public class CommentsActivity extends AppCompatActivity {
                             if (task.isSuccessful()){
                                 Toast.makeText(CommentsActivity.this,"Comment Added", Toast.LENGTH_SHORT).show();
                                 System.out.println("hi");
+                                updateCommentCount(commentsMap);
+                                adapter.notifyDataSetChanged();
                                 comment_post.getText().clear();
                             }else{
                                 Toast.makeText(CommentsActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
@@ -135,4 +144,50 @@ public class CommentsActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void updateCommentCount(Map commentsMap) {
+        processComm = true;
+        DocumentReference ref = (DocumentReference) FirebaseFirestore.getInstance().collection("posts").document(post_id);
+                ref.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                if (error != null) {
+                    Toast.makeText(CommentsActivity.this, "Error", Toast.LENGTH_SHORT);
+                    return;
+                }
+
+                if (processComm == true && value.exists()) {
+                    if(value.getString("commentno") != null){
+                        String comment = "" + value.getString("commentno");
+                        int num = Integer.parseInt(comment) + 1;
+                        String str_num = String.valueOf(num);
+                        commentsMap.put("commentno", str_num);
+
+                        updateField(commentsMap);
+                    }else{
+                        int num = 1;
+                        String str_num = String.valueOf(num);
+                        commentsMap.put("commentno", str_num);
+                        updateField(commentsMap);
+
+                    }
+                    processComm = false;
+                }
+            }
+        });
+
+     }
+
+    private void updateField(Map commentsMap) {
+        DocumentReference documentReference = FirebaseFirestore.getInstance().collection("posts").document(post_id);
+        documentReference.set(commentsMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                System.out.println("added");
+            }
+        });
+    }
+
+
 }
+

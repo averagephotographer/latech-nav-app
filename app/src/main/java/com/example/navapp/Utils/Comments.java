@@ -2,7 +2,7 @@ package com.example.navapp.Utils;
 
 public class Comments {
 
-    private String comment, username; 
+    private String comment, username, commentsno;
 
     public String getComment() {
         return comment;
