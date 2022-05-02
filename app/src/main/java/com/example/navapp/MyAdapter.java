@@ -66,6 +66,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     String description;
     String user;
     String date;
+    FirebaseAuth auth;
     //public String  postId = posts.PostId;
 
 
@@ -119,6 +120,19 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         //holder.likeButton.setText(posts.getLikeBtn());
 
 
+        String postId = posts.PostId;
+        System.out.println("post" + " " + postId);
+
+
+        holder.commentButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent commentIntent = new Intent(context , CommentsActivity.class);
+                commentIntent.putExtra("postid", postId);
+                context.startActivity(commentIntent);
+            }
+        });
+
         /*firestore.collection("user_profile").document(name).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -135,18 +149,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
          */
 
-        String postId = posts.PostId;
-        System.out.println("post" + " " + postId);
-
-
-        holder.commentButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent commentIntent = new Intent(context , CommentsActivity.class);
-                commentIntent.putExtra("postid", postId);
-                context.startActivity(commentIntent);
-            }
-        });
         /*
         holder.delete_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -154,26 +156,56 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                 showMoreOptions(holder.delete_btn, uid, myUid, caption, user, date, description, postId,position);
             }
         }); */
-
-
-
-
-
+        String currentUserId = myUid;
         //like button
-        //String postId = posts.PostId;
-        System.out.println(postId);
-
-
-        holder.likeButton.setOnClickListener(new View.OnClickListener() {
+        /*holder.likeButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                firestore.collection("posts/" + postId + "/likes").document(name);
+            public void onClick(View v) {
+                firestore.collection("posts/" + postId + "/likes").addSnapshotListener(MyAdapter.class, new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+
+                    }
+                })
+            }
+        });
+
+
+
+        //like color change
+        firestore.collection("posts/" + postId + "/likes").document(currentUserId).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                if (error == null){
+                    if (value.exists()){
+                        holder.likeButton.setImageDrawable(context.getDrawable(R.drawable.ic_baseline_favorite_24));
+                    }else{
+                        holder.likeButton.setImageDrawable(context.getDrawable(R.drawable.ic_baseline_favorite_border_24));
+                    }
+                }
+            }
+        });
+
+
+        firestore.collection("posts/" + postId + "/likes").addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                if (error == null){
+                    if (!value.isEmpty()){
+                        int count = value.size();
+                        holder.setPostLike(count);
+                    }else{
+                        holder.setPostLike(0);
+                    }
+                }
             }
         });
 
         System.out.println("post" + " " + postId);
 
         //comment count
+
+         */
 
 
 
@@ -275,6 +307,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             delete_btn = itemView.findViewById(R.id.more_btn);
             comment_no = itemView.findViewById(R.id.comment_count);
             profPic = itemView.findViewById(R.id.profile_pic);
+            likeCount = itemView.findViewById(R.id.like_count_tv);
         }
 
         public void setPostLike(int count) {

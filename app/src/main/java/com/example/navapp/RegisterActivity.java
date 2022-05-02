@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -128,6 +129,9 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher {
                 else if((!password_str.equals(cpassword.getText().toString()))){
                     Toast.makeText(RegisterActivity.this, "Confirm Password Not Matched", Toast.LENGTH_SHORT).show();
                 }
+                else if (mImageUri == null) {
+                    Toast.makeText(RegisterActivity.this, "Error! Please choose a profile picture!", Toast.LENGTH_LONG).show();
+                }
 
                 // register user into firebase
                 else  {
@@ -154,6 +158,7 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher {
                                     }
                                 });
 
+                                // add profile picture
                                 if (mImageUri != null) {
                                     StorageReference reference = storageReference.child("profile_picture").child(FieldValue.serverTimestamp().toString() + "jpg");
                                     reference.putFile(mImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -168,11 +173,6 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher {
                                             });
                                         }
                                     });
-                                }
-                                else {
-                                    circleImageView.setImageDrawable(getDrawable(R.drawable.elcipse));
-                                    user.put("profilePicURL", "");
-                                    db.collection("user_profile").document(username_str).set(user);
                                 }
                                 startActivity(new Intent(getApplicationContext(),LoginActivity.class));
                             } else {
