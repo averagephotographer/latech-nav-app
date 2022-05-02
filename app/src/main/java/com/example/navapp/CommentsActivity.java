@@ -146,6 +146,7 @@ public class CommentsActivity extends AppCompatActivity {
 
     private void updateCommentCount(Map commentsMap) {
         processComm = true;
+        Map<String, Object> count_no = new HashMap<>();
         DocumentReference ref = (DocumentReference) FirebaseFirestore.getInstance().collection("posts").document(post_id);
                 ref.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
             @Override
@@ -160,14 +161,16 @@ public class CommentsActivity extends AppCompatActivity {
                         String comment = "" + value.getString("commentno");
                         int num = Integer.parseInt(comment) + 1;
                         String str_num = String.valueOf(num);
-                        commentsMap.put("commentno", str_num);
+                        ref.update("commentno", str_num);
+                       // commentsMap.put("commentno", str_num);
 
-                        updateField(commentsMap);
+                        //updateField(commentsMap);
                     }else{
                         int num = 1;
                         String str_num = String.valueOf(num);
-                        commentsMap.put("commentno", str_num);
-                        updateField(commentsMap);
+                        ref.update("commentno", str_num);
+                        //commentsMap.put("commentno", str_num);
+                        //updateField(commentsMap);
 
                     }
                     processComm = false;
