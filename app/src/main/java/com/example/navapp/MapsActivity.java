@@ -209,7 +209,7 @@ public class MapsActivity extends DrawerBaseActivity
                     mMap.clear();
 
                     GroundOverlayOptions neth = new GroundOverlayOptions()
-                            .image(BitmapDescriptorFactory.fromResource(R.drawable.nethken_floor1))
+                            .image(BitmapDescriptorFactory.fromResource(R.drawable.nethken_floor1_titled))
                             .position(nethken, 76f, 46f);
 
                     mMap.addGroundOverlay(neth);
@@ -225,7 +225,7 @@ public class MapsActivity extends DrawerBaseActivity
                     //LatLng nethken = new LatLng(32.525665490440126,-92.64472849667071);
 
                     GroundOverlayOptions neth = new GroundOverlayOptions()
-                            .image(BitmapDescriptorFactory.fromResource(R.drawable.nethken_floor2))
+                            .image(BitmapDescriptorFactory.fromResource(R.drawable.nethken_floor2_titled))
                             .position(nethken, 76f, 46f);
 
                     mMap.addGroundOverlay(neth);
@@ -689,7 +689,7 @@ public class MapsActivity extends DrawerBaseActivity
                             mMap.clear();
 
                             GroundOverlayOptions neth = new GroundOverlayOptions()
-                                    .image(BitmapDescriptorFactory.fromResource(R.drawable.nethken_floor1))
+                                    .image(BitmapDescriptorFactory.fromResource(R.drawable.nethken_floor1_titled))
                                     .position(nethken, 76f, 46f);
 
                             mMap.addGroundOverlay(neth);
@@ -703,7 +703,7 @@ public class MapsActivity extends DrawerBaseActivity
                             mMap.clear();
 
                             GroundOverlayOptions neth = new GroundOverlayOptions()
-                                    .image(BitmapDescriptorFactory.fromResource(R.drawable.nethken_floor2))
+                                    .image(BitmapDescriptorFactory.fromResource(R.drawable.nethken_floor2_titled))
                                     .position(nethken, 76f, 46f);
 
                             mMap.addGroundOverlay(neth);
@@ -737,6 +737,16 @@ public class MapsActivity extends DrawerBaseActivity
 
             };
             return obj;
+        }
+
+
+        public static int checkFloor(int minimumRSSI) {
+            if (minimumRSSI < 5){
+                return 1;
+            }
+            else {
+                return 2;
+            }
         }
 
 }
