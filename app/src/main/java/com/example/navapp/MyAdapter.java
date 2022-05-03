@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -30,13 +31,19 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.StorageReference;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -136,71 +143,26 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             }
         });
         String userId = posts.getUsername();
+
         firestore.collection("user_profile").document(userId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
                     String image = task.getResult().getString("profilePicURL");
-                    holder.setProfilePic(image);
+                    // check if user has a profile picture
+                    // if they dont, then just put default picture
+                    if (image == null) {
+                        holder.profPic.setImageDrawable((context.getDrawable(R.drawable.elcipse)));
+                    }
+                    else {
+                        holder.setProfilePic(image);
+                    }
                 }
                 else {
                     Toast.makeText(context, task.getException().toString(), Toast.LENGTH_SHORT).show();
                 }
             }
         });
-
-
-        /*firestore.collection("user_profile").document(name).get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.isSuccessful()){
-                            Users users = task.getResult().toObject(Users.class);
-                            usersList.add(users);
-                            Log.d("users", String.valueOf(users));
-                        }else{
-                            //Toast.makeText(MyAdapter.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-
-         */
-
-
-
-
-
-        /*storageReference = FirebaseStorage.getInstance().getReference("profile_picture/" + name + ".jpg");
-            try {
-                File localFile = File.createTempFile("tempimage", "jpg");
-                localFile.deleteOnExit();
-                storageReference.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                        Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
-                        holder.profPic.setImageBitmap(bitmap);
-                    }
-                });
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-         */
-
-
-
-        /*
-        holder.delete_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showMoreOptions(holder.delete_btn, uid, myUid, caption, user, date, description, postId,position);
-            }
-        }); */
-
-
-
-
-        
 
 
 
@@ -256,15 +218,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                 }
             }
         });
-
-        //System.out.println("post" + " " + postId);
-
-        //comment count
-
-         */
-
-
-
 
     }
 
