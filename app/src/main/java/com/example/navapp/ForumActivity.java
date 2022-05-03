@@ -6,14 +6,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.webkit.RenderProcessGoneDetail;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,23 +19,18 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.navapp.Utils.Posts;
 import com.example.navapp.Utils.Users;
-import com.example.navapp.databinding.ActivityDrawerBaseBinding;
 import com.example.navapp.databinding.ActivityForumBinding;
-import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.DocumentChange;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.remote.WatchChange;
-import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
@@ -151,6 +140,22 @@ public class ForumActivity extends DrawerBaseActivity  {
                             if (dc.getType() == DocumentChange.Type.ADDED) {
                                 String postId = dc.getDocument().getId();
                                 postsArrayList.add(dc.getDocument().toObject(Posts.class).withId(postId));
+                                String user = dc.getDocument().getString("username");
+                                /*firestore.collection("user_profile").document(user).get()
+                                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                if (task.isSuccessful()){
+                                                    Users users = task.getResult().toObject(Users.class);
+                                                    usersArrayList.add(users);
+                                                    myAdapter.notifyDataSetChanged();
+                                                }else{
+                                                    Toast.makeText(ForumActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                                }
+                                            }
+                                        });
+
+                                 */
                                 myAdapter.notifyDataSetChanged();
 
                             }

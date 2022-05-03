@@ -11,9 +11,6 @@ public class Posts extends PostId {
     private String uid;
     private String  commentno;
 
-
-
-
     public void setCommentno(String commentno) {
         this.commentno = commentno;
     }

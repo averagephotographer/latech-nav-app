@@ -53,6 +53,7 @@ public class CreatePostActivity extends AppCompatActivity {
     FirebaseAuth firebaseAuth;
     Uri imageUri;
     String current_user;
+    public static Map<String,Object> posts = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,7 +91,6 @@ public class CreatePostActivity extends AppCompatActivity {
                 String name = sharedPreferences.getString("username", "");
                 storageReference = FirebaseStorage.getInstance().getReference();
 
-                Map<String,Object> posts = new HashMap<>();
                 posts.put("username", name);
                 posts.put("title", title);
                 posts.put("description", description);

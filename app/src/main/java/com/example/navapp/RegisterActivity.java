@@ -1,6 +1,8 @@
 package com.example.navapp;
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
@@ -51,11 +53,13 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher {
     private FirebaseAuth fAuth;
     private ProgressBar progressBarInBackground;
     private String userID;
-    private CircleImageView circleImageView;
     private Uri mImageUri;
+    SharedPreferences sharedPreferences;
     private StorageReference storageReference;
     private boolean isPhotoSelected = false;
     public static final String TAG = "TAG";
+    public static Map<String,Object> user = new HashMap<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,20 +70,11 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher {
         storageReference = FirebaseStorage.getInstance().getReference();
         fAuth = FirebaseAuth.getInstance();
         progressBarInBackground = findViewById(R.id.progressBarLoading);
-        circleImageView = findViewById(R.id.circleImageView);
+        userID = fAuth.getUid();
+        //sharedPreferences = getApplicationContext().getSharedPreferences("login", Context.MODE_PRIVATE);
+        //String name = sharedPreferences.getString("username", "");
+        //Log.d("mynameee", name);
 
-        circleImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ImagePicker.with(RegisterActivity.this)
-                        .galleryOnly()
-                        .crop()                 //Crop image(Optional), Check Customization for more option
-                        .cropSquare()
-                        .compress(1024)			//Final image size will be less than 1 MB(Optional)
-                        .maxResultSize(1080, 1080)	//Final image resolution will be less than 1080 x 1080(Optional)
-                        .start();
-            }
-        });
 
 
         haveAccount_text = (TextView) findViewById(R.id.haveAccount);
@@ -104,7 +99,6 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher {
                 String username_str = input_username.getText().toString();
                 String password_str = password.getText().toString();
 
-                Map<String,Object> user = new HashMap<>();
                 user.put("username", username_str);
                 user.put("email", email_str);
                 if(TextUtils.isEmpty(email_str)) {
@@ -129,9 +123,6 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher {
                 else if((!password_str.equals(cpassword.getText().toString()))){
                     Toast.makeText(RegisterActivity.this, "Confirm Password Not Matched", Toast.LENGTH_SHORT).show();
                 }
-                else if (mImageUri == null) {
-                    Toast.makeText(RegisterActivity.this, "Error! Please choose a profile picture!", Toast.LENGTH_LONG).show();
-                }
 
                 // register user into firebase
                 else  {
@@ -150,30 +141,14 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher {
                                     {
                                         if (task.isSuccessful())
                                         {
-                                            Toast.makeText(RegisterActivity.this, "Verification email sent!", Toast.LENGTH_LONG).show();
+                                            Toast.makeText(RegisterActivity.this, "Verification Email Sent!", Toast.LENGTH_LONG).show();
                                         }
                                         else{
-                                            Toast.makeText(RegisterActivity.this, "Verification email not sent!", Toast.LENGTH_LONG).show();
+                                            Toast.makeText(RegisterActivity.this, "Verification EMail Not Sent!", Toast.LENGTH_LONG).show();
                                         }
                                     }
                                 });
-
-                                // add profile picture
-                                if (mImageUri != null) {
-                                    StorageReference reference = storageReference.child("profile_picture").child(FieldValue.serverTimestamp().toString() + "jpg");
-                                    reference.putFile(mImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                                        @Override
-                                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                            reference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                                @Override
-                                                public void onSuccess(Uri uri) {
-                                                    user.put("profilePicURL", uri.toString());
-                                                    db.collection("user_profile").document(username_str).set(user);
-                                                }
-                                            });
-                                        }
-                                    });
-                                }
+                                db.collection("user_profile").document(username_str).set(user);
                                 startActivity(new Intent(getApplicationContext(),LoginActivity.class));
                             } else {
                                 Toast.makeText(RegisterActivity.this, "Error! " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
@@ -187,13 +162,6 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher {
         });
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        mImageUri = data.getData();
-        circleImageView.setImageURI(mImageUri);
-    }
 
     @Override
     public void beforeTextChanged(

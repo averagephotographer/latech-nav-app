@@ -18,37 +18,22 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.navapp.Utils.Posts;
 import com.example.navapp.Utils.Users;
-import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentChange;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QuerySnapshot;
-import com.snov.timeagolibrary.PrettyTimeAgo;
+import com.google.firebase.storage.StorageReference;
 
-import java.text.CollationElementIterator;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.TimeZone;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -56,7 +41,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
     static Context context;
-    private List<Users> usersList;
+    ArrayList<Users> usersList;
     ArrayList<Posts> postsArrayList;
     SharedPreferences sharedPreferences;
     FirebaseFirestore firestore;
@@ -66,16 +51,18 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     String description;
     String user;
     String date;
+    StorageReference storageReference;
     FirebaseAuth auth;
     //public String  postId = posts.PostId;
 
 
 
-    public MyAdapter(Context context, ArrayList<Posts> postsArrayList, List<Users> usersList) {
+    public MyAdapter(Context context, ArrayList<Posts> postsArrayList, ArrayList<Users> usersList) {
         this.context = context;
         this.postsArrayList = postsArrayList;
         this.usersList = usersList;
         myUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        firestore = FirebaseFirestore.getInstance();
     }
 
 
@@ -84,13 +71,13 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     public MyAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(context).inflate(R.layout.activity_each_post,parent,false);
         return new MyViewHolder(v);
+
     }
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         sharedPreferences = context.getApplicationContext().getSharedPreferences("login", Context.MODE_PRIVATE);
         String name = sharedPreferences.getString("username", "");
-
         Posts posts = postsArrayList.get(position);
         uid = posts.getUid();
         caption = posts.getTitle();
@@ -98,7 +85,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         user = posts.getUsername();
         date = posts.getDatePost();
         String num = posts.getCommentno();
-
 
         holder.postDesc.setText(posts.getDescription());
         holder.postTitle.setText(posts.getTitle());
@@ -132,13 +118,12 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                 context.startActivity(commentIntent);
             }
         });
-
-        /*firestore.collection("user_profile").document(name).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        String userId = posts.getUsername();
+        firestore.collection("user_profile").document(userId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
                     String image = task.getResult().getString("profilePicURL");
-
                     holder.setProfilePic(image);
                 }
                 else {
@@ -147,7 +132,45 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             }
         });
 
+
+        /*firestore.collection("user_profile").document(name).get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()){
+                            Users users = task.getResult().toObject(Users.class);
+                            usersList.add(users);
+                            Log.d("users", String.valueOf(users));
+                        }else{
+                            //Toast.makeText(MyAdapter.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
          */
+
+
+
+
+
+        /*storageReference = FirebaseStorage.getInstance().getReference("profile_picture/" + name + ".jpg");
+            try {
+                File localFile = File.createTempFile("tempimage", "jpg");
+                localFile.deleteOnExit();
+                storageReference.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                        Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+                        holder.profPic.setImageBitmap(bitmap);
+                    }
+                });
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+         */
+
+
 
         /*
         holder.delete_btn.setOnClickListener(new View.OnClickListener() {
@@ -156,6 +179,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                 showMoreOptions(holder.delete_btn, uid, myUid, caption, user, date, description, postId,position);
             }
         }); */
+
         String currentUserId = myUid;
         //like button
         /*holder.likeButton.setOnClickListener(new View.OnClickListener() {
@@ -212,6 +236,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
     }
 
+
     private String calculateTimeAgo(String datePost) {
         SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
         try {
@@ -219,7 +244,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             long now = System.currentTimeMillis();
             Log.e(String.valueOf(now), "");
             CharSequence ago =
-                    DateUtils.getRelativeTimeSpanString(time, now, DateUtils.MINUTE_IN_MILLIS);
+                    DateUtils.getRelativeTimeSpanString(time, now, DateUtils.FORMAT_24HOUR);
             return ago+"";
         } catch (ParseException e) {
             e.printStackTrace();
