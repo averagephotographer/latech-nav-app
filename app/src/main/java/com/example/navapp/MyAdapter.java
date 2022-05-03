@@ -30,6 +30,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -57,9 +58,12 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
     static Context context;
     private List<Users> usersList;
+    private FirebaseAuth auth;
     ArrayList<Posts> postsArrayList;
     SharedPreferences sharedPreferences;
+    DocumentReference fstore;
     FirebaseFirestore firestore;
+    DocumentReference ref;
     String myUid;
     String uid;
     String caption;
@@ -68,6 +72,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     String date;
     //public String  postId = posts.PostId;
 
+    boolean processlike = false;
+
 
 
     public MyAdapter(Context context, ArrayList<Posts> postsArrayList, List<Users> usersList) {
@@ -75,6 +81,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         this.postsArrayList = postsArrayList;
         this.usersList = usersList;
         myUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        firestore = FirebaseFirestore.getInstance();
+
     }
 
 
@@ -82,6 +90,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     @Override
     public MyAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(context).inflate(R.layout.activity_each_post,parent,false);
+        auth = FirebaseAuth.getInstance();
+        //FirebaseFirestore firestore = FirebaseFirestore.getInstance();
         return new MyViewHolder(v);
     }
 
@@ -97,6 +107,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         user = posts.getUsername();
         date = posts.getDatePost();
         String num = posts.getCommentno();
+        String likes = posts.getLikes();
 
 
         holder.postDesc.setText(posts.getDescription());
@@ -104,6 +115,14 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         String timeAgo = calculateTimeAgo(posts.getDatePost());
         holder.postDate.setText(timeAgo);
         holder.username.setText(posts.getUsername());
+        //holder.likeCount.setText(likes);
+
+        String postId = posts.PostId;
+        fstore = FirebaseFirestore.getInstance().collection("posts").document(postId).collection("Likes").document(myUid);
+        ref = FirebaseFirestore.getInstance().collection("posts").document(postId);
+        String currentuser = auth.getCurrentUser().getUid();
+
+        //setLikes(holder, postId);
 
         //String num = posts.getCommentsno();
         System.out.println("num" + num);
@@ -116,27 +135,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             System.out.println("null");
         }
 
-        //holder.likeButton.setText(posts.getLikeBtn());
-
-
-        /*firestore.collection("user_profile").document(name).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    String image = task.getResult().getString("profilePicURL");
-
-                    holder.setProfilePic(image);
-                }
-                else {
-                    Toast.makeText(context, task.getException().toString(), Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
-         */
-
-        String postId = posts.PostId;
-        System.out.println("post" + " " + postId);
 
 
         holder.commentButton.setOnClickListener(new View.OnClickListener() {
@@ -158,25 +156,84 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
 
 
+        
 
-        //like button
-        //String postId = posts.PostId;
-        System.out.println(postId);
 
 
         holder.likeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                firestore.collection("posts/" + postId + "/likes").document(name);
+                firestore.collection("posts/" + postId + "/Likes").document(myUid).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if(!task.getResult().exists()){
+                            Map<String, Object> likesmap = new HashMap<>();
+                            likesmap.put("timestamp", FieldValue.serverTimestamp());
+                            firestore.collection("posts/" + postId + "/Likes").document(myUid).set(likesmap);
+                        }else{
+                            firestore.collection("posts/" + postId + "/Likes").document(myUid).delete();
+                        }
+
+                    }
+                });
+
             }
         });
 
-        System.out.println("post" + " " + postId);
+
+
+        firestore.collection("posts/" + postId + "/Likes").document(currentuser).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                if(error == null){
+                    if(value != null && value.exists()){
+                        holder.likeButton.setImageDrawable(context.getDrawable(R.drawable.ic_baseline_favorite_24));
+                    }else{
+                        holder.likeButton.setImageDrawable(context.getDrawable(R.drawable.ic_baseline_favorite_border_24));
+                    }
+                }else{
+                    System.out.println(error);
+                }
+            }
+        });
+
+        firestore.collection("posts/" + postId + "/Likes").addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                if(error == null){
+                    if(!value.isEmpty()){
+                        String count =  "" + value.size();
+                        holder.setPostLike(count);
+
+                    }else{
+                        holder.setPostLike("0");
+
+                    }
+                }
+            }
+        });
+
+        //System.out.println("post" + " " + postId);
 
         //comment count
 
 
 
+
+    }
+
+    private void setLikes(MyViewHolder holder, String id) {
+        fstore.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                if(value.getString("likes") == null  && ! value.exists()){
+                    holder.likeButton.setImageDrawable(context.getDrawable(R.drawable.ic_baseline_favorite_24));
+
+                }else{
+                    holder.likeButton.setImageDrawable(context.getDrawable(R.drawable.ic_baseline_favorite_border_24));
+                }
+            }
+        });
 
     }
 
@@ -274,10 +331,11 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             commentButton = itemView.findViewById(R.id.comments_post);
             delete_btn = itemView.findViewById(R.id.more_btn);
             comment_no = itemView.findViewById(R.id.comment_count);
+            //likeCount = itemView.findViewById(R.id.like_count_tv);
             profPic = itemView.findViewById(R.id.profile_pic);
         }
 
-        public void setPostLike(int count) {
+        public void setPostLike(String count) {
             likeCount = itemView.findViewById(R.id.like_count_tv);
             likeCount.setText(count);
         }
