@@ -102,6 +102,7 @@ public class MapsActivity extends DrawerBaseActivity
 
         private int minRSSI = 100;
         private int bMin = 0;
+        private int heat = 0;
         /**
          * Flag indicating whether a requested permission has been denied after returning in
          * {@link #onRequestPermissionsResult(int, String[], int[])}.
@@ -188,6 +189,8 @@ public class MapsActivity extends DrawerBaseActivity
 
             Button oButton = findViewById(R.id.overlayButton);
 
+            Button heatMap = findViewById(R.id.heatmapButton);
+
 
             ArrayAdapter<String> adapter=new ArrayAdapter<String>(this,android.R.layout.simple_dropdown_item_1line,countries);
             List<Marker> markers = new ArrayList<>();
@@ -240,6 +243,19 @@ public class MapsActivity extends DrawerBaseActivity
 
                     mMap.addGroundOverlay(neth);
 
+                }
+            });
+
+            heatMap.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    if (floor == 1){
+                        addHeat1();
+                        }
+                    else {
+                        addHeat2();
+                    }
                 }
             });
 
@@ -335,12 +351,12 @@ public class MapsActivity extends DrawerBaseActivity
 
         }
 
-        private void addHeatMap() {
+        private void addHeat1() {
             List<LatLng> latLngs = null;
 
             // Get the data: latitude/longitude positions of police stations.
             try {
-                latLngs = readItems(R.raw.police_stations);
+                latLngs = readItems(R.raw.floor1_heatmap);
             } catch (JSONException e) {
                 Toast.makeText(this, "Problem reading list of locations.", Toast.LENGTH_LONG).show();
             }
@@ -349,6 +365,29 @@ public class MapsActivity extends DrawerBaseActivity
             HeatmapTileProvider provider = new HeatmapTileProvider.Builder()
                     .data(latLngs)
                     .build();
+
+            provider.setRadius(40);
+
+            // Add a tile overlay to the map, using the heat map tile provider.
+            TileOverlay overlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(provider));
+        }
+
+        private void addHeat2() {
+            List<LatLng> latLngs = null;
+
+            // Get the data: latitude/longitude positions of police stations.
+            try {
+                latLngs = readItems(R.raw.floor2_heatmap);
+            } catch (JSONException e) {
+                Toast.makeText(this, "Problem reading list of locations.", Toast.LENGTH_LONG).show();
+            }
+
+            // Create a heat map tile provider, passing it the latlngs of the police stations.
+            HeatmapTileProvider provider = new HeatmapTileProvider.Builder()
+                    .data(latLngs)
+                    .build();
+
+            provider.setRadius(40);
 
             // Add a tile overlay to the map, using the heat map tile provider.
             TileOverlay overlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(provider));
@@ -551,8 +590,6 @@ public class MapsActivity extends DrawerBaseActivity
                 }
             });
 
-            addHeatMap();
-
     }
 
 
@@ -739,6 +776,7 @@ public class MapsActivity extends DrawerBaseActivity
 
                             mMap.addGroundOverlay(neth);
                             floor = 1;
+
                         }
                     }
                     else {
