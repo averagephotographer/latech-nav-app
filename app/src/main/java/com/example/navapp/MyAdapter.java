@@ -26,6 +26,9 @@ import com.example.navapp.Utils.Users;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.StorageReference;
@@ -41,10 +44,12 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
     static Context context;
-    ArrayList<Users> usersList;
+    private List<Users> usersList;
     ArrayList<Posts> postsArrayList;
     SharedPreferences sharedPreferences;
+    DocumentReference fstore;
     FirebaseFirestore firestore;
+    DocumentReference ref;
     String myUid;
     String uid;
     String caption;
@@ -54,6 +59,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     StorageReference storageReference;
     FirebaseAuth auth;
     //public String  postId = posts.PostId;
+
+    boolean processlike = false;
 
 
 
@@ -70,6 +77,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     @Override
     public MyAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(context).inflate(R.layout.activity_each_post,parent,false);
+        auth = FirebaseAuth.getInstance();
+        //FirebaseFirestore firestore = FirebaseFirestore.getInstance();
         return new MyViewHolder(v);
 
     }
@@ -85,12 +94,21 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         user = posts.getUsername();
         date = posts.getDatePost();
         String num = posts.getCommentno();
+        String likes = posts.getLikes();
 
         holder.postDesc.setText(posts.getDescription());
         holder.postTitle.setText(posts.getTitle());
         String timeAgo = calculateTimeAgo(posts.getDatePost());
         holder.postDate.setText(timeAgo);
         holder.username.setText(posts.getUsername());
+        //holder.likeCount.setText(likes);
+
+        String postId = posts.PostId;
+        fstore = FirebaseFirestore.getInstance().collection("posts").document(postId).collection("Likes").document(myUid);
+        ref = FirebaseFirestore.getInstance().collection("posts").document(postId);
+        String currentuser = auth.getCurrentUser().getUid();
+
+        //setLikes(holder, postId);
 
         //String num = posts.getCommentsno();
         System.out.println("num" + num);
@@ -106,7 +124,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         //holder.likeButton.setText(posts.getLikeBtn());
 
 
-        String postId = posts.PostId;
         System.out.println("post" + " " + postId);
 
 
@@ -180,52 +197,67 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             }
         }); */
 
-        String currentUserId = myUid;
-        //like button
-        /*holder.likeButton.setOnClickListener(new View.OnClickListener() {
+
+
+
+        
+
+
+
+        holder.likeButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                firestore.collection("posts/" + postId + "/likes").addSnapshotListener(MyAdapter.class, new EventListener<QuerySnapshot>() {
+            public void onClick(View view) {
+                firestore.collection("posts/" + postId + "/Likes").document(myUid).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
-                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if(!task.getResult().exists()){
+                            Map<String, Object> likesmap = new HashMap<>();
+                            likesmap.put("timestamp", FieldValue.serverTimestamp());
+                            firestore.collection("posts/" + postId + "/Likes").document(myUid).set(likesmap);
+                        }else{
+                            firestore.collection("posts/" + postId + "/Likes").document(myUid).delete();
+                        }
 
                     }
-                })
+                });
+
             }
         });
 
 
 
-        //like color change
-        firestore.collection("posts/" + postId + "/likes").document(currentUserId).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+        firestore.collection("posts/" + postId + "/Likes").document(currentuser).addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-                if (error == null){
-                    if (value.exists()){
+                if(error == null){
+                    if(value != null && value.exists()){
                         holder.likeButton.setImageDrawable(context.getDrawable(R.drawable.ic_baseline_favorite_24));
                     }else{
                         holder.likeButton.setImageDrawable(context.getDrawable(R.drawable.ic_baseline_favorite_border_24));
                     }
+                }else{
+                    System.out.println(error);
                 }
             }
         });
 
-
-        firestore.collection("posts/" + postId + "/likes").addSnapshotListener(new EventListener<QuerySnapshot>() {
+        firestore.collection("posts/" + postId + "/Likes").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                if (error == null){
-                    if (!value.isEmpty()){
-                        int count = value.size();
+                if(error == null){
+                    if(!value.isEmpty()){
+                        String count =  "" + value.size();
                         holder.setPostLike(count);
+
                     }else{
-                        holder.setPostLike(0);
+                        holder.setPostLike("0");
+
                     }
                 }
             }
         });
 
-        System.out.println("post" + " " + postId);
+        //System.out.println("post" + " " + postId);
 
         //comment count
 
@@ -236,6 +268,20 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
     }
 
+    private void setLikes(MyViewHolder holder, String id) {
+        fstore.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                if(value.getString("likes") == null  && ! value.exists()){
+                    holder.likeButton.setImageDrawable(context.getDrawable(R.drawable.ic_baseline_favorite_24));
+
+                }else{
+                    holder.likeButton.setImageDrawable(context.getDrawable(R.drawable.ic_baseline_favorite_border_24));
+                }
+            }
+        });
+
+    }
 
     private String calculateTimeAgo(String datePost) {
         SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
@@ -331,11 +377,12 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             commentButton = itemView.findViewById(R.id.comments_post);
             delete_btn = itemView.findViewById(R.id.more_btn);
             comment_no = itemView.findViewById(R.id.comment_count);
+            //likeCount = itemView.findViewById(R.id.like_count_tv);
             profPic = itemView.findViewById(R.id.profile_pic);
             likeCount = itemView.findViewById(R.id.like_count_tv);
         }
 
-        public void setPostLike(int count) {
+        public void setPostLike(String count) {
             likeCount = itemView.findViewById(R.id.like_count_tv);
             likeCount.setText(count);
         }

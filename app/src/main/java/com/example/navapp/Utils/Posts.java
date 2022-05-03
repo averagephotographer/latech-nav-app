@@ -11,6 +11,13 @@ public class Posts extends PostId {
     private String uid;
     private String  commentno;
 
+
+
+    private String likes;
+
+
+
+
     public void setCommentno(String commentno) {
         this.commentno = commentno;
     }
@@ -30,7 +37,7 @@ public class Posts extends PostId {
         this.description = description;
         this.title = title;
         this.username = username;
-        this.likeCount = likeCount;
+        this.likes = likes;
         this.uid = uid;
         this.commentno = commentno;
     }
@@ -39,14 +46,16 @@ public class Posts extends PostId {
         return datePost;
     }
 
-
-
     public void setDatePost(String datePost) {
         this.datePost = datePost;
     }
 
     public String getCommentno() {
         return commentno;
+    }
+
+    public String getLikes() {
+        return likes;
     }
 
 
