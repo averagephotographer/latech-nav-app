@@ -140,11 +140,14 @@ public class AccountActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()){
-                    if (task.getResult().exists()){
+                    if (task.getResult().exists() && mImageUri != null){
                         String imageUrl = task.getResult().getString("profilePicURL");
                         mImageUri = Uri.parse(imageUrl);
 
                         Glide.with(AccountActivity.this).load(imageUrl).into(circleImageView);
+                    }
+                    else {
+                        Glide.with(AccountActivity.this).load(R.drawable.addimage).into(circleImageView);
                     }
                 }
             }

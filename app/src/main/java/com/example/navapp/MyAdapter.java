@@ -337,7 +337,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
         public void setPostLike(String count) {
             likeCount = itemView.findViewById(R.id.like_count_tv);
-            likeCount.setText(count);
+            likeCount.setText(count + " Likes");
         }
 
         public void setProfilePic(String urlProfile){

@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/blue"
     tools:context=".CommentsActivity">
 
     <EditText
@@ -15,6 +16,7 @@
         android:hint="Add a comment"
         android:inputType="text"
         android:minHeight="48dp"
+        android:backgroundTint="@color/white"
         android:paddingStart="10dp"
         android:paddingLeft="20dp"
         android:paddingTop="5dp"
@@ -39,16 +41,13 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/comment_recyclerView"
-        android:layout_width="410dp"
-        android:layout_height="607dp"
-        android:layout_marginStart="1dp"
-        android:layout_marginTop="1dp"
-        android:layout_marginEnd="1dp"
-        android:layout_marginBottom="1dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toTopOf="@+id/comment"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
