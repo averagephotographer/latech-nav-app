@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RawRes;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -49,10 +50,19 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.TileOverlay;
+import com.google.android.gms.maps.model.TileOverlayOptions;
+import com.google.maps.android.heatmaps.HeatmapTileProvider;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Scanner;
 
 
 /**
@@ -325,6 +335,39 @@ public class MapsActivity extends DrawerBaseActivity
 
         }
 
+        private void addHeatMap() {
+            List<LatLng> latLngs = null;
+
+            // Get the data: latitude/longitude positions of police stations.
+            try {
+                latLngs = readItems(R.raw.police_stations);
+            } catch (JSONException e) {
+                Toast.makeText(this, "Problem reading list of locations.", Toast.LENGTH_LONG).show();
+            }
+
+            // Create a heat map tile provider, passing it the latlngs of the police stations.
+            HeatmapTileProvider provider = new HeatmapTileProvider.Builder()
+                    .data(latLngs)
+                    .build();
+
+            // Add a tile overlay to the map, using the heat map tile provider.
+            TileOverlay overlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(provider));
+        }
+
+        private List<LatLng> readItems(@RawRes int resource) throws JSONException {
+            List<LatLng> result = new ArrayList<>();
+            InputStream inputStream = this.getResources().openRawResource(resource);
+            String json = new Scanner(inputStream).useDelimiter("\\A").next();
+            JSONArray array = new JSONArray(json);
+            for (int i = 0; i < array.length(); i++) {
+                JSONObject object = array.getJSONObject(i);
+                double lat = object.getDouble("lat");
+                double lng = object.getDouble("lng");
+                result.add(new LatLng(lat, lng));
+            }
+            return result;
+        }
+
         public void searchCamera (double x, double y, int i) {
             LatLng searchedRoom = new LatLng(x, y);
 
@@ -507,6 +550,8 @@ public class MapsActivity extends DrawerBaseActivity
                     android.util.Log.i("onMapClick", cords);
                 }
             });
+
+            addHeatMap();
 
     }
 
