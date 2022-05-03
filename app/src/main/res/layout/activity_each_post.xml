@@ -5,7 +5,7 @@
     android:id="@+id/more_options"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/blue">
+    android:background="@color/white">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
@@ -19,9 +19,9 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="406dp"
-            android:layout_height="263dp"
-            android:background="@color/white">
+            android:layout_width="match_parent"
+            android:layout_height="262dp"
+            android:background="@drawable/rounded_corner_forum">
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/profile_pic"
