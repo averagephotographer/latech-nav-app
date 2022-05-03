@@ -109,9 +109,20 @@
         <entry key="..\:/Users/sadia/OneDrive/Documents/GitHub/nav app/app/src/main/res/layout/each_mypost.xml" value="0.11770833333333333" />
         <entry key="..\:/Users/sadia/OneDrive/Documents/GitHub/nav app/app/src/main/res/layout/main_drawer_header.xml" value="0.14402173913043478" />
         <entry key="app/src/main/res/drawable/printer.xml" value="0.15" />
+        <entry key="app/src/main/res/drawable/rounded_corner_forum.xml" value="0.271" />
+        <entry key="app/src/main/res/drawable/rounded_corner_header.xml" value="0.271" />
+        <entry key="app/src/main/res/drawable/rounded_corner_text.xml" value="0.271" />
+        <entry key="app/src/main/res/layout/activity_drawer_base.xml" value="0.1875" />
+        <entry key="app/src/main/res/layout/activity_each_post.xml" value="0.4830805134189031" />
+        <entry key="app/src/main/res/layout/activity_forum.xml" value="0.11302083333333333" />
+        <entry key="app/src/main/res/layout/activity_login.xml" value="0.1875" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.16927083333333334" />
         <entry key="app/src/main/res/layout/activity_maps.xml" value="0.335" />
+        <entry key="app/src/main/res/layout/activity_my_posts.xml" value="0.28229166666666666" />
+        <entry key="app/src/main/res/layout/activity_welcome.xml" value="0.1875" />
+        <entry key="app/src/main/res/layout/content_layout.xml" value="0.28229166666666666" />
         <entry key="app/src/main/res/layout/custom_address.xml" value="0.16236068895643363" />
+        <entry key="app/src/main/res/layout/layout_bg.xml" value="0.1875" />
       </map>
     </option>
   </component>
