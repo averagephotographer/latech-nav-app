@@ -1,17 +1,33 @@
 package com.example.navapp;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.navapp.Utils.Comments;
 import com.example.navapp.Utils.Users;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import java.util.List;
 
@@ -22,12 +38,22 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
 
     private List<Comments> commentsList;
     public FirebaseFirestore firestore;
+    public FirebaseAuth fauth;
+    public String cuid;
+    public String myuid;
+    String UID, post_id;
+    DocumentReference ref;
 
 
-    public CommentsAdapter(Activity context, List<Comments> commentsList, List<Users> usersList){
+    public CommentsAdapter(Activity context, List<Comments> commentsList, List<Users> usersList, String post_id, String UID){
         this.context = context;
         this.commentsList = commentsList;
         this.usersList = usersList;
+        this.post_id = post_id;
+        this.UID = UID;
+        cuid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        ref = FirebaseFirestore.getInstance().collection("posts").document(post_id);
+
     }
 
 
@@ -47,6 +73,42 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
         Users users = usersList.get(position);
         holder.setmUserName(users.getUsername());
 
+        myuid = comments.getUid();
+        String comid = comments.CommId;
+
+        if(cuid.equals(myuid)){
+            holder.delete_icon.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    holder.delete_icon.setVisibility(View.VISIBLE);
+                    showMoreOptions(holder.delete_icon, post_id, comid, position);
+
+
+
+
+                }
+            });
+
+
+        }else{
+            holder.delete_icon.setVisibility(View.GONE);
+        }
+
+        holder.delete_icon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(cuid.equals(myuid)){
+                    holder.delete_icon.setVisibility(View.VISIBLE);
+                    showMoreOptions(holder.delete_icon, post_id, comid, position);
+
+                }else{
+                    holder.delete_icon.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
+
+
 
 
 
@@ -57,13 +119,77 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
         return commentsList.size();
     }
 
+
+    private void showMoreOptions(ImageView moreBtn, String postid, String commid, int index){
+        PopupMenu popupMenu = new PopupMenu(context, moreBtn, Gravity.END);
+
+        //show delete option in only post(s) of currently signed-in user
+        popupMenu.getMenu().add(Menu.NONE, 0, 0, "Delete");
+
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+
+                int id = menuItem.getItemId();
+                if(id==0){
+                    beginDelete(postid, commid, index);
+                    //delete is clicked
+                }
+                return false;
+            }
+        });
+
+        popupMenu.show();
+    }
+
+    private void beginDelete(String postid, String commid, int index) {
+        ProgressDialog pd = new ProgressDialog(context);
+        pd.setMessage("Deleting....");
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+
+        db.collection("posts").document(postid).collection("comments").document(commid)
+                .delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task.isSuccessful()){
+                    commentsList.remove(commentsList.get(index));
+                    ref.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                            String a = documentSnapshot.getString("commentno");
+                            int b = (Integer.parseInt(a))-1;
+                            ref.update("commentno", String.valueOf(b));
+
+                        }
+                    });
+
+                    notifyDataSetChanged();
+                    Toast.makeText(context, "Deleted", Toast.LENGTH_SHORT).show();
+
+
+                    pd.dismiss();
+                }else{
+                    Toast.makeText(context, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+
+                }
+            }
+
+        });
+
+
+    }
+
     public class CommentsViewHolder extends RecyclerView.ViewHolder{
         TextView mcomment, mUserName;
+        ImageView delete_icon;
         View mView;
 
         public CommentsViewHolder(@NonNull View itemView) {
             super(itemView);
             mView = itemView;
+            delete_icon = mView.findViewById(R.id.delete);
         }
 
         public void setmcomment(String comment){

@@ -45,7 +45,7 @@ public class CommentsActivity extends AppCompatActivity {
     private RecyclerView recycle;
     private FirebaseFirestore firestore;
     private FirebaseAuth auth;
-    private String post_id;
+    public String post_id;
     private CommentsAdapter adapter;
     private List<Comments> commList;
     private List<Users> usersList;
@@ -64,13 +64,15 @@ public class CommentsActivity extends AppCompatActivity {
 
         firestore = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
-        String uid = auth.getCurrentUser().getUid();
+        String UID = auth.getCurrentUser().getUid();
 
         commList = new ArrayList<>();
         usersList = new ArrayList<>();
-        adapter = new CommentsAdapter(CommentsActivity.this , commList, usersList);
+        //adapter = new CommentsAdapter(CommentsActivity.this , commList, usersList, post_id, uid);
 
         post_id = getIntent().getStringExtra("postid");
+        adapter = new CommentsAdapter(CommentsActivity.this , commList, usersList, post_id, UID);
+
 
         sharedpreferences = getApplicationContext().getSharedPreferences("login", Context.MODE_PRIVATE);
         String name = sharedpreferences.getString("username", "");
@@ -86,8 +88,9 @@ public class CommentsActivity extends AppCompatActivity {
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
                 for (DocumentChange documentChange : value.getDocumentChanges()){
                     if (documentChange.getType() == DocumentChange.Type.ADDED){
+                        String commId = documentChange.getDocument().getId();
 
-                        Comments comments = documentChange.getDocument().toObject(Comments.class);
+                        Comments comments = documentChange.getDocument().toObject(Comments.class).withId(commId);
                         String user = documentChange.getDocument().getString("username");
                         firestore.collection("user_profile").document(user).get()
                                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -121,7 +124,7 @@ public class CommentsActivity extends AppCompatActivity {
                     commentsMap.put("username", name);
                     commentsMap.put("comment", user_comment);
                     commentsMap.put("time", FieldValue.serverTimestamp());
-                    commentsMap.put("uid", uid);
+                    commentsMap.put("uid", UID);
                     firestore.collection("posts/" + post_id + "/comments").add(commentsMap).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
                         @Override
                         public void onComplete(@NonNull Task<DocumentReference> task) {
