@@ -144,10 +144,10 @@ public class AccountActivity extends AppCompatActivity {
                         String imageUrl = task.getResult().getString("profilePicURL");
                         mImageUri = Uri.parse(imageUrl);
 
-                        Glide.with(AccountActivity.this).load(imageUrl).into(circleImageView);
+                        Glide.with(getApplicationContext()).load(imageUrl).into(circleImageView);
                     }
                     else {
-                        Glide.with(AccountActivity.this).load(R.drawable.addimage).into(circleImageView);
+                        Glide.with(getApplicationContext()).load(R.drawable.addimage).into(circleImageView);
                     }
                 }
             }

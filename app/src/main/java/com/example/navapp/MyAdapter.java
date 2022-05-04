@@ -38,12 +38,18 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.StorageReference;
 
+import org.ocpsoft.prettytime.PrettyTime;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -109,7 +115,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         holder.postDate.setText(timeAgo);
         holder.username.setText(posts.getUsername());
         //holder.likeCount.setText(likes);
-
+        
+        holder.setPostPic(posts.getImageURL());
         String postId = posts.PostId;
         fstore = FirebaseFirestore.getInstance().collection("posts").document(postId).collection("Likes").document(myUid);
         ref = FirebaseFirestore.getInstance().collection("posts").document(postId);
@@ -156,6 +163,26 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                     }
                     else {
                         holder.setProfilePic(image);
+                    }
+                }
+                else {
+                    Toast.makeText(context, task.getException().toString(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        Log.d("posts", postId);
+        firestore.collection("posts").document(postId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    String postImage = task.getResult().getString("imageURL");
+                    // check if user has a profile picture
+                    // if they dont, then just put default picture
+                    if (postImage == null) {
+                        holder.postPic.setImageDrawable((context.getDrawable(R.drawable.ic_baseline_image_24)));
+                    }
+                    else {
+                        holder.setPostPic(postImage);
                     }
                 }
                 else {
@@ -237,13 +264,14 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     }
 
     private String calculateTimeAgo(String datePost) {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy HH:mm:ss");
         try {
             long time = sdf.parse(datePost).getTime();
             long now = System.currentTimeMillis();
-            Log.e(String.valueOf(now), "");
+            Log.d("time", String.valueOf(time));
             CharSequence ago =
-                    DateUtils.getRelativeTimeSpanString(time, now, DateUtils.FORMAT_24HOUR);
+                    DateUtils.getRelativeTimeSpanString(time, now, DateUtils.MINUTE_IN_MILLIS);
+            Log.d("ago", String.valueOf(ago));
             return ago+"";
         } catch (ParseException e) {
             e.printStackTrace();
@@ -316,7 +344,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         TextView postDesc, postTitle, username, likeCount, postDate,comment_no;
-        ImageView likeButton, commentButton, delete_btn;
+        ImageView likeButton, commentButton, delete_btn, postPic;
         CircleImageView profPic;
 
 
@@ -348,6 +376,11 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         public void setCommentno(int count){
             comment_no = itemView.findViewById(R.id.comment_count);
             comment_no.setText(count);
+        }
+
+        public void setPostPic(String urlPost){
+            postPic = itemView.findViewById(R.id.postImage);
+            Glide.with(context).load(urlPost).into(postPic);
         }
     }
 

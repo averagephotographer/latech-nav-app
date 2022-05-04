@@ -96,7 +96,7 @@ public class CreatePostActivity extends AppCompatActivity {
                 posts.put("description", description);
                 posts.put("uid", current_user);
                 Date date = new Date();
-                SimpleDateFormat formatter = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
+                SimpleDateFormat formatter = new SimpleDateFormat("dd-M-yyyy HH:mm:ss");
                 String strDate = formatter.format(date);
                 posts.put("datePost", strDate);
 
