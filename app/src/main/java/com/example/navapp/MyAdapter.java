@@ -38,7 +38,6 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.StorageReference;
 
-import org.ocpsoft.prettytime.PrettyTime;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -107,7 +106,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         user = posts.getUsername();
         date = posts.getDatePost();
         String num = postsArrayList.get(position).getCommentno();
-        String likes = posts.getLikes();
+        //String likes = posts.getLikes();
 
         holder.postDesc.setText(posts.getDescription());
         holder.postTitle.setText(posts.getTitle());

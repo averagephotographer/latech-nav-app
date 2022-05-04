@@ -99,7 +99,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="5dp"
-                android:text="0 Likes"
+                android:text="0"
                 android:textColor="@color/black"
                 android:textSize="15sp"
                 app:layout_constraintStart_toEndOf="@+id/like_btn"
@@ -119,12 +119,12 @@
                 app:layout_constraintVertical_bias="0.0"
                 app:srcCompat="@drawable/ic_baseline_comment_24" />
 
+
             <ImageView
                 android:id="@+id/image"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="56dp"
-                android:layout_marginBottom="5dp"
+                android:layout_marginStart="172dp"
                 android:clickable="true"
                 android:focusable="true"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -132,7 +132,6 @@
                 app:layout_constraintTop_toTopOf="@+id/like_count_tv"
                 app:layout_constraintVertical_bias="0.0"
                 app:srcCompat="@drawable/ic_baseline_image_24" />
-
 
             <ImageView
                 android:id="@+id/more_btn"
@@ -142,6 +141,17 @@
                 app:layout_constraintBottom_toBottomOf="@+id/username_tv"
                 app:layout_constraintStart_toEndOf="@+id/username_tv"
                 app:srcCompat="@drawable/more_button" />
+
+            <TextView
+                android:id="@+id/com_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:text="0"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/comments_post"
+                app:layout_constraintTop_toTopOf="@+id/comments_post"
+                app:layout_constraintVertical_bias="0.0" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
