@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
@@ -22,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RawRes;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -49,10 +51,20 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.TileOverlay;
+import com.google.android.gms.maps.model.TileOverlayOptions;
+import com.google.maps.android.heatmaps.Gradient;
+import com.google.maps.android.heatmaps.HeatmapTileProvider;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Scanner;
 
 
 /**
@@ -92,6 +104,7 @@ public class MapsActivity extends DrawerBaseActivity
 
         private int minRSSI = 100;
         private int bMin = 0;
+        private int heat = 0;
         /**
          * Flag indicating whether a requested permission has been denied after returning in
          * {@link #onRequestPermissionsResult(int, String[], int[])}.
@@ -178,6 +191,8 @@ public class MapsActivity extends DrawerBaseActivity
 
             Button oButton = findViewById(R.id.overlayButton);
 
+            Button heatMap = findViewById(R.id.heatmapButton);
+
 
             ArrayAdapter<String> adapter=new ArrayAdapter<String>(this,android.R.layout.simple_dropdown_item_1line,countries);
             List<Marker> markers = new ArrayList<>();
@@ -209,7 +224,7 @@ public class MapsActivity extends DrawerBaseActivity
                     mMap.clear();
 
                     GroundOverlayOptions neth = new GroundOverlayOptions()
-                            .image(BitmapDescriptorFactory.fromResource(R.drawable.nethken_floor1))
+                            .image(BitmapDescriptorFactory.fromResource(R.drawable.nethken_floor1_titled))
                             .position(nethken, 76f, 46f);
 
                     mMap.addGroundOverlay(neth);
@@ -225,11 +240,24 @@ public class MapsActivity extends DrawerBaseActivity
                     //LatLng nethken = new LatLng(32.525665490440126,-92.64472849667071);
 
                     GroundOverlayOptions neth = new GroundOverlayOptions()
-                            .image(BitmapDescriptorFactory.fromResource(R.drawable.nethken_floor2))
+                            .image(BitmapDescriptorFactory.fromResource(R.drawable.nethken_floor2_titled))
                             .position(nethken, 76f, 46f);
 
                     mMap.addGroundOverlay(neth);
 
+                }
+            });
+
+            heatMap.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    if (floor == 1){
+                        addHeat1();
+                        }
+                    else {
+                        addHeat2();
+                    }
                 }
             });
 
@@ -323,6 +351,100 @@ public class MapsActivity extends DrawerBaseActivity
                 }
             });
 
+        }
+
+        private void addHeat1() {
+            List<LatLng> latLngs = null;
+            List<LatLng> green = null;
+
+            int[] colors = {
+                    Color.rgb(102, 225, 0), // green
+            };
+
+            float[] startPoints = {
+                    1.0f
+            };
+
+            Gradient gradient = new Gradient(colors, startPoints);
+
+            // Get the data: latitude/longitude positions of police stations.
+            try {
+                latLngs = readItems(R.raw.common1);
+                green = readItems(R.raw.uncommon1);
+            } catch (JSONException e) {
+                Toast.makeText(this, "Problem reading list of locations.", Toast.LENGTH_LONG).show();
+            }
+
+            // Create a heat map tile provider, passing it the latlngs of the police stations.
+            HeatmapTileProvider provider = new HeatmapTileProvider.Builder()
+                    .data(latLngs)
+                    .build();
+
+            HeatmapTileProvider uncommon = new HeatmapTileProvider.Builder()
+                    .data(green)
+                    .gradient(gradient)
+                    .build();
+
+            provider.setRadius(40);
+            uncommon.setRadius(35);
+
+            // Add a tile overlay to the map, using the heat map tile provider.
+            TileOverlay overlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(provider));
+            TileOverlay uncommonOverlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(uncommon));
+        }
+
+        private void addHeat2() {
+            List<LatLng> latLngs = null;
+            List<LatLng> green = null;
+
+            int[] colors = {
+                    Color.rgb(102, 225, 0), // green
+            };
+
+            float[] startPoints = {
+                    1.0f
+            };
+
+            Gradient gradient = new Gradient(colors, startPoints);
+
+            // Get the data: latitude/longitude positions of police stations.
+            try {
+                latLngs = readItems(R.raw.common2);
+                green = readItems(R.raw.uncommon2);
+            } catch (JSONException e) {
+                Toast.makeText(this, "Problem reading list of locations.", Toast.LENGTH_LONG).show();
+            }
+
+            // Create a heat map tile provider, passing it the latlngs of the police stations.
+            HeatmapTileProvider provider = new HeatmapTileProvider.Builder()
+                    .data(latLngs)
+                    .build();
+
+            HeatmapTileProvider uncommon = new HeatmapTileProvider.Builder()
+                    .data(green)
+                    .gradient(gradient)
+                    .build();
+
+            provider.setRadius(40);
+            uncommon.setRadius(35);
+
+            // Add a tile overlay to the map, using the heat map tile provider.
+            TileOverlay overlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(provider));
+            TileOverlay uncommonOverlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(uncommon));
+        }
+
+        private List<LatLng> readItems(@RawRes int resource) throws JSONException {
+            List<LatLng> result = new ArrayList<>();
+            InputStream inputStream = this.getResources().openRawResource(resource);
+            String json = new Scanner(inputStream).useDelimiter("\\A").next();
+            JSONArray array = new JSONArray(json);
+            for (int i = 0; i < array.length(); i++) {
+                JSONObject object = array.getJSONObject(i);
+                double lat = object.getDouble("lat");
+                double lng = object.getDouble("lng");
+                result.add(new LatLng(lat, lng));
+            }
+            return result;
         }
 
         public void searchCamera (double x, double y, int i) {
@@ -689,11 +811,12 @@ public class MapsActivity extends DrawerBaseActivity
                             mMap.clear();
 
                             GroundOverlayOptions neth = new GroundOverlayOptions()
-                                    .image(BitmapDescriptorFactory.fromResource(R.drawable.nethken_floor1))
+                                    .image(BitmapDescriptorFactory.fromResource(R.drawable.nethken_floor1_titled))
                                     .position(nethken, 76f, 46f);
 
                             mMap.addGroundOverlay(neth);
                             floor = 1;
+
                         }
                     }
                     else {
@@ -703,7 +826,7 @@ public class MapsActivity extends DrawerBaseActivity
                             mMap.clear();
 
                             GroundOverlayOptions neth = new GroundOverlayOptions()
-                                    .image(BitmapDescriptorFactory.fromResource(R.drawable.nethken_floor2))
+                                    .image(BitmapDescriptorFactory.fromResource(R.drawable.nethken_floor2_titled))
                                     .position(nethken, 76f, 46f);
 
                             mMap.addGroundOverlay(neth);
@@ -737,6 +860,16 @@ public class MapsActivity extends DrawerBaseActivity
 
             };
             return obj;
+        }
+
+
+        public static int checkFloor(int minimumRSSI) {
+            if (minimumRSSI < 5){
+                return 1;
+            }
+            else {
+                return 2;
+            }
         }
 
 }

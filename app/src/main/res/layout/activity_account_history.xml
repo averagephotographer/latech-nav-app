@@ -142,12 +142,12 @@ Posts"
         android:layout_marginBottom="5dp"/>
 
     <ImageView
+        android:id="@+id/imageView4"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:id="@+id/imageView4"
         android:layout_alignTop="@+id/imageView3"
-        android:layout_alignRight="@+id/textView4"
-        android:layout_alignEnd="@+id/textView4" />
+        android:layout_alignEnd="@+id/textView4"
+        android:layout_alignRight="@+id/textView4" />
 
     <Button
         android:layout_width="wrap_content"

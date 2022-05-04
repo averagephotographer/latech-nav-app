@@ -6,13 +6,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.webkit.RenderProcessGoneDetail;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,27 +18,28 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.navapp.Utils.Posts;
-import com.example.navapp.databinding.ActivityDrawerBaseBinding;
+import com.example.navapp.Utils.Users;
 import com.example.navapp.databinding.ActivityForumBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.DocumentChange;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.remote.WatchChange;
-import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 
-public class ForumActivity extends DrawerBaseActivity {
+
+
+
+public class ForumActivity extends DrawerBaseActivity  {
     ActivityForumBinding activityForumBinding;
     BottomNavigationView bottomNavigationView;
     FloatingActionButton floatingActionButton;
@@ -51,12 +47,13 @@ public class ForumActivity extends DrawerBaseActivity {
     SharedPreferences sharedPreferences;
     RecyclerView recyclerView;
     ArrayList<Posts> postsArrayList;
+    ArrayList<Users> usersArrayList;
     FirebaseFirestore firestore;
     MyAdapter myAdapter;
-    StorageReference storageReference;
     ProgressDialog progressDialog;
-    String titlepost;
-    String description;
+    private ListenerRegistration listenerRegistration;
+    private Query query;
+
     ImageView commentbtn;
     SwipeRefreshLayout swipeRefreshLayout;
 
@@ -82,11 +79,26 @@ public class ForumActivity extends DrawerBaseActivity {
 
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
         bottomNavigationView.setBackground(null);
+        bottomNavigationView.setSelectedItemId(R.id.Home);
+
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.Account:
+                    startActivity(new Intent(getApplicationContext(), MyPostsActivity.class));
+                    overridePendingTransition(0,0);
+                    return true;
+                case R.id.Home:
+                    return true;
+            }
+            return false;
+        });
+
         floatingActionButton = findViewById(R.id.floatingActionButton);
+        commentbtn = findViewById(R.id.comments_post);
 
         firestore = FirebaseFirestore.getInstance();
         postsArrayList = new ArrayList<Posts>();
-        myAdapter = new MyAdapter(ForumActivity.this, postsArrayList);
+        myAdapter = new MyAdapter(ForumActivity.this, postsArrayList, usersArrayList);
 
         recyclerView.setAdapter(myAdapter);
         EventChangeListener();
@@ -101,51 +113,74 @@ public class ForumActivity extends DrawerBaseActivity {
 
     }
 
+
+
+
     private void EventChangeListener() {
 
         sharedPreferences = getApplicationContext().getSharedPreferences("login", Context.MODE_PRIVATE);
         String name = sharedPreferences.getString("username", "");
 
 
-        firestore.collection("posts").orderBy("datePost",Query.Direction.DESCENDING)
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+        query = firestore.collection("posts").orderBy("datePost",Query.Direction.DESCENDING);
+        listenerRegistration = query.addSnapshotListener(ForumActivity.this, new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
 
-                        if (error != null) {
+                if (error != null) {
 
-                            if (progressDialog != null && progressDialog.isShowing())
-                                progressDialog.dismiss();
-                            Log.e("Firestore Error", error.getMessage());
-                            return;
+                    if (progressDialog != null && progressDialog.isShowing())
+                        progressDialog.dismiss();
+                    Log.e("Firestore Error", error.getMessage());
+                    return;
 
-                        }
+                }
 
-                        for (DocumentChange dc : value.getDocumentChanges()) {
-                            if (dc.getType() == DocumentChange.Type.ADDED) {
-                                postsArrayList.add(dc.getDocument().toObject(Posts.class));
-                                myAdapter.notifyDataSetChanged();
+                for (DocumentChange dc : value.getDocumentChanges()) {
+                    if (dc.getType() == DocumentChange.Type.ADDED) {
+                        String postId = dc.getDocument().getId();
+                        postsArrayList.add(dc.getDocument().toObject(Posts.class).withId(postId));
+                        //String user = dc.getDocument().getString("username");
+                                /*firestore.collection("user_profile").document(user).get()
+                                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                if (task.isSuccessful()){
+                                                    Users users = task.getResult().toObject(Users.class);
+                                                    usersArrayList.add(users);
+                                                    myAdapter.notifyDataSetChanged();
+                                                }else{
+                                                    Toast.makeText(ForumActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                                }
+                                            }
+                                        });
 
-                            }
-                        }
-
-                        swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
-                        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-                            @Override
-                            public void onRefresh() {
-                                myAdapter.notifyDataSetChanged();
-                                swipeRefreshLayout.setRefreshing(false);
-
-                            }
-                        });
+                                 */
+                    } else {
                         myAdapter.notifyDataSetChanged();
-                        if (progressDialog != null && progressDialog.isShowing())
-                            progressDialog.dismiss();
+                    }
+
+                    swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
+                    swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                        @Override
+                        public void onRefresh() {
+                            myAdapter.notifyDataSetChanged();
+                            swipeRefreshLayout.setRefreshing(false);
+
+                        }
+                    });
+
+                    listenerRegistration.remove();
+                    myAdapter.notifyDataSetChanged();
+                    if (progressDialog != null && progressDialog.isShowing()) {
+                        progressDialog.dismiss();
 
 
                     }
-                });
-
+                }
+            }
+        });
     }
+
 }
 

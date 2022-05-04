@@ -1,9 +1,6 @@
 package com.example.navapp.Utils;
 
-import android.net.Uri;
-import android.widget.ImageView;
-
-public class Posts extends PostId {
+public class Mypost extends Pid {
     private String datePost;
     private String description;
     private String title;
@@ -20,14 +17,14 @@ public class Posts extends PostId {
 
     private String likeCount;
 
-    public Posts() {
+    public Mypost() {
     }
 
     public String getUid() {
         return uid;
     }
 
-    public Posts(String datePost, String description, String title, String username, String imageURL,  String uid, String commentno) {
+    public Mypost(String datePost, String description, String title, String username, String imageURL,  String uid, String commentno) {
         this.datePost = datePost;
         this.description = description;
         this.title = title;
@@ -93,5 +90,6 @@ public class Posts extends PostId {
     public void setLikeCount(String likeCount) {
         this.likeCount = likeCount;
     }
+
 
 }

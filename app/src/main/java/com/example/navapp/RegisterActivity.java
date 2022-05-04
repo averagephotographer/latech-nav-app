@@ -1,6 +1,8 @@
 package com.example.navapp;
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
@@ -12,6 +14,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,7 +30,11 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -46,10 +53,13 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher {
     private FirebaseAuth fAuth;
     private ProgressBar progressBarInBackground;
     private String userID;
-    private CircleImageView circleImageView;
     private Uri mImageUri;
+    SharedPreferences sharedPreferences;
+    private StorageReference storageReference;
     private boolean isPhotoSelected = false;
     public static final String TAG = "TAG";
+    public static Map<String,Object> user = new HashMap<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,23 +67,14 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher {
         setContentView(R.layout.activity_register);
         db = FirebaseFirestore.getInstance();
         db.setLoggingEnabled(true);
-
+        storageReference = FirebaseStorage.getInstance().getReference();
         fAuth = FirebaseAuth.getInstance();
         progressBarInBackground = findViewById(R.id.progressBarLoading);
-        circleImageView = findViewById(R.id.circleImageView);
+        userID = fAuth.getUid();
+        //sharedPreferences = getApplicationContext().getSharedPreferences("login", Context.MODE_PRIVATE);
+        //String name = sharedPreferences.getString("username", "");
+        //Log.d("mynameee", name);
 
-        circleImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ImagePicker.with(RegisterActivity.this)
-                        .galleryOnly()
-                        .crop()                 //Crop image(Optional), Check Customization for more option
-                        .cropSquare()
-                        .compress(1024)			//Final image size will be less than 1 MB(Optional)
-                        .maxResultSize(1080, 1080)	//Final image resolution will be less than 1080 x 1080(Optional)
-                        .start();
-            }
-        });
 
 
         haveAccount_text = (TextView) findViewById(R.id.haveAccount);
@@ -98,7 +99,6 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher {
                 String username_str = input_username.getText().toString();
                 String password_str = password.getText().toString();
 
-                Map<String,Object> user = new HashMap<>();
                 user.put("username", username_str);
                 user.put("email", email_str);
                 if(TextUtils.isEmpty(email_str)) {
@@ -141,20 +141,14 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher {
                                     {
                                         if (task.isSuccessful())
                                         {
-                                            Toast.makeText(RegisterActivity.this, "verification email sent", Toast.LENGTH_LONG).show();
+                                            Toast.makeText(RegisterActivity.this, "Verification Email Sent!", Toast.LENGTH_LONG).show();
                                         }
                                         else{
-                                            Toast.makeText(RegisterActivity.this, "verification email not sent", Toast.LENGTH_LONG).show();
+                                            Toast.makeText(RegisterActivity.this, "Verification EMail Not Sent!", Toast.LENGTH_LONG).show();
                                         }
                                     }
                                 });
-                                DocumentReference documentReference = db.collection("user_profile").document(username_str);
-                                documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        Log.d(TAG, "onSuccess: user profile is created for " + userID);
-                                    }
-                                });
+                                db.collection("user_profile").document(username_str).set(user);
                                 startActivity(new Intent(getApplicationContext(),LoginActivity.class));
                             } else {
                                 Toast.makeText(RegisterActivity.this, "Error! " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
@@ -168,13 +162,6 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher {
         });
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        mImageUri = data.getData();
-        circleImageView.setImageURI(mImageUri);
-    }
 
     @Override
     public void beforeTextChanged(

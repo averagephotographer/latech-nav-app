@@ -8,17 +8,18 @@
         <entry key="..\:/Users/cdtv1/Documents/GitHub/latech-nav-app/app/src/main/res/layout/activity_about.xml" value="0.2513586956521739" />
         <entry key="..\:/Users/cdtv1/Documents/GitHub/latech-nav-app/app/src/main/res/layout/activity_account.xml" value="0.2513586956521739" />
         <entry key="..\:/Users/cdtv1/Documents/GitHub/latech-nav-app/app/src/main/res/layout/activity_account_history.xml" value="0.2513586956521739" />
+        <entry key="..\:/Users/cdtv1/Documents/GitHub/latech-nav-app/app/src/main/res/layout/activity_beacons.xml" value="0.27447916666666666" />
         <entry key="..\:/Users/cdtv1/Documents/GitHub/latech-nav-app/app/src/main/res/layout/activity_create_post.xml" value="0.2513586956521739" />
         <entry key="..\:/Users/cdtv1/Documents/GitHub/latech-nav-app/app/src/main/res/layout/activity_drawer_base.xml" value="0.2513586956521739" />
-        <entry key="..\:/Users/cdtv1/Documents/GitHub/latech-nav-app/app/src/main/res/layout/activity_forum.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/cdtv1/Documents/GitHub/latech-nav-app/app/src/main/res/layout/activity_each_post.xml" value="0.22010869565217392" />
+        <entry key="..\:/Users/cdtv1/Documents/GitHub/latech-nav-app/app/src/main/res/layout/activity_forum.xml" value="0.22010869565217392" />
         <entry key="..\:/Users/cdtv1/Documents/GitHub/latech-nav-app/app/src/main/res/layout/activity_ground.xml" value="0.2418478260869565" />
         <entry key="..\:/Users/cdtv1/Documents/GitHub/latech-nav-app/app/src/main/res/layout/activity_login.xml" value="0.176" />
         <entry key="..\:/Users/cdtv1/Documents/GitHub/latech-nav-app/app/src/main/res/layout/activity_main.xml" value="0.12360688956433637" />
-        <entry key="..\:/Users/cdtv1/Documents/GitHub/latech-nav-app/app/src/main/res/layout/activity_maps.xml" value="0.27447916666666666" />
+        <entry key="..\:/Users/cdtv1/Documents/GitHub/latech-nav-app/app/src/main/res/layout/activity_maps.xml" value="0.3120189461219657" />
         <entry key="..\:/Users/cdtv1/Documents/GitHub/latech-nav-app/app/src/main/res/layout/activity_register.xml" value="0.2164855072463768" />
         <entry key="..\:/Users/cdtv1/Documents/GitHub/latech-nav-app/app/src/main/res/layout/activity_settings.xml" value="0.536" />
         <entry key="..\:/Users/cdtv1/Documents/GitHub/latech-nav-app/app/src/main/res/layout/activity_sign_options.xml" value="0.30984126984126986" />
-        <entry key="..\:/Users/cdtv1/Documents/GitHub/latech-nav-app/app/src/main/res/layout/activity_two_fact_reg.xml" value="0.12" />
         <entry key="..\:/Users/cdtv1/Documents/GitHub/latech-nav-app/app/src/main/res/layout/activity_twofareg.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/cdtv1/Documents/GitHub/latech-nav-app/app/src/main/res/layout/activity_welcome.xml" value="0.3468372423596304" />
         <entry key="..\:/Users/cdtv1/Documents/GitHub/latech-nav-app/app/src/main/res/layout/content_layout.xml" value="0.2513586956521739" />
@@ -33,8 +34,11 @@
         <entry key="..\:/Users/jjung/Documents/GitHub/latech-nav-app/app/src/main/res/drawable/ic_baseline_add_24.xml" value="0.1" />
         <entry key="..\:/Users/jjung/Documents/GitHub/latech-nav-app/app/src/main/res/drawable/ic_baseline_add_circle_outline_24.xml" value="0.1375" />
         <entry key="..\:/Users/jjung/Documents/GitHub/latech-nav-app/app/src/main/res/drawable/ic_baseline_arrow_back_24.xml" value="0.213" />
+        <entry key="..\:/Users/jjung/Documents/GitHub/latech-nav-app/app/src/main/res/drawable/ic_baseline_comment_24.xml" value="0.2355" />
+        <entry key="..\:/Users/jjung/Documents/GitHub/latech-nav-app/app/src/main/res/drawable/ic_baseline_favorite_border_24.xml" value="0.2355" />
         <entry key="..\:/Users/jjung/Documents/GitHub/latech-nav-app/app/src/main/res/drawable/ic_baseline_forum_24.xml" value="0.290625" />
         <entry key="..\:/Users/jjung/Documents/GitHub/latech-nav-app/app/src/main/res/drawable/ic_baseline_home_24.xml" value="0.1375" />
+        <entry key="..\:/Users/jjung/Documents/GitHub/latech-nav-app/app/src/main/res/drawable/ic_baseline_image_24.xml" value="0.2355" />
         <entry key="..\:/Users/jjung/Documents/GitHub/latech-nav-app/app/src/main/res/drawable/ic_baseline_map_24.xml" value="0.290625" />
         <entry key="..\:/Users/jjung/Documents/GitHub/latech-nav-app/app/src/main/res/drawable/ic_baseline_person_add_alt_1_24.xml" value="0.2" />
         <entry key="..\:/Users/jjung/Documents/GitHub/latech-nav-app/app/src/main/res/drawable/ic_baseline_person_outline_24.xml" value="0.1375" />
@@ -45,19 +49,26 @@
         <entry key="..\:/Users/jjung/Documents/GitHub/latech-nav-app/app/src/main/res/layout/activity_about.xml" value="0.17753623188405798" />
         <entry key="..\:/Users/jjung/Documents/GitHub/latech-nav-app/app/src/main/res/layout/activity_account.xml" value="0.264" />
         <entry key="..\:/Users/jjung/Documents/GitHub/latech-nav-app/app/src/main/res/layout/activity_account_history.xml" value="0.24114583333333334" />
+        <entry key="..\:/Users/jjung/Documents/GitHub/latech-nav-app/app/src/main/res/layout/activity_comments.xml" value="0.192481884057971" />
         <entry key="..\:/Users/jjung/Documents/GitHub/latech-nav-app/app/src/main/res/layout/activity_create_post.xml" value="0.266304347826087" />
         <entry key="..\:/Users/jjung/Documents/GitHub/latech-nav-app/app/src/main/res/layout/activity_drawer_base.xml" value="0.264" />
-        <entry key="..\:/Users/jjung/Documents/GitHub/latech-nav-app/app/src/main/res/layout/activity_forum.xml" value="0.264" />
+        <entry key="..\:/Users/jjung/Documents/GitHub/latech-nav-app/app/src/main/res/layout/activity_each_post.xml" value="0.19655797101449277" />
+        <entry key="..\:/Users/jjung/Documents/GitHub/latech-nav-app/app/src/main/res/layout/activity_forum.xml" value="0.2" />
         <entry key="..\:/Users/jjung/Documents/GitHub/latech-nav-app/app/src/main/res/layout/activity_ground.xml" value="0.2617753623188406" />
         <entry key="..\:/Users/jjung/Documents/GitHub/latech-nav-app/app/src/main/res/layout/activity_login.xml" value="0.2536231884057971" />
         <entry key="..\:/Users/jjung/Documents/GitHub/latech-nav-app/app/src/main/res/layout/activity_main.xml" value="0.176" />
         <entry key="..\:/Users/jjung/Documents/GitHub/latech-nav-app/app/src/main/res/layout/activity_maps.xml" value="0.2536231884057971" />
+        <entry key="..\:/Users/jjung/Documents/GitHub/latech-nav-app/app/src/main/res/layout/activity_my_posts.xml" value="0.2203125" />
+        <entry key="..\:/Users/jjung/Documents/GitHub/latech-nav-app/app/src/main/res/layout/activity_register.xml" value="0.192481884057971" />
         <entry key="..\:/Users/jjung/Documents/GitHub/latech-nav-app/app/src/main/res/layout/activity_settings.xml" value="0.264" />
         <entry key="..\:/Users/jjung/Documents/GitHub/latech-nav-app/app/src/main/res/layout/activity_sign_options.xml" value="0.2536231884057971" />
         <entry key="..\:/Users/jjung/Documents/GitHub/latech-nav-app/app/src/main/res/layout/activity_welcome.xml" value="0.2536231884057971" />
         <entry key="..\:/Users/jjung/Documents/GitHub/latech-nav-app/app/src/main/res/layout/app_bar_main.xml" value="0.22735507246376813" />
         <entry key="..\:/Users/jjung/Documents/GitHub/latech-nav-app/app/src/main/res/layout/content_layout.xml" value="0.2" />
         <entry key="..\:/Users/jjung/Documents/GitHub/latech-nav-app/app/src/main/res/layout/content_main.xml" value="0.22735507246376813" />
+        <entry key="..\:/Users/jjung/Documents/GitHub/latech-nav-app/app/src/main/res/layout/custom_address.xml" value="0.27447916666666666" />
+        <entry key="..\:/Users/jjung/Documents/GitHub/latech-nav-app/app/src/main/res/layout/each_comment.xml" value="0.25677083333333334" />
+        <entry key="..\:/Users/jjung/Documents/GitHub/latech-nav-app/app/src/main/res/layout/each_mypost.xml" value="0.2203125" />
         <entry key="..\:/Users/jjung/Documents/GitHub/latech-nav-app/app/src/main/res/layout/each_post.xml" value="0.21770833333333334" />
         <entry key="..\:/Users/jjung/Documents/GitHub/latech-nav-app/app/src/main/res/layout/fragment_forum.xml" value="0.23731884057971014" />
         <entry key="..\:/Users/jjung/Documents/GitHub/latech-nav-app/app/src/main/res/layout/fragment_gallery.xml" value="0.22735507246376813" />
@@ -70,6 +81,7 @@
         <entry key="..\:/Users/jjung/Documents/GitHub/latech-nav-app/app/src/main/res/layout/nav_header.xml" value="0.25769927536231885" />
         <entry key="..\:/Users/jjung/Documents/GitHub/latech-nav-app/app/src/main/res/layout/nav_header_main.xml" value="0.22735507246376813" />
         <entry key="..\:/Users/jjung/Documents/GitHub/latech-nav-app/app/src/main/res/layout/register_activity.xml" value="0.264" />
+        <entry key="..\:/Users/jjung/Documents/GitHub/latech-nav-app/app/src/main/res/layout/test_image_view.xml" value="0.192481884057971" />
         <entry key="..\:/Users/jjung/Documents/GitHub/latech-nav-app/app/src/main/res/layout/toolbar.xml" value="0.22735507246376813" />
         <entry key="..\:/Users/jjung/Documents/GitHub/latech-nav-app/app/src/main/res/menu/activity_main_drawer.xml" value="0.27447916666666666" />
         <entry key="..\:/Users/jjung/Documents/GitHub/latech-nav-app/app/src/main/res/menu/bottom_menu.xml" value="0.27447916666666666" />
@@ -98,6 +110,25 @@
         <entry key="app/src/main/res/layout/activity_register.xml" value="0.2006340579710145" />
         <entry key="app/src/main/res/layout/activity_sign_options.xml" value="0.2006340579710145" />
         <entry key="app/src/main/res/layout/activity_welcome.xml" value="0.2006340579710145" />
+        <entry key="..\:/Users/sadia/OneDrive/Documents/GitHub/nav app/app/src/main/res/drawable/arrow_forward.xml" value="0.124" />
+        <entry key="..\:/Users/sadia/OneDrive/Documents/GitHub/nav app/app/src/main/res/drawable/ic_baseline_comment_24.xml" value="0.124" />
+        <entry key="..\:/Users/sadia/OneDrive/Documents/GitHub/nav app/app/src/main/res/drawable/send_icon.xml" value="0.124" />
+        <entry key="..\:/Users/sadia/OneDrive/Documents/GitHub/nav app/app/src/main/res/layout/activity_account.xml" value="0.11770833333333333" />
+        <entry key="..\:/Users/sadia/OneDrive/Documents/GitHub/nav app/app/src/main/res/layout/activity_account_history.xml" value="0.16666666666666666" />
+        <entry key="..\:/Users/sadia/OneDrive/Documents/GitHub/nav app/app/src/main/res/layout/activity_comments.xml" value="0.16666666666666666" />
+        <entry key="..\:/Users/sadia/OneDrive/Documents/GitHub/nav app/app/src/main/res/layout/activity_create_post.xml" value="0.13360507246376813" />
+        <entry key="..\:/Users/sadia/OneDrive/Documents/GitHub/nav app/app/src/main/res/layout/activity_each_post.xml" value="0.16666666666666666" />
+        <entry key="..\:/Users/sadia/OneDrive/Documents/GitHub/nav app/app/src/main/res/layout/activity_forum.xml" value="0.13360507246376813" />
+        <entry key="..\:/Users/sadia/OneDrive/Documents/GitHub/nav app/app/src/main/res/layout/activity_maps.xml" value="0.11770833333333333" />
+        <entry key="..\:/Users/sadia/OneDrive/Documents/GitHub/nav app/app/src/main/res/layout/activity_my_posts.xml" value="0.16666666666666666" />
+        <entry key="..\:/Users/sadia/OneDrive/Documents/GitHub/nav app/app/src/main/res/layout/activity_twofareg.xml" value="0.14402173913043478" />
+        <entry key="..\:/Users/sadia/OneDrive/Documents/GitHub/nav app/app/src/main/res/layout/content_layout.xml" value="0.14402173913043478" />
+        <entry key="..\:/Users/sadia/OneDrive/Documents/GitHub/nav app/app/src/main/res/layout/each_comment.xml" value="0.22" />
+        <entry key="..\:/Users/sadia/OneDrive/Documents/GitHub/nav app/app/src/main/res/layout/each_mypost.xml" value="0.11770833333333333" />
+        <entry key="..\:/Users/sadia/OneDrive/Documents/GitHub/nav app/app/src/main/res/layout/main_drawer_header.xml" value="0.14402173913043478" />
+        <entry key="app/src/main/res/drawable/printer.xml" value="0.15" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.16927083333333334" />
+        <entry key="app/src/main/res/layout/activity_maps.xml" value="0.335" />
         <entry key="app/src/main/res/layout/custom_address.xml" value="0.16236068895643363" />
       </map>
     </option>

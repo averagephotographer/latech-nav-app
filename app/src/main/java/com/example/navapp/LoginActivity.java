@@ -177,7 +177,7 @@ public class LoginActivity extends AppCompatActivity {
                                             }
                                             else
                                             {
-                                                Toast.makeText(LoginActivity.this, "Please Verify your email", Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(LoginActivity.this, "Please Verify Your Email!", Toast.LENGTH_SHORT).show();
                                             }
 
                                         }
@@ -322,7 +322,7 @@ public class LoginActivity extends AppCompatActivity {
                                 });
                                 //startActivity(new Intent(getApplicationContext(), MapsActivity.class));
                             } else {
-                                Toast.makeText(LoginActivity.this, "Error! " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                                Toast.makeText(LoginActivity.this, "Error! Wrong Password or Username." , Toast.LENGTH_LONG).show();
                             }
                         }
                         else{

@@ -21,8 +21,15 @@
             android:name=".TwitterActivity"
             android:exported="false" />
         <activity
+            android:name=".MyPostsActivity"
+            android:exported="false" />
+        <activity
             android:name=".CommentsActivity"
             android:exported="false" />
+        <activity
+            android:name=".CommentsActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".twofareg"
             android:exported="false" />
@@ -68,7 +75,7 @@
             android:name=".CreatePostActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".ImageViewActivity"
             android:exported="false" />
         <activity
             android:name=".WelcomeActivity"
