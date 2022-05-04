@@ -3,6 +3,7 @@ package com.example.navapp;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.Gravity;
@@ -17,8 +18,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.navapp.Utils.Mypost;
 import com.example.navapp.Utils.PostId;
 import com.example.navapp.Utils.Posts;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -26,12 +29,15 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 public class mypostsAdapter extends RecyclerView.Adapter<mypostsAdapter.PostViewHolder> {
@@ -39,13 +45,15 @@ public class mypostsAdapter extends RecyclerView.Adapter<mypostsAdapter.PostView
     String uid;
 
 
-    private List<Posts> mList;
+    private ArrayList<Posts> mList;
     private Activity context;
+    private FirebaseFirestore fstore;
 
-    public mypostsAdapter(Activity context, List<Posts> mList){
+    public mypostsAdapter(Activity context, ArrayList<Posts> mList){
         this.mList = mList;
         this.context = context;
         myUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        fstore = FirebaseFirestore.getInstance();
     }
 
     @NonNull
@@ -62,17 +70,43 @@ public class mypostsAdapter extends RecyclerView.Adapter<mypostsAdapter.PostView
         holder.setCaption(post.getDescription());
         holder.setTitle(post.getTitle());
         holder.setPostusername(post.getUsername());
-        //String timeAgo = calculateTimeAgo(post.getDatePost());
-        //holder.setDate(timeAgo);
+        String timeAgo = calculateTimeAgo(post.getDatePost());
+        holder.setDate(timeAgo);
         String postId = post.PostId;
         System.out.println(postId);
-        int pos = holder.getBindingAdapterPosition();
-
+        //int pos = holder.getBindingAdapterPosition();
 
         holder.delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showMoreOptions(holder.delete, postId, pos);
+                showMoreOptions(holder.delete, postId, position);
+            }
+        });
+
+        holder.comment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent commentIntent = new Intent(context , CommentsActivity.class);
+                commentIntent.putExtra("postid", postId);
+                context.startActivity(commentIntent);
+            }
+        });
+
+        holder.commcount.setText(post.getCommentno());
+
+        fstore.collection("posts/" + postId + "/Likes").addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                if(error == null){
+                    if(!value.isEmpty()){
+                        String count =  "" + value.size();
+                        holder.postlikes.setText(count);
+
+                    }else{
+                        holder.postlikes.setText("0");
+
+                    }
+                }
             }
         });
 
@@ -116,24 +150,9 @@ public class mypostsAdapter extends RecyclerView.Adapter<mypostsAdapter.PostView
 
 
 
-        if (postID != null) {
-            System.out.println("post" + postID);
-            /*
-            db.collection("posts").document(mList.get(pos).PostId).collection("comments").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<QuerySnapshot> task) {
 
-                    for (QueryDocumentSnapshot snapshot : task.getResult()){
-                        db.collection("posts/" + postID + "/comments").document(snapshot.getId()).delete();
-                    }
-                }
-            });*/
 
-        }else{
-            System.out.println("error");
-        }
-        /*
-        db.collection("posts").document(mList.get(pos).PostId).collection("comments").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        db.collection("posts").document(postID).collection("comments").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
 
@@ -141,10 +160,10 @@ public class mypostsAdapter extends RecyclerView.Adapter<mypostsAdapter.PostView
                     db.collection("posts/" + postID + "/comments").document(snapshot.getId()).delete();
                 }
             }
-        }); */
+        });
 
-        /*
-        db.collection("posts").document(mList.get(pos).PostId)
+
+        db.collection("posts").document(postID)
                 .delete().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
@@ -161,7 +180,7 @@ public class mypostsAdapter extends RecyclerView.Adapter<mypostsAdapter.PostView
                 }
             }
 
-        });*/
+        });
 
 
 
@@ -169,13 +188,14 @@ public class mypostsAdapter extends RecyclerView.Adapter<mypostsAdapter.PostView
 
 
     private String calculateTimeAgo(String datePost) {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy HH:mm:ss");
         try {
             long time = sdf.parse(datePost).getTime();
             long now = System.currentTimeMillis();
-            Log.e(String.valueOf(now), "");
+            Log.d("time", String.valueOf(time));
             CharSequence ago =
                     DateUtils.getRelativeTimeSpanString(time, now, DateUtils.MINUTE_IN_MILLIS);
+            Log.d("ago", String.valueOf(ago));
             return ago+"";
         } catch (ParseException e) {
             e.printStackTrace();
@@ -186,7 +206,7 @@ public class mypostsAdapter extends RecyclerView.Adapter<mypostsAdapter.PostView
 
     public class PostViewHolder extends RecyclerView.ViewHolder{
         ImageView like, comment, delete;
-        TextView username, date, descrip, title, postlikes;
+        TextView username, date, descrip, title, postlikes, commcount;
         View mView;
 
 
@@ -194,6 +214,9 @@ public class mypostsAdapter extends RecyclerView.Adapter<mypostsAdapter.PostView
             super(itemView);
             mView = itemView;
             delete = mView.findViewById(R.id.more_btn);
+            comment = mView.findViewById(R.id.comments_post);
+            postlikes = mView.findViewById(R.id.like_count_tv);
+            commcount = mView.findViewById(R.id.com_count);
         }
 
         public void setPostusername(String postusername){

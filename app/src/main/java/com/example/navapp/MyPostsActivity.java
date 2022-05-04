@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.navapp.Utils.Mypost;
 import com.example.navapp.Utils.Posts;
 import com.example.navapp.databinding.ActivityForumBinding;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -39,7 +40,7 @@ public class MyPostsActivity extends DrawerBaseActivity {
     private FirebaseFirestore firestore;
     private FirebaseAuth firebaseAuth;
     private mypostsAdapter adapter;
-    private List<Posts> list;
+    private ArrayList<Posts> list;
     SharedPreferences sharedpref;
     private Query query;
     private BottomNavigationView bottomNavigationView;
@@ -60,7 +61,7 @@ public class MyPostsActivity extends DrawerBaseActivity {
         recycler.setHasFixedSize(true);
         recycler.setLayoutManager(new LinearLayoutManager(MyPostsActivity.this));
 
-        list = new ArrayList<>();
+        list = new ArrayList<Posts>();
 
         adapter = new mypostsAdapter(MyPostsActivity.this, list);
         recycler.setAdapter(adapter);
@@ -103,7 +104,9 @@ public class MyPostsActivity extends DrawerBaseActivity {
                 public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
                     for(DocumentChange doc : value.getDocumentChanges()){
                         if(doc.getType() == DocumentChange.Type.ADDED){
-                            Posts post = doc.getDocument().toObject(Posts.class);
+                            String pid = doc.getDocument().getId();
+                            Posts post = doc.getDocument().toObject(Posts.class).withId(pid);
+                            //System.out.println("mypost" + post);
                             list.add(post);
                             adapter.notifyDataSetChanged();
                         }else{
