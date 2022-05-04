@@ -62,9 +62,9 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     private List<Users> usersList;
     public static ArrayList<Posts> postsArrayList;
     SharedPreferences sharedPreferences;
-    DocumentReference fstore;
+
     FirebaseFirestore firestore;
-    DocumentReference ref;
+
     String myUid;
     String uid;
     String caption;
@@ -108,7 +108,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         description = posts.getDescription();
         user = posts.getUsername();
         date = posts.getDatePost();
-        String num = posts.getCommentno();
+        String num = postsArrayList.get(position).getCommentno();
         String likes = posts.getLikes();
 
         holder.postDesc.setText(posts.getDescription());
@@ -120,8 +120,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
         holder.setPostPic(posts.getImageURL());
         String postId = posts.PostId;
-        fstore = FirebaseFirestore.getInstance().collection("posts").document(postId).collection("Likes").document(myUid);
-        ref = FirebaseFirestore.getInstance().collection("posts").document(postId);
         String currentuser = auth.getCurrentUser().getUid();
 
         //setLikes(holder, postId);
@@ -256,20 +254,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
     }
 
-    private void setLikes(MyViewHolder holder, String id) {
-        fstore.addSnapshotListener(new EventListener<DocumentSnapshot>() {
-            @Override
-            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-                if(value.getString("likes") == null  && ! value.exists()){
-                    holder.likeButton.setImageDrawable(context.getDrawable(R.drawable.ic_baseline_favorite_24));
 
-                }else{
-                    holder.likeButton.setImageDrawable(context.getDrawable(R.drawable.ic_baseline_favorite_border_24));
-                }
-            }
-        });
-
-    }
 
     private String calculateTimeAgo(String datePost) {
         SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy HH:mm:ss");
