@@ -23,6 +23,16 @@
             android:layout_height="263dp"
             android:background="@color/white">
 
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/profile_pic"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="16dp"
+                android:src="@drawable/elcipse"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
             <TextView
                 android:id="@+id/username_tv"
                 android:layout_width="wrap_content"
@@ -33,7 +43,7 @@
                 android:textSize="25dp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.052"
+                app:layout_constraintHorizontal_bias="0.268"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -48,7 +58,7 @@
                 android:textSize="15sp"
                 app:layout_constraintBottom_toTopOf="@+id/show_description"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.05"
+                app:layout_constraintHorizontal_bias="0.238"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/username_tv"
                 app:layout_constraintVertical_bias="0.0" />
@@ -65,7 +75,7 @@
                 app:layout_constraintHorizontal_bias="0.47"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.679" />
+                app:layout_constraintVertical_bias="0.73" />
 
             <TextView
                 android:id="@+id/show_title"
@@ -78,10 +88,10 @@
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.254"
+                app:layout_constraintHorizontal_bias="0.271"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.32" />
+                app:layout_constraintVertical_bias="0.354" />
 
             <ImageView
                 android:id="@+id/like_btn"
