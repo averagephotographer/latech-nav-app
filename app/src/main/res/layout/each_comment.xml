@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/blue">
+    android:background="@color/white">
 
 
     <androidx.cardview.widget.CardView
@@ -22,7 +22,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white">
+            android:background="@drawable/rounded_corner_forum">
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/comment_profile_pic"
@@ -69,8 +69,7 @@
                 android:layout_marginStart="192dp"
                 app:layout_constraintBottom_toBottomOf="@+id/comment_user"
                 app:layout_constraintStart_toEndOf="@+id/comment_user"
-                app:srcCompat="@drawable/more_button"
-                />
+                app:srcCompat="@drawable/more_button" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
