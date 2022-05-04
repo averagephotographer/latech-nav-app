@@ -22,8 +22,10 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.navapp.Utils.Posts;
 import com.example.navapp.Utils.Users;
+import com.github.chrisbanes.photoview.PhotoView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -57,7 +59,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
     static Context context;
     private List<Users> usersList;
-    ArrayList<Posts> postsArrayList;
+    public static ArrayList<Posts> postsArrayList;
     SharedPreferences sharedPreferences;
 
     FirebaseFirestore firestore;
@@ -114,7 +116,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         holder.postDate.setText(timeAgo);
         holder.username.setText(posts.getUsername());
         //holder.likeCount.setText(likes);
-        
+
         holder.setPostPic(posts.getImageURL());
         String postId = posts.PostId;
         String currentuser = auth.getCurrentUser().getUid();
@@ -146,6 +148,16 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                 context.startActivity(commentIntent);
             }
         });
+
+        holder.postPic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context , ImageViewActivity.class);
+                intent.putExtra("postid", postId);
+                context.startActivity(intent);
+            }
+        });
+
         String userId = posts.getUsername();
 
         firestore.collection("user_profile").document(userId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -167,18 +179,14 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                 }
             }
         });
-        Log.d("posts", postId);
         firestore.collection("posts").document(postId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
                     String postImage = task.getResult().getString("imageURL");
-                    // check if user has a profile picture
+                    // check if user has a post picture
                     // if they dont, then just put default picture
-                    if (postImage == null) {
-                        holder.postPic.setImageDrawable((context.getDrawable(R.drawable.ic_baseline_image_24)));
-                    }
-                    else {
+                    if (postImage != null) {
                         holder.setPostPic(postImage);
                     }
                 }
@@ -364,7 +372,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
         public void setPostPic(String urlPost){
             postPic = itemView.findViewById(R.id.postImage);
-            Glide.with(context).load(urlPost).into(postPic);
+            Glide.with(context).load(urlPost).apply(new RequestOptions().override(600, 200)).into(postPic);
         }
     }
 
