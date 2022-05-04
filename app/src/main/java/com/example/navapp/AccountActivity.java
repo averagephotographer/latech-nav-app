@@ -177,7 +177,7 @@ public class AccountActivity extends AppCompatActivity {
         documentReference.update(user).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {
-                Toast.makeText(AccountActivity.this, "Uploaded Complete.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AccountActivity.this, "Upload Complete.", Toast.LENGTH_SHORT).show();
             }
         });
 
