@@ -69,7 +69,7 @@
             android:name=".CreatePostActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".ImageViewActivity"
             android:exported="false" />
         <activity
             android:name=".WelcomeActivity"

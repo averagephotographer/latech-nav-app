@@ -65,17 +65,17 @@
 
             <TextView
                 android:id="@+id/show_description"
-                android:layout_width="372dp"
-                android:layout_height="107dp"
+                android:layout_width="360dp"
+                android:layout_height="97dp"
                 android:text="Caption"
                 android:textColor="@color/black"
                 android:textSize="18dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.47"
+                app:layout_constraintHorizontal_bias="0.457"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.679" />
+                app:layout_constraintVertical_bias="0.642" />
 
             <TextView
                 android:id="@+id/show_title"
@@ -131,15 +131,14 @@
 
             <ImageView
                 android:id="@+id/postImage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="96dp"
+                android:layout_width="92dp"
+                android:layout_height="50dp"
                 android:clickable="true"
                 android:focusable="true"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/like_count_tv"
-                app:layout_constraintTop_toTopOf="@+id/like_count_tv"
-                app:layout_constraintVertical_bias="0.0"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.189"
+                app:layout_constraintStart_toEndOf="@+id/comments_post"
+                app:layout_constraintTop_toBottomOf="@+id/show_description"
                 app:srcCompat="@drawable/ic_baseline_image_24" />
 
             <ImageView
