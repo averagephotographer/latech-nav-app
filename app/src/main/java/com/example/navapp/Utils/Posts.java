@@ -10,13 +10,8 @@ public class Posts extends PostId {
     private String username;
     private String uid;
     private String  commentno;
-
-
-
+    private String imageURL;
     private String likes;
-
-
-
 
     public void setCommentno(String commentno) {
         this.commentno = commentno;
@@ -32,13 +27,14 @@ public class Posts extends PostId {
         return uid;
     }
 
-    public Posts(String datePost, String description, String title, String username, String uid, String commentno) {
+    public Posts(String datePost, String description, String title, String username, String imageURL,  String uid, String commentno) {
         this.datePost = datePost;
         this.description = description;
         this.title = title;
         this.username = username;
         this.likes = likes;
         this.uid = uid;
+        this.imageURL = imageURL;
         this.commentno = commentno;
     }
 
@@ -58,6 +54,13 @@ public class Posts extends PostId {
         return likes;
     }
 
+    public String getImageURL() {
+        return imageURL;
+    }
+
+    public void setImageURL(String imageURL) {
+        this.imageURL = imageURL;
+    }
 
     public String getDescription() {
         return description;

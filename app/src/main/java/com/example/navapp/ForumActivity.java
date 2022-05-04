@@ -29,6 +29,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.StorageReference;
@@ -49,10 +50,9 @@ public class ForumActivity extends DrawerBaseActivity  {
     ArrayList<Users> usersArrayList;
     FirebaseFirestore firestore;
     MyAdapter myAdapter;
-    StorageReference storageReference;
     ProgressDialog progressDialog;
-    String titlepost;
-    String description;
+    private ListenerRegistration listenerRegistration;
+    private Query query;
 
     ImageView commentbtn;
     SwipeRefreshLayout swipeRefreshLayout;
@@ -122,25 +122,25 @@ public class ForumActivity extends DrawerBaseActivity  {
         String name = sharedPreferences.getString("username", "");
 
 
-        firestore.collection("posts").orderBy("datePost",Query.Direction.DESCENDING)
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+        query = firestore.collection("posts").orderBy("datePost",Query.Direction.DESCENDING);
+        listenerRegistration = query.addSnapshotListener(ForumActivity.this, new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
 
-                        if (error != null) {
+                if (error != null) {
 
-                            if (progressDialog != null && progressDialog.isShowing())
-                                progressDialog.dismiss();
-                            Log.e("Firestore Error", error.getMessage());
-                            return;
+                    if (progressDialog != null && progressDialog.isShowing())
+                        progressDialog.dismiss();
+                    Log.e("Firestore Error", error.getMessage());
+                    return;
 
-                        }
+                }
 
-                        for (DocumentChange dc : value.getDocumentChanges()) {
-                            if (dc.getType() == DocumentChange.Type.ADDED) {
-                                String postId = dc.getDocument().getId();
-                                postsArrayList.add(dc.getDocument().toObject(Posts.class).withId(postId));
-                                String user = dc.getDocument().getString("username");
+                for (DocumentChange dc : value.getDocumentChanges()) {
+                    if (dc.getType() == DocumentChange.Type.ADDED) {
+                        String postId = dc.getDocument().getId();
+                        postsArrayList.add(dc.getDocument().toObject(Posts.class).withId(postId));
+                        //String user = dc.getDocument().getString("username");
                                 /*firestore.collection("user_profile").document(user).get()
                                         .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                             @Override
@@ -156,30 +156,31 @@ public class ForumActivity extends DrawerBaseActivity  {
                                         });
 
                                  */
-                                myAdapter.notifyDataSetChanged();
-
-                            }
-                        }
-
-                        swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
-                        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-                            @Override
-                            public void onRefresh() {
-                                myAdapter.notifyDataSetChanged();
-                                swipeRefreshLayout.setRefreshing(false);
-
-                            }
-                        });
+                    } else {
                         myAdapter.notifyDataSetChanged();
-                        if (progressDialog != null && progressDialog.isShowing())
-                            progressDialog.dismiss();
+                    }
+
+                    swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
+                    swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                        @Override
+                        public void onRefresh() {
+                            myAdapter.notifyDataSetChanged();
+                            swipeRefreshLayout.setRefreshing(false);
+
+                        }
+                    });
+
+                    listenerRegistration.remove();
+                    myAdapter.notifyDataSetChanged();
+                    if (progressDialog != null && progressDialog.isShowing()) {
+                        progressDialog.dismiss();
 
 
                     }
-                });
-
+                }
+            }
+        });
     }
-
 
 }
 
