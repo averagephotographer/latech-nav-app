@@ -140,6 +140,9 @@ public class mypostsAdapter extends RecyclerView.Adapter<mypostsAdapter.PostView
                     if (postImage != null) {
                         holder.setPostPic(postImage);
                     }
+                    else {
+                        holder.image.setVisibility(View.GONE);
+                    }
                 }
                 else {
                     Toast.makeText(context, task.getException().toString(), Toast.LENGTH_SHORT).show();

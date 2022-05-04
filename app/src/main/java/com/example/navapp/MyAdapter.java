@@ -189,6 +189,9 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                     if (postImage != null) {
                         holder.setPostPic(postImage);
                     }
+                    else {
+                        holder.postPic.setVisibility(View.GONE);
+                    }
                 }
                 else {
                     Toast.makeText(context, task.getException().toString(), Toast.LENGTH_SHORT).show();
