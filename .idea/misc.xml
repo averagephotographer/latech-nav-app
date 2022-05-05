@@ -92,6 +92,9 @@
         <entry key="..\:/Users/jjung/Documents/GitHub/latech-nav-app/app/src/main/res/menu/main_drawer_menu.xml" value="0.176" />
         <entry key="..\:/Users/jjung/Documents/GitHub/latech-nav-app/app/src/main/res/menu/navigation_bar.xml" value="0.4" />
         <entry key="..\:/Users/noah/Documents/GitHub/latech-nav-app/app/src/main/res/layout/activity_login.xml" value="0.12760416666666666" />
+        <entry key="..\:/Users/noah/Documents/GitHub/latech-nav-app/app/src/main/res/layout/activity_register.xml" value="0.25" />
+        <entry key="..\:/Users/noah/Documents/GitHub/latech-nav-app/app/src/main/res/layout/activity_sign_options.xml" value="0.375" />
+        <entry key="..\:/Users/noah/Documents/GitHub/latech-nav-app/app/src/main/res/layout/activity_twitter.xml" value="0.16041666666666668" />
         <entry key="..\:/Users/sadia/OneDrive/Documents/GitHub/latech-nav-app/app/src/main/res/drawable/ic_baseline_person_outline_24.xml" value="0.1" />
         <entry key="..\:/Users/sadia/OneDrive/Documents/GitHub/latech-nav-app/app/src/main/res/drawable/ic_baseline_vpn_key_24.xml" value="0.1" />
         <entry key="..\:/Users/sadia/OneDrive/Documents/GitHub/latech-nav-app/app/src/main/res/layout/activity_login.xml" value="0.1" />
@@ -99,6 +102,14 @@
         <entry key="..\:/Users/sadia/OneDrive/Documents/GitHub/latech-nav-app/app/src/main/res/layout/activity_sign_option.xml" value="0.17552083333333332" />
         <entry key="..\:/Users/sadia/OneDrive/Documents/GitHub/latech-nav-app/app/src/main/res/layout/activity_sign_options.xml" value="0.1796875" />
         <entry key="..\:/Users/sadia/OneDrive/Documents/GitHub/latech-nav-app/app/src/main/res/layout/activity_welcome.xml" value="0.17527173913043478" />
+        <entry key="app/src/main/res/drawable/printer.xml" value="0.15" />
+        <entry key="app/src/main/res/layout/activity_forum.xml" value="0.2006340579710145" />
+        <entry key="app/src/main/res/layout/activity_login.xml" value="0.2006340579710145" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.16927083333333334" />
+        <entry key="app/src/main/res/layout/activity_maps.xml" value="0.26390466593909323" />
+        <entry key="app/src/main/res/layout/activity_register.xml" value="0.2006340579710145" />
+        <entry key="app/src/main/res/layout/activity_sign_options.xml" value="0.2006340579710145" />
+        <entry key="app/src/main/res/layout/activity_welcome.xml" value="0.2006340579710145" />
         <entry key="..\:/Users/sadia/OneDrive/Documents/GitHub/nav app/app/src/main/res/drawable/arrow_forward.xml" value="0.124" />
         <entry key="..\:/Users/sadia/OneDrive/Documents/GitHub/nav app/app/src/main/res/drawable/ic_baseline_comment_24.xml" value="0.124" />
         <entry key="..\:/Users/sadia/OneDrive/Documents/GitHub/nav app/app/src/main/res/drawable/send_icon.xml" value="0.124" />

@@ -50,6 +50,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText mUsername;
     private EditText mPassword;
     private Button mLogin;
+    private TextView frgtpss;
     TextView dontHaveAcc;
     FirebaseAuth firebaseAuth;
     FirebaseFirestore fStore;
@@ -74,10 +75,51 @@ public class LoginActivity extends AppCompatActivity {
         sharedPreferences = getSharedPreferences("login", Context.MODE_PRIVATE);
 
         if(sharedPreferences.contains(Username)){
-            //Intent i = new Intent(LoginActivity.this, MapsActivity.class);
-            //startActivity(i);
+            Intent i = new Intent(LoginActivity.this, MapsActivity.class);
+            startActivity(i);
+        }
+        frgtpss = findViewById(R.id.frgt_pass);
+        frgtpss.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final EditText input2 = new EditText(LoginActivity.this);
+                AlertDialog.Builder builder2 = new AlertDialog.Builder(LoginActivity.this);
+                builder2.setTitle("Reset Password Email Address");
+                input2.setInputType(InputType.TYPE_CLASS_TEXT);
+                builder2.setView(input2);
+                System.out.println("hahahaha");
+
+// Set up the buttons
+                builder2.setPositiveButton("Send", new  DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        String javascript = input2.getText().toString();
+                        firebaseAuth.sendPasswordResetEmail(javascript).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if(task.isSuccessful())
+                                {
+                                    Toast.makeText(LoginActivity.this, "Email Sent.", Toast.LENGTH_SHORT).show();
+                                }
+                                else
+                                {
+                                    Toast.makeText(LoginActivity.this, "Error Sending Email.", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+                        builder2.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        });
+            }
+        });
+                builder2.show();
         }
 
+                                   });
         dontHaveAcc = findViewById(R.id.dontHaveAcc);
         dontHaveAcc.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -222,7 +264,7 @@ public class LoginActivity extends AppCompatActivity {
 // Set up the input
                                             final EditText input = new EditText(LoginActivity.this);
 // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
-                                            input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                                            input.setInputType(InputType.TYPE_CLASS_NUMBER);
                                             builder.setView(input);
 
 // Set up the buttons
