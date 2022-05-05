@@ -98,7 +98,11 @@ public class TwitterActivity extends RegisterActivity {
                                     //System.out.println(email);
 
                                     user.put("username", username);
-                                    db.collection("user_profile").document(username).set(user);
+                                    if (db.collection("user_profile").document(username) == null)
+                                    {
+                                        db.collection("user_profile").document(username).set(user);
+                                    }
+                                    ;
                                     //user.put("email", email);
                                    /* DocumentReference documentReference = db.collection("user_profile").document(username);
                                     documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
