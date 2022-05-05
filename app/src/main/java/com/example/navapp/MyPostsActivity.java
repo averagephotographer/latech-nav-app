@@ -106,8 +106,7 @@ public class MyPostsActivity extends DrawerBaseActivity {
                 }
             });
 
-            query = firestore.collection("posts").orderBy("datePost",Query.Direction.DESCENDING);
-            query = firestore.collection("posts").whereEqualTo("username", name);
+            query = firestore.collection("posts").whereEqualTo("username", name).orderBy("datePost",Query.Direction.DESCENDING);
             listenerRegistration = query.addSnapshotListener(MyPostsActivity.this, new EventListener<QuerySnapshot>() {
                 @Override
                 public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {

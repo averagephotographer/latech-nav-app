@@ -187,6 +187,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                     // check if user has a post picture
                     // if they dont, then just put default picture
                     if (postImage != null) {
+                        holder.postPic.setVisibility(View.VISIBLE);
                         holder.setPostPic(postImage);
                     }
                     else {
