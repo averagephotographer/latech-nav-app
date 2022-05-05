@@ -35,6 +35,7 @@ public class TwitterActivity extends RegisterActivity {
 
         firebaseAuth = FirebaseAuth.getInstance();
         sharedPreferences = getSharedPreferences("login", Context.MODE_PRIVATE);
+        db = FirebaseFirestore.getInstance();
 
         OAuthProvider.Builder twt = OAuthProvider.newBuilder("twitter.com");
         twt.addCustomParameter("lang", "en");
@@ -91,12 +92,13 @@ public class TwitterActivity extends RegisterActivity {
                                     // authResult.getCredential().getAccessToken().
                                     // The OAuth secret can be retrieved by calling:
                                     // authResult.getCredential().getSecret().
-                                    final String username = authResult.getAdditionalUserInfo().getUsername();
-                                    final String email = authResult.getUser().getEmail();
+                                    final String username = authResult.getAdditionalUserInfo().getUsername().toString();
+                                   // final String email = authResult.getUser().getEmail();
                                     Map<String,Object> user = new HashMap<>();
-                                    System.out.println(username);
+                                    //System.out.println(email);
 
-                                    user.put("username", user);
+                                    user.put("username", username);
+                                    db.collection("user_profile").document(username).set(user);
                                     //user.put("email", email);
                                    /* DocumentReference documentReference = db.collection("user_profile").document(username);
                                     documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {

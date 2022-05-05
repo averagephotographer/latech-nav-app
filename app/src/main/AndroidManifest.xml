@@ -23,9 +23,7 @@
         <activity
             android:name=".MyPostsActivity"
             android:exported="false" />
-        <activity
-            android:name=".CommentsActivity"
-            android:exported="false" />
+
         <activity
             android:name=".CommentsActivity"
             android:exported="false"
@@ -33,14 +31,7 @@
         <activity
             android:name=".twofareg"
             android:exported="false" />
-        <activity
-            android:name=".ui.login.twofactorregister"
-            android:exported="false"
-            android:label="@string/title_activity_twofactorregister" />
-        <activity
-            android:name=".ui.login.twofactorauthregister"
-            android:exported="false"
-            android:label="@string/title_activity_twofactorauthregister" />
+
         <activity
             android:name=".LoginActivity"
             android:exported="false" />
@@ -89,9 +80,7 @@
         <activity
             android:name=".DrawerBaseActivity"
             android:exported="false" />
-        <activity
-            android:name="com.canhub.cropper.CropImageActivity"
-            android:theme="@style/Base.Theme.AppCompat" />
+
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
