@@ -10,7 +10,7 @@
         android:tint="@color/blue"/>
     <item
         android:id="@+id/Account"
-        android:title="Account"
+        android:title="My Posts"
         app:titleTextColor="@color/blue"
         app:showAsAction="ifRoom"
         android:icon="@drawable/ic_baseline_person_outline_24"

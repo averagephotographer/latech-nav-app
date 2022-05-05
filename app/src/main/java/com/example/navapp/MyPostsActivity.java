@@ -86,6 +86,13 @@ public class MyPostsActivity extends DrawerBaseActivity {
         sharedpref = getApplicationContext().getSharedPreferences("login", Context.MODE_PRIVATE);
         String name = sharedpref.getString("username", "");
 
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MyPostsActivity.this, CreatePostActivity.class);
+                startActivity(intent);
+            }
+        });
 
 
         if(firebaseAuth.getCurrentUser() != null){
@@ -98,6 +105,8 @@ public class MyPostsActivity extends DrawerBaseActivity {
                         Toast.makeText(MyPostsActivity.this, "You've reached the end", Toast.LENGTH_SHORT);
                 }
             });
+
+            query = firestore.collection("posts").orderBy("datePost",Query.Direction.DESCENDING);
             query = firestore.collection("posts").whereEqualTo("username", name);
             listenerRegistration = query.addSnapshotListener(MyPostsActivity.this, new EventListener<QuerySnapshot>() {
                 @Override

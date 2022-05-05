@@ -22,6 +22,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
+import com.example.navapp.databinding.ActivityAccountBinding;
 import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -45,12 +46,13 @@ import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class AccountActivity extends AppCompatActivity {
+public class AccountActivity extends DrawerBaseActivity {
     TextView username, email;
     Button log_out;
     FirebaseAuth fAuth;
     FirebaseFirestore fStore;
     //String userID;
+    ActivityAccountBinding activityAccountBinding;
     SharedPreferences sharedPreferences;
     public static final String Username = "username";
     public static final String pass_wrd = "password";
@@ -65,7 +67,9 @@ public class AccountActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_account);
+        activityAccountBinding = ActivityAccountBinding.inflate(getLayoutInflater());
+        setContentView(activityAccountBinding.getRoot());
+        allocateActivityTitle("Account");
         username = findViewById(R.id.profilename);
         email = findViewById(R.id.profileemail);
         log_out = findViewById(R.id.sign_out);
@@ -146,7 +150,7 @@ public class AccountActivity extends AppCompatActivity {
 
                         Glide.with(getApplicationContext()).load(imageUrl).into(circleImageView);
                     }
-                    else {
+                    else if(mImageUri == null) {
                         Glide.with(getApplicationContext()).load(R.drawable.addimage).into(circleImageView);
                     }
                 }

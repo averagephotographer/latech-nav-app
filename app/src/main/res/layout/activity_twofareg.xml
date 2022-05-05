@@ -7,6 +7,21 @@
     tools:context=".twofareg"
     android:background="@color/blue">
 
+    <TextView
+        android:id="@+id/register2fa"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Register for 2FA"
+        android:textColor="@color/white"
+        android:textSize="34sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.122" />
+
     <Button
         android:id="@+id/Skipbutton"
         android:layout_width="150dp"
@@ -52,4 +67,5 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.289" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

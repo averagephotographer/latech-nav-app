@@ -1,5 +1,6 @@
 package com.example.navapp;
 
+import android.accounts.Account;
 import android.content.Intent;
 import android.view.MenuItem;
 import android.view.View;
@@ -59,8 +60,8 @@ public class DrawerBaseActivity extends AppCompatActivity implements NavigationV
         drawerLayout.closeDrawer(GravityCompat.START);
 
         switch(item.getItemId()) {
-            case R.id.setting:
-                startActivity(new Intent(this, SettingsActivity.class));
+            case R.id.account:
+                startActivity(new Intent(this, AccountActivity.class));
                 overridePendingTransition(0,0);
                 break;
 

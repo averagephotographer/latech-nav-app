@@ -131,7 +131,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
         }
         else{
-            System.out.println("null");
+            holder.comment_no.setText("0");
         }
 
         //holder.likeButton.setText(posts.getLikeBtn());
@@ -316,7 +316,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                 if(task.isSuccessful()){
                     postsArrayList.remove(postsArrayList.get(pos));
                     notifyDataSetChanged();
-                    Toast.makeText(context, "Deleted", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Deleted Post!", Toast.LENGTH_SHORT).show();
 
 
                     pd.dismiss();
@@ -360,7 +360,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
         public void setPostLike(String count) {
             likeCount = itemView.findViewById(R.id.like_count_tv);
-            likeCount.setText(count + " Likes");
+            likeCount.setText(count);
         }
 
         public void setProfilePic(String urlProfile){
