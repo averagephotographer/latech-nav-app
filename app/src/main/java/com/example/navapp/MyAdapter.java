@@ -144,7 +144,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                         holder.comment_no.setText(count);
 
                     }else{
-                        holder.comment_no.setText(0);
+                        holder.comment_no.setText("0");
 
                     }
                 }
@@ -379,7 +379,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
         public void setPostLike(int count) {
             likeCount = itemView.findViewById(R.id.like_count_tv);
-            likeCount.setText(count);
+            likeCount.setText("" + count);
         }
 
         public void setProfilePic(String urlProfile){

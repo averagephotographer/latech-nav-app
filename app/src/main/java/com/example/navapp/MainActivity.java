@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.test_image_view);
         ImageView test = findViewById(R.id.testing);
         test.setImageResource(R.drawable.ic_baseline_add_24);
-        btn = findViewById(R.id.btn);
+//        btn = findViewById(R.id.btn);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
