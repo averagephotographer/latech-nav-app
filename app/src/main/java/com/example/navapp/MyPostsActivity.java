@@ -76,7 +76,7 @@ public class MyPostsActivity extends DrawerBaseActivity {
                     return true;
                 case R.id.Home:
                     startActivity(new Intent(getApplicationContext(), ForumActivity.class));
-                    overridePendingTransition(0,0);
+                    overridePendingTransition(0, 0);
                     return true;
             }
             return false;
@@ -95,29 +95,30 @@ public class MyPostsActivity extends DrawerBaseActivity {
         });
 
 
-        if(firebaseAuth.getCurrentUser() != null){
+        if (firebaseAuth.getCurrentUser() != null) {
             recycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
                 @Override
                 public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                     super.onScrollStateChanged(recyclerView, newState);
                     Boolean isbtm = !recycler.canScrollVertically(1);
-                    if(isbtm)
+                    if (isbtm)
                         Toast.makeText(MyPostsActivity.this, "You've reached the end", Toast.LENGTH_SHORT);
                 }
             });
 
-            query = firestore.collection("posts").whereEqualTo("username", name).orderBy("datePost",Query.Direction.DESCENDING);
+
+            query = firestore.collection("posts").whereEqualTo("username", name).orderBy("datePost", Query.Direction.DESCENDING);
             listenerRegistration = query.addSnapshotListener(MyPostsActivity.this, new EventListener<QuerySnapshot>() {
                 @Override
                 public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                    for(DocumentChange doc : value.getDocumentChanges()){
-                        if(doc.getType() == DocumentChange.Type.ADDED){
+                    for (DocumentChange doc : value.getDocumentChanges()) {
+                        if (doc.getType() == DocumentChange.Type.ADDED) {
                             String pid = doc.getDocument().getId();
                             Posts post = doc.getDocument().toObject(Posts.class).withId(pid);
                             //System.out.println("mypost" + post);
                             list.add(post);
                             adapter.notifyDataSetChanged();
-                        }else{
+                        } else {
                             adapter.notifyDataSetChanged();
                         }
                     }
@@ -126,8 +127,6 @@ public class MyPostsActivity extends DrawerBaseActivity {
             });
 
         }
-
-
 
     }
 }

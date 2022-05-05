@@ -112,6 +112,7 @@ public class AccountActivity extends DrawerBaseActivity {
             }
         });
 
+        saveProfilePic.setEnabled(false);
 
         saveProfilePic.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -144,14 +145,15 @@ public class AccountActivity extends DrawerBaseActivity {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()){
-                    if (task.getResult().exists() && mImageUri != null){
+                    if (task.getResult().exists()){
                         String imageUrl = task.getResult().getString("profilePicURL");
-                        mImageUri = Uri.parse(imageUrl);
-
-                        Glide.with(getApplicationContext()).load(imageUrl).into(circleImageView);
-                    }
-                    else if(mImageUri == null) {
-                        Glide.with(getApplicationContext()).load(R.drawable.addimage).into(circleImageView);
+                        if (imageUrl != null) {
+                            mImageUri = Uri.parse(imageUrl);
+                            Glide.with(getApplicationContext()).load(imageUrl).into(circleImageView);
+                        }
+                        else {
+                            Glide.with(getApplicationContext()).load(R.drawable.addimage).into(circleImageView);
+                        }
                     }
                 }
             }
@@ -196,6 +198,7 @@ public class AccountActivity extends DrawerBaseActivity {
         circleImageView.setImageURI(mImageUri);
 
         isPhotoSelected = true;
+        saveProfilePic.setEnabled(true);
     }
 
 }
