@@ -44,7 +44,7 @@
         android:id="@+id/overlayButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="88dp"
+        android:layout_marginStart="28dp"
         android:backgroundTint="@color/light_blue"
         android:text="Gimbal"
         android:textColor="@color/black"
@@ -52,16 +52,16 @@
         app:cornerRadius="24dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/map"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.003"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.947" />
+        app:layout_constraintVertical_bias="0.953" />
 
     <Button
         android:id="@+id/heatmapButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="88dp"
+        android:layout_marginStart="28dp"
         android:backgroundTint="@color/light_blue"
         android:text="Heat"
         android:textColor="@color/black"
@@ -69,7 +69,7 @@
         app:cornerRadius="24dp"
         app:layout_constraintBottom_toTopOf="@+id/overlayButton"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.993" />
