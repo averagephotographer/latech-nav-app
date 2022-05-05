@@ -2,6 +2,7 @@ package com.example.navapp;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.text.format.DateUtils;
 import android.view.Gravity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -32,6 +33,8 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -78,6 +81,9 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
         Users users = usersList.get(position);
         holder.setmUserName(users.getUsername());
         holder.setCProfilePic(users.getImage());
+
+        String timeAgo = calculateTimeAgo(comments.getTime());
+        holder.date_comment.setText(timeAgo);
 
         myuid = comments.getUid();
         String comid = comments.CommId;
@@ -195,8 +201,24 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
 
     }
 
+    private String calculateTimeAgo(String datePost) {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy HH:mm:ss");
+        try {
+            long time = sdf.parse(datePost).getTime();
+            long now = System.currentTimeMillis();
+            Log.d("time", String.valueOf(time));
+            CharSequence ago =
+                    DateUtils.getRelativeTimeSpanString(time, now, DateUtils.MINUTE_IN_MILLIS);
+            Log.d("ago", String.valueOf(ago));
+            return ago+"";
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
     public class CommentsViewHolder extends RecyclerView.ViewHolder{
-        TextView mcomment, mUserName;
+        TextView mcomment, mUserName, date_comment;
         ImageView delete_icon;
         CircleImageView circleImageView;
         View mView;
@@ -205,6 +227,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
             super(itemView);
             mView = itemView;
             delete_icon = mView.findViewById(R.id.delete);
+            date_comment = itemView.findViewById(R.id.date_comment);
         }
 
         public void setCProfilePic(String urlProfile){

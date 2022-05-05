@@ -3,7 +3,9 @@ package com.example.navapp;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.Gravity;
@@ -21,6 +23,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.navapp.Utils.Mypost;
 import com.example.navapp.Utils.PostId;
 import com.example.navapp.Utils.Posts;
@@ -40,11 +44,12 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class mypostsAdapter extends RecyclerView.Adapter<mypostsAdapter.PostViewHolder> {
     String myUid;
     String uid;
-
-
+    SharedPreferences sharedPreferences;
     private ArrayList<Posts> mList;
     private Activity context;
     private FirebaseFirestore fstore;
@@ -64,7 +69,7 @@ public class mypostsAdapter extends RecyclerView.Adapter<mypostsAdapter.PostView
     }
 
     @Override
-    public void onBindViewHolder(@NonNull PostViewHolder holder,  int position) {
+    public void onBindViewHolder(@NonNull PostViewHolder holder, int position) {
         Posts post = mList.get(position);
         uid = post.getUid();
         holder.setCaption(post.getDescription());
@@ -75,11 +80,21 @@ public class mypostsAdapter extends RecyclerView.Adapter<mypostsAdapter.PostView
         String postId = post.PostId;
         System.out.println(postId);
         //int pos = holder.getBindingAdapterPosition();
+        holder.setPostPic(post.getImageURL());
 
         holder.delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 showMoreOptions(holder.delete, postId, position);
+            }
+        });
+
+        holder.image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context , ImageViewActivity.class);
+                intent.putExtra("postid", postId);
+                context.startActivity(intent);
             }
         });
 
@@ -89,6 +104,49 @@ public class mypostsAdapter extends RecyclerView.Adapter<mypostsAdapter.PostView
                 Intent commentIntent = new Intent(context , CommentsActivity.class);
                 commentIntent.putExtra("postid", postId);
                 context.startActivity(commentIntent);
+            }
+        });
+
+        sharedPreferences = context.getApplicationContext().getSharedPreferences("login", Context.MODE_PRIVATE);
+        String name = sharedPreferences.getString("username", "");
+
+        fstore.collection("user_profile").document(name).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    String image = task.getResult().getString("profilePicURL");
+                    // check if user has a profile picture
+                    // if they dont, then just put default picture
+                    if (image == null) {
+                        holder.image.setImageDrawable((context.getDrawable(R.drawable.elcipse)));
+                    }
+                    else {
+                        holder.setProfilePic(image);
+                    }
+                }
+                else {
+                    Toast.makeText(context, task.getException().toString(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        fstore.collection("posts").document(postId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    String postImage = task.getResult().getString("imageURL");
+                    // check if user has a post picture
+                    // if they dont, then just put default picture
+                    if (postImage != null) {
+                        holder.setPostPic(postImage);
+                    }
+                    else {
+                        holder.image.setVisibility(View.GONE);
+                    }
+                }
+                else {
+                    Toast.makeText(context, task.getException().toString(), Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -205,7 +263,8 @@ public class mypostsAdapter extends RecyclerView.Adapter<mypostsAdapter.PostView
 
 
     public class PostViewHolder extends RecyclerView.ViewHolder{
-        ImageView like, comment, delete;
+        ImageView like, comment, delete, image;
+        CircleImageView circleImageView;
         TextView username, date, descrip, title, postlikes, commcount;
         View mView;
 
@@ -225,6 +284,11 @@ public class mypostsAdapter extends RecyclerView.Adapter<mypostsAdapter.PostView
 
         }
 
+        public void setProfilePic(String urlProfile){
+            circleImageView = itemView.findViewById(R.id.myprofile_pic);
+            Glide.with(context).load(urlProfile).into(circleImageView);
+        }
+
         public void setDate(String postdate){
             date = mView.findViewById(R.id.date_tv);
             date.setText(postdate);
@@ -238,6 +302,10 @@ public class mypostsAdapter extends RecyclerView.Adapter<mypostsAdapter.PostView
         public void setTitle(String posttitle){
             title = mView.findViewById(R.id.show_title);
             title.setText(posttitle);
+        }
+        public void setPostPic(String urlPost){
+            image = itemView.findViewById(R.id.pimage);
+            Glide.with(context).load(urlPost).apply(new RequestOptions().override(600, 200)).into(image);
         }
     }
 

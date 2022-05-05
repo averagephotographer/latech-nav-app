@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/blue"
+    android:background="@color/white"
     tools:context=".CommentsActivity">
 
     <EditText
@@ -13,14 +13,15 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:background="@drawable/add_comment_bg"
-        android:hint="Add a comment"
+        android:backgroundTint="@color/white"
+        android:hint="Add a comment..."
+        android:maxLength="40"
+        android:imeOptions="actionDone"
         android:inputType="text"
         android:minHeight="48dp"
-        android:backgroundTint="@color/white"
         android:paddingStart="10dp"
         android:paddingLeft="20dp"
         android:paddingTop="5dp"
-        android:imeOptions="actionDone"
 
 
         android:paddingBottom="5dp"

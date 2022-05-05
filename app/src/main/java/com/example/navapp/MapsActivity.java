@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
@@ -52,6 +53,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.TileOverlay;
 import com.google.android.gms.maps.model.TileOverlayOptions;
+import com.google.maps.android.heatmaps.Gradient;
 import com.google.maps.android.heatmaps.HeatmapTileProvider;
 
 import org.json.JSONArray;
@@ -353,10 +355,22 @@ public class MapsActivity extends DrawerBaseActivity
 
         private void addHeat1() {
             List<LatLng> latLngs = null;
+            List<LatLng> green = null;
+
+            int[] colors = {
+                    Color.rgb(102, 225, 0), // green
+            };
+
+            float[] startPoints = {
+                    1.0f
+            };
+
+            Gradient gradient = new Gradient(colors, startPoints);
 
             // Get the data: latitude/longitude positions of police stations.
             try {
-                latLngs = readItems(R.raw.floor1_heatmap);
+                latLngs = readItems(R.raw.common1);
+                green = readItems(R.raw.uncommon1);
             } catch (JSONException e) {
                 Toast.makeText(this, "Problem reading list of locations.", Toast.LENGTH_LONG).show();
             }
@@ -366,18 +380,37 @@ public class MapsActivity extends DrawerBaseActivity
                     .data(latLngs)
                     .build();
 
+            HeatmapTileProvider uncommon = new HeatmapTileProvider.Builder()
+                    .data(green)
+                    .gradient(gradient)
+                    .build();
+
             provider.setRadius(40);
+            uncommon.setRadius(35);
 
             // Add a tile overlay to the map, using the heat map tile provider.
             TileOverlay overlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(provider));
+            TileOverlay uncommonOverlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(uncommon));
         }
 
         private void addHeat2() {
             List<LatLng> latLngs = null;
+            List<LatLng> green = null;
+
+            int[] colors = {
+                    Color.rgb(102, 225, 0), // green
+            };
+
+            float[] startPoints = {
+                    1.0f
+            };
+
+            Gradient gradient = new Gradient(colors, startPoints);
 
             // Get the data: latitude/longitude positions of police stations.
             try {
-                latLngs = readItems(R.raw.floor2_heatmap);
+                latLngs = readItems(R.raw.common2);
+                green = readItems(R.raw.uncommon2);
             } catch (JSONException e) {
                 Toast.makeText(this, "Problem reading list of locations.", Toast.LENGTH_LONG).show();
             }
@@ -387,10 +420,17 @@ public class MapsActivity extends DrawerBaseActivity
                     .data(latLngs)
                     .build();
 
+            HeatmapTileProvider uncommon = new HeatmapTileProvider.Builder()
+                    .data(green)
+                    .gradient(gradient)
+                    .build();
+
             provider.setRadius(40);
+            uncommon.setRadius(35);
 
             // Add a tile overlay to the map, using the heat map tile provider.
             TileOverlay overlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(provider));
+            TileOverlay uncommonOverlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(uncommon));
         }
 
         private List<LatLng> readItems(@RawRes int resource) throws JSONException {

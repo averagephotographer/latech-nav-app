@@ -204,7 +204,11 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                     // check if user has a post picture
                     // if they dont, then just put default picture
                     if (postImage != null) {
+                        holder.postPic.setVisibility(View.VISIBLE);
                         holder.setPostPic(postImage);
+                    }
+                    else {
+                        holder.postPic.setVisibility(View.GONE);
                     }
                 }
                 else {
@@ -331,7 +335,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                 if(task.isSuccessful()){
                     postsArrayList.remove(postsArrayList.get(pos));
                     notifyDataSetChanged();
-                    Toast.makeText(context, "Deleted", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Deleted Post!", Toast.LENGTH_SHORT).show();
 
 
                     pd.dismiss();
@@ -375,16 +379,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
         public void setPostLike(int count) {
             likeCount = itemView.findViewById(R.id.like_count_tv);
-            if(count < 2){
-                String a = String.valueOf(count);
-                likeCount.setText(a);
-            }else{
-                String b = String.valueOf(count);
-                likeCount.setText(b + " Likes");
-
-            }
-
-
+            likeCount.setText(count);
         }
 
         public void setProfilePic(String urlProfile){
