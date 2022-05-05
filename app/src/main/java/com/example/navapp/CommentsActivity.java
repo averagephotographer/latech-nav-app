@@ -33,7 +33,9 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -120,10 +122,13 @@ public class CommentsActivity extends AppCompatActivity {
             public void onClick(View view) {
                 String user_comment = comment_post.getText().toString();
                 if(!user_comment.isEmpty()){
+                    Date date = new Date();
+                    SimpleDateFormat formatter = new SimpleDateFormat("dd-M-yyyy HH:mm:ss");
+                    String strDate = formatter.format(date);
                     Map<String, Object> commentsMap = new HashMap<>();
                     commentsMap.put("username", name);
                     commentsMap.put("comment", user_comment);
-                    commentsMap.put("time", FieldValue.serverTimestamp());
+                    commentsMap.put("time", strDate);
                     commentsMap.put("uid", UID);
                     firestore.collection("posts/" + post_id + "/comments").add(commentsMap).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
                         @Override

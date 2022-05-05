@@ -21,7 +21,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="90dp"
             android:background="@drawable/rounded_corner_forum">
 
             <de.hdodenhof.circleimageview.CircleImageView
@@ -46,6 +46,20 @@
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/date_comment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="03/05/2022"
+                android:textColor="@color/blue"
+                android:textSize="10sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.953"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/delete"
+                app:layout_constraintVertical_bias="0.886" />
 
             <TextView
                 android:id="@+id/comment_tv"
