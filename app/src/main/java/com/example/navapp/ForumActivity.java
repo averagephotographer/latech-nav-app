@@ -164,8 +164,8 @@ public class ForumActivity extends DrawerBaseActivity  {
                     swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
                         @Override
                         public void onRefresh() {
-                            myAdapter.notifyDataSetChanged();
                             swipeRefreshLayout.setRefreshing(false);
+                            myAdapter.notifyDataSetChanged();
 
                         }
                     });

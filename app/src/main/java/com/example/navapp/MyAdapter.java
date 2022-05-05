@@ -25,7 +25,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.navapp.Utils.Posts;
 import com.example.navapp.Utils.Users;
-import com.github.chrisbanes.photoview.PhotoView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -126,13 +125,31 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         //String num = posts.getCommentsno();
         System.out.println("num" + num);
         //String num1 = String.valueOf(num);
+        /*
         if(num != null){
             holder.comment_no.setText(num);
 
         }
         else{
-            System.out.println("null");
-        }
+            holder.comment_no.setText("0");
+        }*/
+
+        firestore.collection("posts/" + postId + "/comments").addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                if(error == null){
+                    if(!value.isEmpty()){
+                        String count =  "" + value.size();
+                        //int a = Integer.parseInt(count);
+                        holder.comment_no.setText(count);
+
+                    }else{
+                        holder.comment_no.setText(0);
+
+                    }
+                }
+            }
+        });
 
         //holder.likeButton.setText(posts.getLikeBtn());
 
@@ -241,10 +258,11 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                 if(error == null){
                     if(!value.isEmpty()){
                         String count =  "" + value.size();
-                        holder.setPostLike(count);
+                        int a = Integer.parseInt(count);
+                        holder.setPostLike(a);
 
                     }else{
-                        holder.setPostLike("0");
+                        holder.setPostLike(0);
 
                     }
                 }
@@ -355,9 +373,18 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             likeCount = itemView.findViewById(R.id.like_count_tv);
         }
 
-        public void setPostLike(String count) {
+        public void setPostLike(int count) {
             likeCount = itemView.findViewById(R.id.like_count_tv);
-            likeCount.setText(count + " Likes");
+            if(count < 2){
+                String a = String.valueOf(count);
+                likeCount.setText(a);
+            }else{
+                String b = String.valueOf(count);
+                likeCount.setText(b + " Likes");
+
+            }
+
+
         }
 
         public void setProfilePic(String urlProfile){
