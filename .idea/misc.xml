@@ -102,14 +102,6 @@
         <entry key="..\:/Users/sadia/OneDrive/Documents/GitHub/latech-nav-app/app/src/main/res/layout/activity_sign_option.xml" value="0.17552083333333332" />
         <entry key="..\:/Users/sadia/OneDrive/Documents/GitHub/latech-nav-app/app/src/main/res/layout/activity_sign_options.xml" value="0.1796875" />
         <entry key="..\:/Users/sadia/OneDrive/Documents/GitHub/latech-nav-app/app/src/main/res/layout/activity_welcome.xml" value="0.17527173913043478" />
-        <entry key="app/src/main/res/drawable/printer.xml" value="0.15" />
-        <entry key="app/src/main/res/layout/activity_forum.xml" value="0.2006340579710145" />
-        <entry key="app/src/main/res/layout/activity_login.xml" value="0.2006340579710145" />
-        <entry key="app/src/main/res/layout/activity_main.xml" value="0.16927083333333334" />
-        <entry key="app/src/main/res/layout/activity_maps.xml" value="0.26390466593909323" />
-        <entry key="app/src/main/res/layout/activity_register.xml" value="0.2006340579710145" />
-        <entry key="app/src/main/res/layout/activity_sign_options.xml" value="0.2006340579710145" />
-        <entry key="app/src/main/res/layout/activity_welcome.xml" value="0.2006340579710145" />
         <entry key="..\:/Users/sadia/OneDrive/Documents/GitHub/nav app/app/src/main/res/drawable/arrow_forward.xml" value="0.124" />
         <entry key="..\:/Users/sadia/OneDrive/Documents/GitHub/nav app/app/src/main/res/drawable/ic_baseline_comment_24.xml" value="0.124" />
         <entry key="..\:/Users/sadia/OneDrive/Documents/GitHub/nav app/app/src/main/res/drawable/send_icon.xml" value="0.124" />
@@ -126,9 +118,15 @@
         <entry key="..\:/Users/sadia/OneDrive/Documents/GitHub/nav app/app/src/main/res/layout/each_comment.xml" value="0.22" />
         <entry key="..\:/Users/sadia/OneDrive/Documents/GitHub/nav app/app/src/main/res/layout/each_mypost.xml" value="0.11770833333333333" />
         <entry key="..\:/Users/sadia/OneDrive/Documents/GitHub/nav app/app/src/main/res/layout/main_drawer_header.xml" value="0.14402173913043478" />
+        <entry key="app/src/main/res/drawable/ic_logo.xml" value="0.147" />
         <entry key="app/src/main/res/drawable/printer.xml" value="0.15" />
+        <entry key="app/src/main/res/layout/activity_forum.xml" value="0.2006340579710145" />
+        <entry key="app/src/main/res/layout/activity_login.xml" value="0.2006340579710145" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.16927083333333334" />
         <entry key="app/src/main/res/layout/activity_maps.xml" value="0.335" />
+        <entry key="app/src/main/res/layout/activity_register.xml" value="0.2006340579710145" />
+        <entry key="app/src/main/res/layout/activity_sign_options.xml" value="0.2006340579710145" />
+        <entry key="app/src/main/res/layout/activity_welcome.xml" value="0.2006340579710145" />
         <entry key="app/src/main/res/layout/custom_address.xml" value="0.16236068895643363" />
       </map>
     </option>
