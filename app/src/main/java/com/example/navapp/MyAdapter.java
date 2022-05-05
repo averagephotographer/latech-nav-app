@@ -208,7 +208,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                         holder.setPostPic(postImage);
                     }
                     else {
-                        holder.postPic.setVisibility(View.GONE);
+                        System.out.println("[KFH[DKHPGKF");
+                        holder.postPic.setVisibility(View.INVISIBLE);
                     }
                 }
                 else {
