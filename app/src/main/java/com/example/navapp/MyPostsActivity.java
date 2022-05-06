@@ -111,22 +111,22 @@ public class MyPostsActivity extends DrawerBaseActivity {
             listenerRegistration = query.addSnapshotListener(MyPostsActivity.this, new EventListener<QuerySnapshot>() {
                 @Override
                 public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                    for (DocumentChange doc : value.getDocumentChanges()) {
-                        if (doc.getType() == DocumentChange.Type.ADDED) {
-                            String pid = doc.getDocument().getId();
-                            Posts post = doc.getDocument().toObject(Posts.class).withId(pid);
-                            //System.out.println("mypost" + post);
-                            list.add(post);
-                            adapter.notifyDataSetChanged();
-                        } else {
-                            adapter.notifyDataSetChanged();
+                    if (value != null) {
+                        for (DocumentChange doc : value.getDocumentChanges()) {
+                            if (doc.getType() == DocumentChange.Type.ADDED) {
+                                String pid = doc.getDocument().getId();
+                                Posts post = doc.getDocument().toObject(Posts.class).withId(pid);
+                                //System.out.println("mypost" + post);
+                                list.add(post);
+                                adapter.notifyDataSetChanged();
+                            } else {
+                                adapter.notifyDataSetChanged();
+                            }
                         }
+                        listenerRegistration.remove();
                     }
-                    listenerRegistration.remove();
                 }
             });
-
         }
-
     }
 }
