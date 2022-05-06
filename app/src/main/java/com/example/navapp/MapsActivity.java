@@ -120,6 +120,7 @@ public class MapsActivity extends DrawerBaseActivity
         Button textView;
         boolean [] selectedService;
         ArrayList<Integer> servList = new ArrayList<>();
+
         String[] servArray = {"Classrooms", "Professors", "Resources"};
         String[] countries={"Dr. Turner","Dr. Choi","Dr. Prather","Dr. O'Neal","Dr. Cox","Dr. Biggs","Dr. Glisson","Dr. Bowman","Dr. Abdoulahi","Dr. Gates","Dr. Hyde","Dr. Hyde",
                 "NETH105","NETH120","NETH140","NETH153","Admin Office","NETH103: Machinery I","NETH101: Data Mining Rese Lab","NETH100: Power Systems Lab","NETH104: Machinery II",
@@ -146,7 +147,7 @@ public class MapsActivity extends DrawerBaseActivity
                 {"Dr. Prashanna Bhattari","Assistant Professor","32.52580966130865","-92.64494575560093"}, {"Aaron Hutchinson","Assistant Professor","32.52580966130865","-92.64490719884634"}, {"Dr. Jinyuan Chen","Assistant Professor","32.52580966130865","-92.6448706537485"},
                 {"Nathan Green","Assistant Professor","32.52580966130865","-92.64487367123365"},{"Dr. Don Liu","Professor","32.52580966130865","-92.64484014362097"},{"Dr. Raj Nassar","Professor Emeritus","32.52580966130865","-92.64480259269475"},
                 {"Dr. Weizhong Dai","Professor – Mathematics and Statistics, Program Chair – Computational Analysis Modeling","32.52580966130865","-92.64459773898123"},{"Dr. Pradeep Chowriappa","Assistant Professor","32.52580966130865","-92.64455180615187"},
-                {"Dr. Kevin Cherry","Lecturer","32.52580966130865","-92.64447435736656"},{"Dr. Richard Greechie","Professor Emeritus","32.52580966130865","-92.64444317668676"},
+                {"Dr. Cherry","Lecturer","32.52580966130865","-92.64447435736656", "cherry"},{"Dr. Richard Greechie","Professor Emeritus","32.52580966130865","-92.64444317668676"},
                 {"Dr. Manki Min", "Associate Professor", "32.52559001258808","-92.64442641288042"}};
 
         String[][] class2 = {{"NETH209","","32.5257098724455","-92.64506578445436"},{"NETH243","","32.52565700974508","-92.64442473649979"},
@@ -348,6 +349,20 @@ public class MapsActivity extends DrawerBaseActivity
                             //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(searchedRoom, 15));
                         }
                     }
+
+                    for(int i = 0; i < prof2.length; i++){
+                        android.util.Log.i("onVisitEnd", prof2[i][0]);
+                        boolean isEqual = desiredRoom.equals(prof2[i][0]);
+                        if(isEqual){
+
+                            searchCamera(Double.parseDouble(prof2[i][2]),Double.parseDouble(prof2[i][3]), i);
+
+                            android.util.Log.i("onVisitEnd", "they equal");
+                            //LatLng searchedRoom = new LatLng(0,0);
+                            //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(searchedRoom, 15));
+                        }
+                    }
+
                 }
             });
 
@@ -449,10 +464,55 @@ public class MapsActivity extends DrawerBaseActivity
 
         public void searchCamera (double x, double y, int i) {
             LatLng searchedRoom = new LatLng(x, y);
+            Marker marker;
+            Drawable drawable;
+            if (floor == 1) {
+                String name = prof1[i][4];
+                int id = getResources().getIdentifier(name, "drawable", getPackageName());
+                drawable = getResources().getDrawable(id);
 
-            Marker marker = mMap.addMarker(new MarkerOptions().position(searchedRoom).title(prof1[i][0])
-                    .icon(BitmapFromVector(getApplicationContext(), R.drawable.professor_dot))
-                    .snippet(prof1[i][1]));
+                marker = mMap.addMarker(new MarkerOptions().position(searchedRoom).title(prof1[i][0])
+                        .icon(BitmapFromVector(getApplicationContext(), R.drawable.professor_dot))
+                        .snippet(prof1[i][1]));
+
+            }
+
+            else {
+                String name = prof2[i][4];
+                int id = getResources().getIdentifier(name, "drawable", getPackageName());
+                drawable = getResources().getDrawable(id);
+
+                marker = mMap.addMarker(new MarkerOptions().position(searchedRoom).title(prof2[i][0])
+                        .icon(BitmapFromVector(getApplicationContext(), R.drawable.professor_dot))
+                        .snippet(prof2[i][1]));
+
+            }
+
+            if (mMap != null){
+                mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+
+                    @Override
+                    public View getInfoWindow(@NonNull Marker marker) {
+                        View row = getLayoutInflater().inflate(R.layout.custom_address,null);
+                        TextView title = (TextView) row.findViewById(R.id.title);
+                        TextView snippet = (TextView) row.findViewById(R.id.snippet);
+                        ImageView image = (ImageView) row.findViewById(R.id.image);
+
+                        title.setText(marker.getTitle());
+                        snippet.setText(marker.getSnippet());
+                        image.setBackground(drawable);
+
+                        return row;
+                    }
+
+                    @Override
+                    public View getInfoContents(@NonNull Marker marker) {
+
+                        return null;
+                    }
+                });
+            }
+
 
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(searchedRoom, 22));
             marker.showInfoWindow();
@@ -483,7 +543,7 @@ public class MapsActivity extends DrawerBaseActivity
                         mMap.addMarker(new MarkerOptions().position(resource).title(prof2[i][0])
                                 .icon(BitmapFromVector(getApplicationContext(), R.drawable.professor_dot))
                                 .snippet(prof2[i][1]));
-
+                        /*
                         if (mMap != null){
                             mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
 
@@ -506,6 +566,7 @@ public class MapsActivity extends DrawerBaseActivity
                                 }
                             });
                         }
+                        */
 
                     }
                 }
@@ -551,7 +612,7 @@ public class MapsActivity extends DrawerBaseActivity
                                 .snippet(prof1[i][1]));
 
                         //android.util.Log.i("onMapClick", String.valueOf(drawable));
-
+                        /*
                         if (mMap != null){
                             mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
 
@@ -575,7 +636,7 @@ public class MapsActivity extends DrawerBaseActivity
                                     return null;
                                 }
                             });
-                        }
+                        }*/
 
                     }
                 }
@@ -817,6 +878,11 @@ public class MapsActivity extends DrawerBaseActivity
                             mMap.addGroundOverlay(neth);
                             floor = 1;
 
+                            //plot markers floor 1
+                            plotMarker("Classrooms");
+                            plotMarker("Professors");
+                            plotMarker("Resources");
+
                         }
                     }
                     else {
@@ -832,6 +898,11 @@ public class MapsActivity extends DrawerBaseActivity
                             mMap.addGroundOverlay(neth);
 
                             floor = 2;
+
+                            //plot markers floor 2
+                            plotMarker("Classrooms");
+                            plotMarker("Professors");
+                            plotMarker("Resources");
                         }
                     }
                         //if already on that floor, do not change anything
