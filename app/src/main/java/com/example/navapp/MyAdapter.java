@@ -114,25 +114,11 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         String timeAgo = calculateTimeAgo(posts.getDatePost());
         holder.postDate.setText(timeAgo);
         holder.username.setText(posts.getUsername());
-        //holder.likeCount.setText(likes);
 
         holder.setPostPic(posts.getImageURL());
         String postId = posts.PostId;
         String currentuser = auth.getCurrentUser().getUid();
 
-        //setLikes(holder, postId);
-
-        //String num = posts.getCommentsno();
-        System.out.println("num" + num);
-        //String num1 = String.valueOf(num);
-        /*
-        if(num != null){
-            holder.comment_no.setText(num);
-
-        }
-        else{
-            holder.comment_no.setText("0");
-        }*/
 
         firestore.collection("posts/" + postId + "/comments").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
@@ -150,12 +136,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                 }
             }
         });
-
-        //holder.likeButton.setText(posts.getLikeBtn());
-
-
-        System.out.println("post" + " " + postId);
-
 
         holder.commentButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -196,6 +176,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                 }
             }
         });
+
         firestore.collection("posts").document(postId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -208,8 +189,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                         holder.setPostPic(postImage);
                     }
                     else {
-                        System.out.println("[KFH[DKHPGKF");
-                        holder.postPic.setVisibility(View.INVISIBLE);
+                        holder.postPic.setVisibility(View.GONE);
                     }
                 }
                 else {
